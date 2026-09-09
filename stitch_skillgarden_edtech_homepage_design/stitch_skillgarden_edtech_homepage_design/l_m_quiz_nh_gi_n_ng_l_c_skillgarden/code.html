@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#777683", "on-secondary": "#ffffff", "primary": "#24277f", "error": "#ba1a1a", "surface": "#fbf8ff", "background": "#fbf8ff", "on-primary-fixed-variant": "#383c93", "primary-container": "#3c4097", "on-tertiary-fixed": "#1c1c16", "inverse-primary": "#bfc1ff", "on-secondary-container": "#306f41", "on-tertiary-container": "#bdbab1", "primary-fixed": "#e1e0ff", "surface-variant": "#e0e0ff", "error-container": "#ffdad6", "on-surface": "#171a31", "surface-container-high": "#e7e6ff", "surface-tint": "#5155ad", "surface-container-lowest": "#ffffff", "secondary": "#2c6a3d", "surface-container-highest": "#e0e0ff", "secondary-fixed-dim": "#94d69e", "inverse-on-surface": "#f1efff", "on-error": "#ffffff", "tertiary": "#35342e", "surface-container": "#eeecff", "on-secondary-fixed-variant": "#0e5227", "surface-dim": "#d7d7f8", "tertiary-container": "#4c4a44", "on-secondary-fixed": "#00210b", "on-background": "#171a31", "tertiary-fixed": "#e6e2d9", "secondary-fixed": "#aff2b9", "on-error-container": "#93000a", "on-tertiary-fixed-variant": "#484740", "secondary-container": "#acefb6", "on-surface-variant": "#464651", "primary-fixed-dim": "#bfc1ff", "surface-container-low": "#f4f2ff", "tertiary-fixed-dim": "#cac6be", "outline-variant": "#c7c5d3", "on-tertiary": "#ffffff", "on-primary-container": "#b1b4ff", "on-primary-fixed": "#050369", "on-primary": "#ffffff", "surface-bright": "#fbf8ff", "inverse-surface": "#2c2e47" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin-desktop": "3rem", "space-sm": "0.75rem", "space-2xs": "0.25rem", "space-xs": "0.5rem", "space-3xl": "4rem", "margin-tablet": "2rem", "margin-mobile": "1rem", "gutter-mobile": "1rem", "space-2xl": "3rem", "gutter-desktop": "2rem", "space-md": "1rem", "gutter-tablet": "1.5rem", "space-lg": "1.5rem", "space-xl": "2rem" }, "fontFamily": { "headline-lg-mobile": [ "Plus Jakarta Sans" ], "title-md": [ "Inter" ], "body-sm": [ "Inter" ], "headline-lg": [ "Plus Jakarta Sans" ], "label-md": [ "Inter" ], "display-mobile": [ "Plus Jakarta Sans" ], "title-lg": [ "Inter" ], "headline-sm": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "body-lg": [ "Inter" ], "body-md": [ "Inter" ], "display": [ "Plus Jakarta Sans" ], "label-sm": [ "Inter" ] }, "fontSize": { "headline-lg-mobile": [ "26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "title-md": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "body-sm": [ "13px", { "lineHeight": "18px", "fontWeight": "400" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "display-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "title-lg": [ "18px", { "lineHeight": "26px", "fontWeight": "600" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "display": [ "48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between py-space-lg px-space-md"><div class="flex flex-col gap-space-lg"><div class="flex items-center gap-space-sm px-space-xs"><img alt="PLT Solutions SkillGarden Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VFgbLuBGoUS37q3J4FMMOblD5vaW7hiVtyKx0bmgegnNRnKxBYWH8XB0hn-GFHARcus3WjLF7QdaafiudZbZzmt1CoEiV4Fj3WO0Zrnm2mESMTU3yuy7L59jQKsRpZ9DiQ-FenWT6eWN_-b5cq5GDsQamzv0E3GKTJyg_fqhwZ5JBA5IDRO2w_NbEgnXrEyAbHStKsJZXCShOy2QcGEaaI3EsXVlHjXvEtZWoTkOMnaDVCO-C73wHO-eE"/><div class="flex flex-col"><span class="font-title-md text-title-md text-primary leading-none">SkillGarden</span><span class="font-label-sm text-label-sm text-on-surface-variant">by PLT Solutions</span></div></div><nav class="flex flex-col gap-space-2xs" data-active-classes="bg-primary-container text-on-primary font-bold rounded-xl shadow-[0_4px_16px_0_rgba(111,175,123,0.24)]"><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="tong-quan" href="#">Tổng quan</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="ky-nang" href="#">Kỹ năng</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="lo-trinh-hoc" href="#">Lộ trình học</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="khu-vuon" href="#">Khu vườn</a><a aria-current="page" class="flex items-center px-space-md py-space-sm transition-all bg-primary-container text-on-primary font-bold rounded-xl shadow-[0_4px_16px_0_rgba(111,175,123,0.24)]" data-path="bai-kiem-tra" href="#">Bài kiểm tra</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="muc-tieu" href="#">Mục tiêu</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="thanh-tich-huy-hieu" href="#">Thành tích &amp; Huy hiệu</a></nav></div><div class="flex flex-col gap-space-2xs pt-space-md"><nav class="flex flex-col gap-space-2xs" data-active-classes="bg-primary-container text-on-primary font-bold rounded-xl"><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="ho-so-ca-nhan" href="#">Hồ sơ cá nhân</a></nav></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center flex-1 max-w-md"><div class="relative w-full flex items-center"><span class="material-symbols-outlined absolute left-space-sm text-on-surface-variant text-[20px]">search</span><input class="w-full h-11 pl-10 pr-space-md rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/60 font-body-sm text-body-sm shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] focus:outline-none" placeholder="Tìm bài học, kỹ năng, quiz..." type="search"/></div></div><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface"><span class="text-[15px]">🔥</span><span class="font-label-md text-label-md">7 Ngày Streak</span></div><div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface"><span class="text-[15px]">⚡</span><span class="font-label-md text-label-md">1.250 XP</span></div><div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container"><span class="material-symbols-outlined text-[18px]">eco</span><span class="font-label-md text-label-md">Cấp 8 (Mầm tri thức)</span></div></div><div class="relative flex items-center"><button aria-label="Thông báo" class="p-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all flex items-center justify-center" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface"></span></div><div class="h-6 w-px bg-outline-variant/30 hidden sm:block"></div><div class="flex items-center gap-space-xs cursor-pointer"><img alt="Anh Khoa" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1U064rGfQ3_X6J4t9Rk614Qp96qjM7w1_K9iE2mDslv-aU9Q_x4Q8a_nC6f2L5v0q8Y3pX8zG3h0jY=s160"/><span class="hidden md:inline font-title-md text-body-md text-on-surface">Anh Khoa</span><span class="material-symbols-outlined text-on-surface-variant text-[18px]">expand_more</span></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-xl py-space-xl"><div class="flex flex-col w-full gap-space-lg">
+<!-- Top Quiz Action Bar / Context Header -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<a class="flex items-center gap-space-xs text-on-surface-variant hover:text-primary font-title-md text-body-md transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] transition-transform group-hover:-translate-x-1">arrow_back</span>
+<span>Trở về Lộ trình học</span>
+</a>
+<div class="h-5 w-px bg-surface-variant hidden sm:block"></div>
+<div>
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-label-sm text-label-sm px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold tracking-wide">MODULE 03 • NÂNG CAO</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-medium">PLT Certification Track</span>
+</div>
+<h1 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-1">JavaScript Async &amp; Concurrency Control</h1>
+</div>
+</div>
+<!-- Timer, Yields, Actions -->
+<div class="flex items-center gap-space-lg self-end lg:self-center flex-wrap">
+<!-- Live Smart Countdown -->
+<div class="flex items-center gap-space-xs bg-surface-container px-space-md py-space-xs rounded-xl shadow-sm">
+<span class="material-symbols-outlined text-primary text-[20px] animate-pulse">timer</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Thời gian còn lại</span>
+<span class="font-title-md text-title-md text-primary font-bold tracking-tight" id="quizTimer">18:45 <span class="font-label-sm text-on-surface-variant/70 font-normal">/ 30:00</span></span>
+</div>
+</div>
+<!-- Growth Potential Reward -->
+<div class="hidden xl:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-xl">
+<div class="flex items-center gap-1 text-primary">
+<span class="font-title-md text-body-md font-bold">⚡ +50</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">XP</span>
+</div>
+<div class="h-3.5 w-px bg-surface-variant"></div>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[18px]">water_drop</span>
+<span class="font-title-md text-body-md font-bold">+10</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Giọt tưới</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-2.5 rounded-xl font-title-md text-body-md text-on-surface bg-surface-container-high hover:bg-surface-variant transition-all" type="button">
+          Tạm dừng
+        </button>
+<button class="px-space-lg py-2.5 rounded-xl font-title-md text-body-md text-on-primary bg-primary-container hover:bg-primary shadow-sm transition-all transform active:scale-95 flex items-center gap-space-xs" onclick="document.getElementById('resultModal').classList.remove('hidden')" type="button">
+<span>Nộp bài ngay</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Workspace Grid (8:4 Desktop layout) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN: Question Canvas & Editor & Answers (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-space-lg">
+<!-- Current Question Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm flex flex-col gap-space-md relative overflow-hidden">
+<!-- Botanical Backdrop Ambient Glow -->
+<div class="absolute -right-16 -top-16 w-56 h-56 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none"></div>
+<!-- Question Meta & Breadcrumb -->
+<div class="flex items-center justify-between flex-wrap gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-3 py-1 rounded-lg bg-primary-container text-on-primary font-title-md text-body-sm font-bold shadow-sm">
+              CÂU 06 / 10
+            </span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-secondary">psychology</span> Vận dụng cao • Microtasks &amp; Event Loop
+            </span>
+</div>
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-error transition-colors font-label-md text-label-md px-2.5 py-1 rounded-lg bg-surface-container hover:bg-error-container" type="button">
+<span class="material-symbols-outlined text-[16px]">flag</span>
+<span>Đánh dấu xem lại</span>
+</button>
+</div>
+<!-- Prompt Text -->
+<div class="pt-space-xs">
+<p class="font-title-lg text-title-lg text-on-surface leading-relaxed font-semibold">
+            Đoạn mã sau sử dụng <code class="px-1.5 py-0.5 rounded bg-surface-container-high text-primary font-mono text-body-sm">Promise.allSettled()</code> kết hợp với Macro/Microtask scheduling. Khi Microtask queue được giải phóng hoàn toàn và tiến trình kết thúc, giá trị mảng <code class="px-1.5 py-0.5 rounded bg-surface-container-high text-primary font-mono text-body-sm">status</code> được in ra console theo cấu trúc nào?
+          </p>
+</div>
+<!-- Code Snippet Editor Theme Dark IDE -->
+<div class="rounded-xl overflow-hidden bg-tertiary shadow-md flex flex-col">
+<!-- IDE Top bar -->
+<div class="bg-tertiary-container/60 px-space-md py-2.5 flex items-center justify-between text-tertiary-fixed-dim font-label-sm text-label-sm">
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-error/80 inline-block"></span>
+<span class="w-3 h-3 rounded-full bg-secondary-fixed-dim/80 inline-block"></span>
+<span class="w-3 h-3 rounded-full bg-secondary inline-block"></span>
+</div>
+<span class="font-mono text-body-sm text-tertiary-fixed ml-1">concurrency_challenge.mjs</span>
+<span class="px-2 py-0.5 rounded bg-tertiary text-on-tertiary-container text-[10px] uppercase font-mono">ES2026 Engine</span>
+</div>
+<button class="flex items-center gap-1 text-tertiary-fixed-dim hover:text-tertiary-fixed transition-colors text-body-sm" onclick="navigator.clipboard?.writeText('// copied')" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span>Sao chép</span>
+</button>
+</div>
+<!-- Code Content with Line Numbers -->
+<div class="p-space-md font-mono text-body-sm leading-relaxed overflow-x-auto text-surface-container flex">
+<!-- Line Numbers -->
+<div class="select-none pr-space-md text-tertiary-fixed-dim/40 text-right font-mono flex flex-col">
+<span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+</div>
+<!-- Code Body Syntax Highlighted -->
+<div class="flex-1 whitespace-pre pl-2">
+<span class="text-primary-fixed-dim font-bold">const</span> <span class="text-secondary-fixed">p1</span> = Promise.<span class="text-secondary-fixed-dim">resolve</span>(<span class="text-secondary-container font-medium">"🌱 Mầm non"</span>);
+<span class="text-primary-fixed-dim font-bold">const</span> <span class="text-secondary-fixed">p2</span> = Promise.<span class="text-error font-semibold">reject</span>(<span class="text-primary-fixed-dim">new</span> <span class="text-secondary-fixed-dim">Error</span>(<span class="text-surface-variant">"Héo rũ"</span>));
+<span class="text-primary-fixed-dim font-bold">const</span> <span class="text-secondary-fixed">p3</span> = <span class="text-primary-fixed-dim">new</span> <span class="text-secondary-fixed-dim">Promise</span>((resolve) =&gt; setTimeout(() =&gt; resolve(<span class="text-secondary-container">"🌸 Đơm hoa"</span>), <span class="text-tertiary-fixed">100</span>));
+
+Promise.<span class="text-secondary-fixed-dim font-bold">allSettled</span>([p1, p2, p3]).<span class="text-secondary-fixed-dim">then</span>((results) =&gt; {
+  console.<span class="text-secondary-fixed-dim">log</span>(results.<span class="text-secondary-fixed-dim">map</span>(r =&gt; r.<span class="text-secondary-fixed">status</span>));
+});</div>
+</div>
+</div>
+<!-- Multiple Choice Options -->
+<div class="flex flex-col gap-space-sm pt-space-xs" id="quizAnswers">
+<!-- Option A (Selected & Correct) -->
+<label class="group relative flex items-start gap-space-md p-space-md rounded-xl bg-secondary-container/30 cursor-pointer transition-all shadow-sm hover:shadow-md">
+<input checked="" class="mt-1 w-5 h-5 text-secondary accent-secondary focus:ring-0" name="quiz_q6" type="radio" value="A"/>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md font-bold text-on-surface">A.</span>
+<span class="font-mono text-body-md font-semibold text-secondary">["fulfilled", "rejected", "fulfilled"]</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Đã chọn
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Phương thức allSettled chờ tất cả promises hoàn tất bất kể thành công hay thất bại, không bao giờ rơi vào catch block ngay lập tức như Promise.all.
+              </p>
+</div>
+</label>
+<!-- Option B -->
+<label class="group relative flex items-start gap-space-md p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition-all shadow-sm">
+<input class="mt-1 w-5 h-5 text-secondary accent-secondary focus:ring-0" name="quiz_q6" type="radio" value="B"/>
+<div class="flex-1">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md font-bold text-on-surface">B.</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Ném ngoại lệ UnhandledPromiseRejection tại p2 và dừng toàn bộ tiến trình</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Giả định hành vi tương đương với Promise.all khi phát sinh lỗi từ chối tại bất kỳ nhánh rẽ nào.
+              </p>
+</div>
+</label>
+<!-- Option C -->
+<label class="group relative flex items-start gap-space-md p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition-all shadow-sm">
+<input class="mt-1 w-5 h-5 text-secondary accent-secondary focus:ring-0" name="quiz_q6" type="radio" value="C"/>
+<div class="flex-1">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md font-bold text-on-surface">C.</span>
+<span class="font-mono text-body-md text-on-surface">["resolved", "rejected", "pending"]</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Giả định trạng thái resolved thay vì fulfilled và p3 chưa hoàn tất do timeout 100ms.
+              </p>
+</div>
+</label>
+<!-- Option D -->
+<label class="group relative flex items-start gap-space-md p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition-all shadow-sm">
+<input class="mt-1 w-5 h-5 text-secondary accent-secondary focus:ring-0" name="quiz_q6" type="radio" value="D"/>
+<div class="flex-1">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md font-bold text-on-surface">D.</span>
+<span class="font-mono text-body-md text-on-surface">["fulfilled", "fulfilled", "fulfilled"]</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Cho rằng allSettled tự động chuyển đổi mọi kết quả lỗi sang trạng thái thành công danh nghĩa.
+              </p>
+</div>
+</label>
+</div>
+<!-- Navigation bar inside Quiz Workspace -->
+<div class="flex items-center justify-between pt-space-md mt-space-xs">
+<button class="px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-title-md text-body-md flex items-center gap-1 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+<span>Câu trước</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant hidden sm:inline">Tự động lưu bài làm sau mỗi thao tác</span>
+<span class="w-2 h-2 rounded-full bg-secondary inline-block"></span>
+</div>
+<button class="px-space-lg py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-title-md text-body-md flex items-center gap-1 shadow-sm transition-all" type="button">
+<span>Câu tiếp theo</span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Quick Analysis & Architectural Insight Accordion -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="p-2 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">science</span>
+</span>
+<div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold">Khu Vực Phân Tích Thực Tiễn &amp; V8 Microtask</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Giải mã hành vi kiến trúc chạy nền trên Node.js &amp; Modern Browsers</p>
+</div>
+</div>
+<span class="font-label-md text-label-md px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-semibold">Tài liệu tham khảo</span>
+</div>
+<!-- Mini Visual Diagram Event Loop -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+              Trong chuẩn ECMAScript, <span class="font-semibold text-primary">Promise.allSettled()</span> giải quyết hạn chế "Fail-fast" của <code class="font-mono text-body-sm">Promise.all</code>. Mỗi phần tử kết quả luôn luôn là một Object mang 2 thuộc tính: <code class="font-mono text-body-sm">status</code> ("fulfilled" hoặc "rejected") và kèm theo <code class="font-mono text-body-sm">value</code> hoặc <code class="font-mono text-body-sm">reason</code>.
+            </p>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest p-space-sm rounded-lg shadow-sm">
+<div class="text-center px-2">
+<div class="font-label-sm text-on-surface-variant">Callstack</div>
+<div class="font-mono text-body-sm font-bold text-primary">Main()</div>
+</div>
+<span class="text-outline-variant">→</span>
+<div class="text-center px-2">
+<div class="font-label-sm text-secondary font-semibold">Microtasks</div>
+<div class="font-mono text-body-sm font-bold text-secondary">p1, p2 settle</div>
+</div>
+<span class="text-outline-variant">→</span>
+<div class="text-center px-2">
+<div class="font-label-sm text-on-surface-variant">Macrotask</div>
+<div class="font-mono text-body-sm font-bold text-on-surface">p3 (100ms)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Question Palette & Plant Growth Impact (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- Palette Matrix Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<h2 class="font-title-md text-title-md text-on-surface font-bold">Bản đồ câu hỏi</h2>
+<span class="font-label-md text-label-md font-semibold text-secondary">6/10 Đã trả lời</span>
+</div>
+<!-- 10 Question Grid Buttons -->
+<div class="grid grid-cols-5 gap-2.5">
+<!-- Q1: Completed -->
+<button class="h-11 rounded-xl bg-secondary-container text-on-secondary-container font-title-md text-body-sm font-bold flex items-center justify-center relative group" type="button">
+<span>01</span>
+<span class="material-symbols-outlined text-[14px] absolute top-1 right-1 text-secondary">check</span>
+</button>
+<!-- Q2: Completed -->
+<button class="h-11 rounded-xl bg-secondary-container text-on-secondary-container font-title-md text-body-sm font-bold flex items-center justify-center relative" type="button">
+<span>02</span>
+<span class="material-symbols-outlined text-[14px] absolute top-1 right-1 text-secondary">check</span>
+</button>
+<!-- Q3: Completed -->
+<button class="h-11 rounded-xl bg-secondary-container text-on-secondary-container font-title-md text-body-sm font-bold flex items-center justify-center relative" type="button">
+<span>03</span>
+<span class="material-symbols-outlined text-[14px] absolute top-1 right-1 text-secondary">check</span>
+</button>
+<!-- Q4: Completed -->
+<button class="h-11 rounded-xl bg-secondary-container text-on-secondary-container font-title-md text-body-sm font-bold flex items-center justify-center relative" type="button">
+<span>04</span>
+<span class="material-symbols-outlined text-[14px] absolute top-1 right-1 text-secondary">check</span>
+</button>
+<!-- Q5: Completed -->
+<button class="h-11 rounded-xl bg-secondary-container text-on-secondary-container font-title-md text-body-sm font-bold flex items-center justify-center relative" type="button">
+<span>05</span>
+<span class="material-symbols-outlined text-[14px] absolute top-1 right-1 text-secondary">check</span>
+</button>
+<!-- Q6: Active Current Question -->
+<button class="h-11 rounded-xl bg-primary-container text-on-primary font-title-md text-body-sm font-bold flex items-center justify-center ring-4 ring-primary-fixed shadow-md" type="button">
+<span>06</span>
+</button>
+<!-- Q7: Flagged -->
+<button class="h-11 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed font-title-md text-body-sm font-bold flex items-center justify-center relative" type="button">
+<span>07</span>
+<span class="material-symbols-outlined text-[13px] absolute top-1 right-1 text-error">flag</span>
+</button>
+<!-- Q8: Not answered -->
+<button class="h-11 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-title-md text-body-sm font-medium flex items-center justify-center transition-colors" type="button">
+<span>08</span>
+</button>
+<!-- Q9: Not answered -->
+<button class="h-11 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-title-md text-body-sm font-medium flex items-center justify-center transition-colors" type="button">
+<span>09</span>
+</button>
+<!-- Q10: Not answered -->
+<button class="h-11 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-title-md text-body-sm font-medium flex items-center justify-center transition-colors" type="button">
+<span>10</span>
+</button>
+</div>
+<!-- Legend -->
+<div class="grid grid-cols-2 gap-y-2 pt-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="w-3.5 h-3.5 rounded bg-secondary-container"></span>
+<span>Đã làm (5)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3.5 h-3.5 rounded bg-primary-container"></span>
+<span>Đang làm (1)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3.5 h-3.5 rounded bg-tertiary-fixed flex items-center justify-center"><span class="material-symbols-outlined text-[10px] text-error">flag</span></span>
+<span>Đặt cờ (1)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3.5 h-3.5 rounded bg-surface-container"></span>
+<span>Chưa làm (3)</span>
+</div>
+</div>
+</div>
+<!-- Skill Tree Growth Impact Widget -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md relative overflow-hidden">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[24px]">psychiatry</span>
+<h2 class="font-title-md text-title-md text-on-surface font-bold">Tác động sinh trưởng kỹ năng</h2>
+</div>
+<!-- Progress ring & Plant representation -->
+<div class="p-space-md rounded-xl bg-secondary-container/20 flex items-center gap-space-md">
+<div class="relative w-16 h-16 flex items-center justify-center flex-shrink-0">
+<!-- SVG Progress Ring -->
+<svg class="w-16 h-16 transform -rotate-90" viewbox="0 0 64 64">
+<circle class="text-surface-variant" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="5"></circle>
+<circle class="text-secondary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="176" stroke-dashoffset="35" stroke-linecap="round" stroke-width="5"></circle>
+</svg>
+<span class="absolute font-title-md text-body-sm font-bold text-on-surface">80%</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-body-md text-on-surface font-semibold">Cây JavaScript (Cấp 3)</span>
+<span class="font-body-sm text-body-sm text-secondary font-medium">Giai đoạn: Cây Vươn Nhánh</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Tiêu chuẩn qua môn: ≥ 80%</span>
+</div>
+</div>
+<!-- Growth Milestone Rewards List -->
+<div class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface">
+<div class="flex items-start gap-2 p-2 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-[18px] text-secondary mt-0.5">nest_eco_leaf</span>
+<span>Tăng <strong>+8% Sinh khối số</strong> khi vượt qua bài thi này với 8/10 điểm trở lên.</span>
+</div>
+<div class="flex items-start gap-2 p-2 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-[18px] text-primary mt-0.5">lock_open</span>
+<span>Tự động mở khóa <strong>Module 04: DOM &amp; Web APIs Chuyên sâu</strong>.</span>
+</div>
+</div>
+<!-- Enterprise Certification Footnote -->
+<div class="pt-space-xs">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px]">verified_user</span>
+<span>PLT Enterprise Standardized Assessment Engine</span>
+</div>
+</div>
+</div>
+<!-- Proctoring & Guidelines Reminder -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-space-xs">
+<div class="flex items-center gap-2 text-primary font-title-md text-body-sm font-semibold">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<span>Quy chế bài kiểm tra</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-normal">
+          Không chuyển tab quá 3 lần để tránh hệ thống giám sát tự động khóa phiên làm bài. Mọi câu trả lời được lưu vết liên tục vào Blockchain Ledger của PLT Academy.
+        </p>
+</div>
+</div>
+</div>
+<!-- INLINE MODAL PREVIEW: Quiz Completion & Evaluation (Can be triggered or closed) -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center p-space-md bg-inverse-surface/60 backdrop-blur-sm animate-fade-in" id="resultModal">
+<div class="bg-surface-container-lowest max-w-2xl w-full rounded-2xl shadow-2xl p-space-xl flex flex-col gap-space-lg relative overflow-hidden">
+<!-- Top Success Blossom Badge -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[28px]">eco</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold">KẾT QUẢ ĐẠT YÊU CẦU</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-0.5">Chúc mừng Anh Khoa!</h3>
+</div>
+</div>
+<button class="p-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="document.getElementById('resultModal').classList.add('hidden')" type="button">
+<span class="material-symbols-outlined text-[22px]">close</span>
+</button>
+</div>
+<!-- Score Banner with Growth metrics -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm p-space-md rounded-xl bg-surface-container-low text-center">
+<div class="flex flex-col p-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Điểm số</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary mt-1">8 / 10</span>
+<span class="font-label-sm text-secondary font-semibold mt-0.5">80% • Xuất sắc</span>
+</div>
+<div class="flex flex-col p-2 bg-surface-container-lowest rounded-lg shadow-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Kinh nghiệm</span>
+<span class="font-headline-lg text-headline-lg font-bold text-secondary mt-1">+40 XP</span>
+<span class="font-label-sm text-on-surface-variant mt-0.5">Cấp độ 8 hiện tại</span>
+</div>
+<div class="flex flex-col p-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Nước tưới tích lũy</span>
+<span class="font-headline-lg text-headline-lg font-bold text-secondary mt-1">+15 💧</span>
+<span class="font-label-sm text-on-surface-variant mt-0.5">Cây JS vươn nhánh</span>
+</div>
+</div>
+<!-- Growth Metaphor Narrative Feedback -->
+<div class="flex flex-col gap-space-xs">
+<h4 class="font-title-md text-title-md text-on-surface font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[20px]">psychiatry</span>
+<span>Đánh giá năng lực sinh trưởng</span>
+</h4>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Bạn đã hoàn thành tốt bài đánh giá về <strong class="text-on-surface">Microtasks, Promises &amp; Event Loop</strong>. Tư duy phân giải bất đồng bộ của bạn đạt chuẩn Senior Frontend Developer tại PLT Solutions. Cây JavaScript đã hấp thụ đầy đủ dưỡng chất và mở khóa các nhánh tri thức cao cấp hơn.
+        </p>
+</div>
+<!-- Skill Breakdown Mini Visual Bars -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-semibold">Microtask Queue &amp; Scheduler</span>
+<span class="text-secondary font-bold">100%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 100%"></div>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm mt-1">
+<span class="text-on-surface font-semibold">Promise Combinators (all, race, any, allSettled)</span>
+<span class="text-primary font-bold">75%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 75%"></div>
+</div>
+</div>
+<!-- Action Buttons in Modal -->
+<div class="flex flex-col sm:flex-row items-center justify-end gap-space-xs pt-space-xs">
+<button class="w-full sm:w-auto px-space-lg py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-title-md text-body-md transition-all" onclick="document.getElementById('resultModal').classList.add('hidden')" type="button">
+          Xem lại đáp án chi tiết
+        </button>
+<a class="w-full sm:w-auto px-space-xl py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-title-md text-body-md shadow-sm transition-all text-center" href="#">
+          Tiếp tục Module 04 →
+        </a>
+</div>
+</div>
+</div>
+<!-- Interactive JavaScript for Quiz Logic -->
+<script>
+    // Live Timer Emulation
+    let duration = 18 * 60 + 45;
+    const timerDisplay = document.getElementById('quizTimer');
+
+    setInterval(() => {
+      if (duration > 0) {
+        duration--;
+        const mins = Math.floor(duration / 60);
+        const secs = duration % 60;
+        if (timerDisplay) {
+          timerDisplay.innerHTML = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')} <span class="font-label-sm text-on-surface-variant/70 font-normal">/ 30:00</span>`;
+        }
+      }
+    }, 1000);
+  </script>
+</div></main></div></body></html>
