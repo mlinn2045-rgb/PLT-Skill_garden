@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-tertiary-container": "#bdbab1", "primary-fixed-dim": "#bfc1ff", "surface-container-highest": "#e0e0ff", "on-error-container": "#93000a", "tertiary-container": "#4c4a44", "primary-container": "#3c4097", "on-surface": "#171a31", "surface": "#fbf8ff", "surface-bright": "#fbf8ff", "surface-container-high": "#e7e6ff", "secondary-fixed": "#aff2b9", "on-secondary-fixed-variant": "#0e5227", "surface-container-lowest": "#ffffff", "background": "#fbf8ff", "secondary": "#2c6a3d", "secondary-container": "#acefb6", "tertiary-fixed-dim": "#cac6be", "inverse-surface": "#2c2e47", "on-tertiary-fixed": "#1c1c16", "on-tertiary": "#ffffff", "tertiary": "#35342e", "on-primary-fixed": "#050369", "on-secondary-fixed": "#00210b", "inverse-primary": "#bfc1ff", "primary": "#24277f", "on-error": "#ffffff", "on-surface-variant": "#464651", "on-primary-fixed-variant": "#383c93", "error-container": "#ffdad6", "surface-variant": "#e0e0ff", "on-tertiary-fixed-variant": "#484740", "surface-dim": "#d7d7f8", "on-secondary-container": "#306f41", "tertiary-fixed": "#e6e2d9", "outline": "#777683", "on-primary": "#ffffff", "secondary-fixed-dim": "#94d69e", "on-background": "#171a31", "on-secondary": "#ffffff", "outline-variant": "#c7c5d3", "error": "#ba1a1a", "surface-container": "#eeecff", "surface-container-low": "#f4f2ff", "surface-tint": "#5155ad", "primary-fixed": "#e1e0ff", "on-primary-container": "#b1b4ff", "inverse-on-surface": "#f1efff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-tablet": "1.5rem", "space-2xs": "0.25rem", "margin-tablet": "2rem", "space-sm": "0.75rem", "space-2xl": "3rem", "gutter-mobile": "1rem", "space-md": "1rem", "space-lg": "1.5rem", "gutter-desktop": "2rem", "space-xs": "0.5rem", "space-3xl": "4rem", "margin-mobile": "1rem", "space-xl": "2rem", "margin-desktop": "3rem" }, "fontFamily": { "headline-lg": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "body-md": [ "Inter" ], "label-md": [ "Inter" ], "label-sm": [ "Inter" ], "body-sm": [ "Inter" ], "display-mobile": [ "Plus Jakarta Sans" ], "body-lg": [ "Inter" ], "display": [ "Plus Jakarta Sans" ], "title-md": [ "Inter" ], "title-lg": [ "Inter" ], "headline-lg-mobile": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ] }, "fontSize": { "headline-lg": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" } ], "body-sm": [ "13px", { "lineHeight": "18px", "fontWeight": "400" } ], "display-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "display": [ "48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "title-md": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "title-lg": [ "18px", { "lineHeight": "26px", "fontWeight": "600" } ], "headline-lg-mobile": [ "26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between py-space-lg px-space-md"><div class="flex flex-col gap-space-lg"><div class="flex items-center gap-space-sm px-space-xs"><img alt="PLT Solutions SkillGarden Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VFgbLuBGoUS37q3J4FMMOblD5vaW7hiVtyKx0bmgegnNRnKxBYWH8XB0hn-GFHARcus3WjLF7QdaafiudZbZzmt1CoEiV4Fj3WO0Zrnm2mESMTU3yuy7L59jQKsRpZ9DiQ-FenWT6eWN_-b5cq5GDsQamzv0E3GKTJyg_fqhwZ5JBA5IDRO2w_NbEgnXrEyAbHStKsJZXCShOy2QcGEaaI3EsXVlHjXvEtZWoTkOMnaDVCO-C73wHO-eE"/><div class="flex flex-col"><span class="font-title-md text-title-md text-primary leading-none">SkillGarden</span><span class="font-label-sm text-label-sm text-on-surface-variant">by PLT Solutions</span></div></div><nav class="flex flex-col gap-space-2xs" data-active-classes="bg-primary-container text-on-primary font-bold rounded-xl shadow-[0_4px_16px_0_rgba(111,175,123,0.24)]"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary font-bold rounded-xl shadow-[0_4px_16px_0_rgba(111,175,123,0.24)]" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">space_dashboard</span><span class="font-body-md text-body-md">Tổng quan</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="skill-explorer" href="#"><span class="material-symbols-outlined text-[20px]">psychology</span><span class="font-body-md text-body-md">Kỹ năng</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="learning-path" href="#"><span class="material-symbols-outlined text-[20px]">route</span><span class="font-body-md text-body-md">Lộ trình học</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="my-garden" href="#"><span class="material-symbols-outlined text-[20px]">potted_plant</span><span class="font-body-md text-body-md">Khu vườn</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="goals" href="#"><span class="material-symbols-outlined text-[20px]">flag</span><span class="font-body-md text-body-md">Mục tiêu</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="achievements" href="#"><span class="material-symbols-outlined text-[20px]">military_tech</span><span class="font-body-md text-body-md">Thành tích</span></a></nav></div><div class="flex flex-col gap-space-2xs pt-space-md"><nav class="flex flex-col gap-space-2xs" data-active-classes="bg-primary-container text-on-primary font-bold rounded-xl"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="profile" href="#"><span class="material-symbols-outlined text-[20px]">person</span><span class="font-body-md text-body-md">Hồ sơ cá nhân</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-body-md text-body-md">Cài đặt</span></a></nav></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center flex-1 max-w-md"><div class="relative w-full flex items-center"><span class="material-symbols-outlined absolute left-space-sm text-on-surface-variant text-[20px]">search</span><input class="w-full h-11 pl-10 pr-space-md rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/60 font-body-sm text-body-sm shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] focus:outline-none" placeholder="Tìm bài học, kỹ năng, quiz..." type="search"/></div></div><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface"><span class="material-symbols-outlined text-[18px] text-error">local_fire_department</span><span class="font-label-md text-label-md">7 Ngày</span></div><div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface"><span class="material-symbols-outlined text-[18px] text-primary">bolt</span><span class="font-label-md text-label-md">1.250 XP</span></div><div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container"><span class="material-symbols-outlined text-[18px]">eco</span><span class="font-label-md text-label-md">Cấp 8 (Mầm tri thức)</span></div></div><div class="relative flex items-center"><button class="p-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all flex items-center justify-center" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface"></span></div><div class="h-6 w-px bg-outline-variant/30 hidden sm:block"></div><div class="flex items-center gap-space-xs cursor-pointer"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK7Le_Ir6NdDEtOPLZe3U54ck46tI-yWhK2BN8Gn6oM2QZll7u8yyK0Cvh3UweLyX4TrGPS39YhGs5h1Lc-khCQAWbjzK2YLYdiYZQcV9507hujSrKW-2EExrGavGlKnrDJenXrsk97XeMukseC0OIf8i7dDHAVOOsNN_7BAjxGSrW_7eMJUpjA3KSvftUL4G0Eo1JUl3b3BB2d583BgUfK2mK-W965Tlvvm1bG9VeFyzGGy6McY0M"/><span class="hidden md:inline font-title-md text-body-md text-on-surface">Minh Tuấn</span><span class="material-symbols-outlined text-on-surface-variant text-[18px]">expand_more</span></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-xl py-space-xl"><div class="flex flex-col w-full">
+<!-- Micro Zen Mode & Focus Styles Script -->
+<script>
+    function toggleZenMode() {
+      const mainWorkspace = document.getElementById('lesson-workspace-container');
+      const zenBtn = document.getElementById('zen-mode-toggle-btn');
+      const isZen = mainWorkspace.classList.toggle('zen-active');
+      if (isZen) {
+        document.getElementById('left-curriculum-col').classList.add('hidden', 'lg:hidden');
+        document.getElementById('right-growth-col').classList.add('hidden', 'xl:hidden');
+        document.getElementById('center-lesson-col').classList.remove('lg:w-[56%]', 'xl:w-[56%]');
+        document.getElementById('center-lesson-col').classList.add('max-w-4xl', 'mx-auto');
+        zenBtn.classList.add('bg-primary-container', 'text-on-primary');
+        zenBtn.querySelector('span:last-child').textContent = 'Thoát Zen';
+      } else {
+        document.getElementById('left-curriculum-col').classList.remove('hidden', 'lg:hidden');
+        document.getElementById('right-growth-col').classList.remove('hidden', 'xl:hidden');
+        document.getElementById('center-lesson-col').classList.add('lg:w-[56%]', 'xl:w-[56%]');
+        document.getElementById('center-lesson-col').classList.remove('max-w-4xl', 'mx-auto');
+        zenBtn.classList.remove('bg-primary-container', 'text-on-primary');
+        zenBtn.querySelector('span:last-child').textContent = 'Tập trung';
+      }
+    }
+
+    function runSandboxCode() {
+      const terminal = document.getElementById('sandbox-terminal-output');
+      const runBtn = document.getElementById('sandbox-run-btn');
+      runBtn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span> Đang chạy...';
+      runBtn.disabled = true;
+
+      setTimeout(() => {
+        terminal.innerHTML = `
+<div class="text-secondary-fixed flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">check_circle</span> [200 OK] Fetching 3 endpoints concurrently...</div>
+<div class="text-on-primary-container text-xs font-mono mt-1">&gt; Promise.allSettled() resolved 3/3 items.</div>
+<div class="bg-inverse-surface/60 p-3 rounded-lg mt-2 font-mono text-xs text-surface space-y-1">
+  <div>[0] { status: <span class="text-secondary-fixed">"fulfilled"</span>, value: { id: 101, name: "Khóa học Front-end" } }</div>
+  <div>[1] { status: <span class="text-error-container">"rejected"</span>, reason: "Error: Analytics Service Timeout (504)" }</div>
+  <div>[2] { status: <span class="text-secondary-fixed">"fulfilled"</span>, value: { balance: 4500, currency: "XP" } }</div>
+</div>
+<div class="text-secondary-fixed font-bold text-xs mt-2">🌱 Kết quả: Giao diện vẫn render mượt mà, không bị sập bởi endpoint lỗi!</div>
+        `;
+        runBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">play_arrow</span> Chạy lại';
+        runBtn.disabled = false;
+      }, 700);
+    }
+
+    function completeLesson() {
+      const badge = document.getElementById('complete-celebration-badge');
+      const actionBtn = document.getElementById('btn-complete-lesson');
+      badge.classList.remove('hidden');
+      badge.classList.add('flex');
+      actionBtn.classList.remove('bg-primary-container', 'hover:bg-primary');
+      actionBtn.classList.add('bg-secondary', 'text-on-secondary');
+      actionBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">task_alt</span> Đã hoàn thành (+20 XP)';
+      
+      const xpCounter = document.getElementById('droplets-counter');
+      if (xpCounter) xpCounter.textContent = '20 / 20 Giọt nước';
+    }
+  </script>
+<!-- 1. LESSON TOPBAR -->
+<section class="w-full bg-surface-container-lowest rounded-2xl shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] px-space-md py-space-sm mb-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<a class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container text-body-sm font-body-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span class="hidden sm:inline">Lộ trình Front-end</span>
+</a>
+<div class="h-5 w-px bg-surface-variant"></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">JS Core</span>
+<h1 class="text-title-md font-title-md text-on-surface truncate max-w-xs sm:max-w-md xl:max-w-xl">
+            Bài 14: Làm chủ Promise.allSettled() trong JavaScript hiện đại
+          </h1>
+</div>
+</div>
+</div>
+<!-- Progress & Utility Actions -->
+<div class="flex items-center justify-between sm:justify-end gap-space-sm">
+<div class="flex items-center gap-3">
+<div class="flex flex-col text-right hidden lg:flex">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Tiến độ bài</span>
+<span class="text-label-md font-label-md text-secondary">65% đã đọc • +20 XP</span>
+</div>
+<div class="w-24 h-2 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-secondary-container rounded-full" style="width: 65%;"></div>
+</div>
+</div>
+<div class="h-5 w-px bg-surface-variant"></div>
+<div class="flex items-center gap-1.5">
+<button class="p-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" title="Đánh dấu lưu lại" type="button">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container text-on-surface text-body-sm font-body-sm hover:bg-surface-container-high transition-colors" id="zen-mode-toggle-btn" onclick="toggleZenMode()" type="button">
+<span class="material-symbols-outlined text-[18px]">self_improvement</span>
+<span>Tập trung</span>
+</button>
+</div>
+</div>
+</section>
+<!-- WORKSPACE 3-COLUMN LAYOUT -->
+<div class="flex flex-col lg:flex-row gap-space-lg items-start w-full" id="lesson-workspace-container">
+<!-- 2. LEFT COLUMN (22%): CURRICULUM TREE -->
+<aside class="w-full lg:w-[22%] shrink-0 flex flex-col gap-space-md" id="left-curriculum-col">
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)]">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm bg-surface-container-low px-3 py-2 rounded-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">auto_stories</span>
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase">Mục lục khóa học</span>
+<span class="text-title-md font-title-md text-on-surface">Module 3: Async JS</span>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-on-surface">3/6</span>
+</div>
+<!-- Lessons Tree List -->
+<div class="flex flex-col gap-1.5">
+<!-- Item 1: Done -->
+<a class="group flex items-center justify-between p-2.5 rounded-xl text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant group-hover:text-on-surface truncate">Bài 11: Callback &amp; Hell</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline shrink-0">10m</span>
+</a>
+<!-- Item 2: Done -->
+<a class="group flex items-center justify-between p-2.5 rounded-xl text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant group-hover:text-on-surface truncate">Bài 12: Promise Cơ bản</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline shrink-0">15m</span>
+</a>
+<!-- Item 3: Done -->
+<a class="group flex items-center justify-between p-2.5 rounded-xl text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant group-hover:text-on-surface truncate">Bài 13: Async / Await</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline shrink-0">18m</span>
+</a>
+<!-- Item 4: ACTIVE LESSON -->
+<div class="flex items-center justify-between p-2.5 rounded-xl bg-surface-container-high text-on-surface shadow-sm">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">play_arrow</span>
+</span>
+<div class="flex flex-col min-w-0">
+<span class="text-body-sm font-title-md text-primary font-bold truncate">Bài 14: Promise.allSettled()</span>
+<span class="text-label-sm font-label-sm text-secondary">Đang học • 12 phút</span>
+</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse shrink-0"></span>
+</div>
+<!-- Item 5: Up Next -->
+<a class="group flex items-center justify-between p-2.5 rounded-xl text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">lock_open</span>
+</span>
+<span class="text-body-sm font-body-sm text-on-surface group-hover:text-primary truncate">Bài 15: Generator Functions</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline shrink-0">20m</span>
+</a>
+<!-- Item 6: Locked -->
+<div class="flex items-center justify-between p-2.5 rounded-xl opacity-60">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant truncate">Bài 16: Quiz Module 3</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline shrink-0">Quiz</span>
+</div>
+</div>
+<!-- Instructor Badge in sidebar -->
+<div class="mt-space-lg pt-space-md bg-surface-container-lowest rounded-xl flex items-center gap-3">
+<img alt="SkillGarden Brand" class="h-6 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VFgbLuBGoUS37q3J4FMMOblD5vaW7hiVtyKx0bmgegnNRnKxBYWH8XB0hn-GFHARcus3WjLF7QdaafiudZbZzmt1CoEiV4Fj3WO0Zrnm2mESMTU3yuy7L59jQKsRpZ9DiQ-FenWT6eWN_-b5cq5GDsQamzv0E3GKTJyg_fqhwZ5JBA5IDRO2w_NbEgnXrEyAbHStKsJZXCShOy2QcGEaaI3EsXVlHjXvEtZWoTkOMnaDVCO-C73wHO-eE"/>
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Chứng chỉ Front-end Pro</span>
+<span class="text-label-sm font-label-sm text-primary font-semibold">PLT Solutions Academy</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- 3. CENTER COLUMN (56%): MAIN LESSON CONTENT -->
+<main class="w-full lg:w-[56%] shrink-0 flex flex-col gap-space-lg" id="center-lesson-col">
+<article class="bg-surface-container-lowest rounded-2xl p-space-lg md:p-space-xl shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] flex flex-col gap-space-lg">
+<!-- Header Bài viết -->
+<header class="flex flex-col gap-space-sm pb-space-md bg-surface-container-lowest">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-md font-label-md">
+              🌱 Bài học Chuyên sâu
+            </span>
+<span class="text-label-md font-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span> 12 phút đọc &amp; thực hành
+            </span>
+<span class="text-label-md font-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">verified</span> Kỹ sư trưởng PLT Solutions
+            </span>
+</div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">
+            Làm chủ Promise.allSettled() và Xử lý Thất bại An toàn trong Ứng dụng Thực tế
+          </h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant">
+            Giải quyết triệt để vấn đề "một con sâu làm rầu nồi canh" khi xử lý nhiều API cùng lúc. Tìm hiểu sự khác biệt cơ bản giữa cơ chế <span class="font-semibold text-primary">fail-fast</span> của <code class="px-1.5 py-0.5 rounded bg-surface-container text-primary text-body-sm font-mono">Promise.all()</code> và cơ chế bảo toàn của <code class="px-1.5 py-0.5 rounded bg-surface-container text-primary text-body-sm font-mono">Promise.allSettled()</code>.
+          </p>
+</header>
+<!-- Lý thuyết dẫn nhập trực quan -->
+<section class="flex flex-col gap-space-sm">
+<h3 class="text-headline-sm font-headline-sm text-on-surface flex items-center gap-2">
+<span class="w-2 h-6 rounded-full bg-primary"></span>
+            1. Vấn nạn Fail-Fast của Promise.all()
+          </h3>
+<p class="text-body-md font-body-md text-on-surface leading-relaxed">
+            Trong các hệ thống phân tán và dashboard hiện đại, trang người dùng cần tổng hợp dữ liệu từ nhiều dịch vụ độc lập: Thông tin học viên, Lịch sử nạp xu, Huy hiệu hoàn thành và Khuyến mãi cá nhân hóa. Nếu bạn sử dụng <code class="text-primary font-mono text-body-sm">Promise.all()</code>, chỉ cần microservice khuyến mãi gặp sự cố phản hồi (500 Internal Server Error), toàn bộ màn hình sẽ bị sập vào khối <code class="text-error font-mono text-body-sm">catch</code>, khiến học viên không thể xem được cả thông tin quan trọng cá nhân.
+          </p>
+<!-- So sánh trực quan dạng Diagram Card -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md mt-space-xs">
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="text-title-md font-title-md text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">cancel</span> Promise.all()
+                </span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-error-container text-on-error-container">Nguy cơ cao</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+                Ngay khi 1 promise bị reject, nó lập tức từ chối toàn bộ danh sách. Không chờ các promise còn lại hoàn tất.
+              </p>
+<div class="mt-2 text-xs font-mono p-2 rounded bg-surface-container text-on-surface-variant">
+                [✓ Success, ✕ Reject(Crash!), … Bỏ qua]
+              </div>
+</div>
+<div class="bg-secondary-container/40 rounded-xl p-space-md flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="text-title-md font-title-md text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">check_circle</span> Promise.allSettled()
+                </span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container">Chuẩn Enterprise</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-secondary-container">
+                Luôn chờ tất cả các tác vụ kết thúc (thành công hay thất bại) và trả về mảng báo cáo chi tiết kèm trạng thái.
+              </p>
+<div class="mt-2 text-xs font-mono p-2 rounded bg-surface-container-lowest text-on-surface">
+                [{status: 'fulfilled'}, {status: 'rejected'}]
+              </div>
+</div>
+</div>
+</section>
+<!-- Code Block Chuyên Nghiệp (VS Code Theme) -->
+<section class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<h3 class="text-headline-sm font-headline-sm text-on-surface flex items-center gap-2">
+<span class="w-2 h-6 rounded-full bg-secondary"></span>
+              2. Cú pháp &amp; Phân tích cấu trúc Status
+            </h3>
+<span class="text-label-sm font-mono text-outline font-body-sm">demoAsync.js</span>
+</div>
+<div class="rounded-xl overflow-hidden bg-inverse-surface text-surface shadow-md">
+<div class="flex items-center justify-between px-4 py-2.5 bg-surface-container-highest/20 text-on-surface-variant text-label-sm">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-error"></span>
+<span class="w-3 h-3 rounded-full bg-secondary-container"></span>
+<span class="w-3 h-3 rounded-full bg-primary-fixed"></span>
+<span class="ml-2 font-mono text-xs text-outline-variant">JavaScript ES2020+</span>
+</div>
+<button class="hover:text-surface flex items-center gap-1 text-xs" onclick="navigator.clipboard.writeText('// Copied');">
+<span class="material-symbols-outlined text-[14px]">content_copy</span> Sao chép
+              </button>
+</div>
+<pre class="p-4 font-mono text-body-sm leading-relaxed overflow-x-auto text-primary-fixed"><code><span class="text-outline-variant">// 1. Khởi tạo danh sách các tác vụ bất đồng bộ</span>
+<span class="text-secondary-fixed">const</span> fetchProfile = Promise.resolve({ id: 89, name: <span class="text-secondary-container">"Anh Khoa"</span> });
+<span class="text-secondary-fixed">const</span> fetchNotifications = Promise.reject(<span class="text-secondary-container">"Service Unavailable (503)"</span>);
+<span class="text-secondary-fixed">const</span> fetchGardenBadges = Promise.resolve([<span class="text-secondary-container">"Mầm tri thức"</span>, <span class="text-secondary-container">"Chuỗi 7 ngày"</span>]);
+
+<span class="text-secondary-fixed">async function</span> <span class="text-primary-fixed-dim">loadStudentDashboard</span>() {
+  <span class="text-secondary-fixed">const</span> results = <span class="text-secondary-fixed">await</span> Promise.<span class="text-secondary-fixed-dim">allSettled</span>([
+    fetchProfile,
+    fetchNotifications,
+    fetchGardenBadges
+  ]);
+
+  results.<span class="text-primary-fixed-dim">forEach</span>((result, index) =&gt; {
+    <span class="text-secondary-fixed">if</span> (result.status === <span class="text-secondary-container">'fulfilled'</span>) {
+      console.<span class="text-primary-fixed-dim">log</span>(<span class="text-secondary-container">`Tác vụ ${index} thành công:`</span>, result.value);
+    } <span class="text-secondary-fixed">else</span> {
+      console.<span class="text-primary-fixed-dim">warn</span>(<span class="text-secondary-container">`Tác vụ ${index} thất bại:`</span>, result.reason);
+    }
+  });
+}
+</code></pre>
+</div>
+</section>
+<!-- Callout Tip: Gieo Mầm Kinh Nghiệm -->
+<section class="bg-surface-container-high/60 rounded-xl p-space-md flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">psychology</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-title-md font-title-md text-on-surface">Gieo mầm kinh nghiệm 🌱</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+<strong>Lưu ý Memory &amp; Timeout:</strong> Mặc dù <code class="text-primary font-mono font-semibold">allSettled()</code> không fail-fast, nó vẫn phải đợi Promise có thời gian phản hồi lâu nhất hoàn thành. Hãy luôn bọc các request mạng của bạn với <code class="text-primary font-mono">AbortController</code> hoặc cơ chế timeout 5-8 giây để tránh tình trạng "treo mầm xanh" làm chậm toàn bộ giao diện học tập.
+            </p>
+</div>
+</section>
+<!-- 4. Interactive Live Sandbox / Mini Playground -->
+<section class="flex flex-col gap-space-sm bg-surface-container-low p-space-md rounded-2xl">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">terminal</span>
+<h3 class="text-title-md font-title-md text-on-surface">SkillGarden Sandbox: Thực thi tức thì</h3>
+</div>
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-secondary text-on-secondary text-label-md font-label-md hover:bg-secondary/90 transition-all shadow-sm active:scale-95" id="sandbox-run-btn" onclick="runSandboxCode()" type="button">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+              Chạy thử nghiệm (Run Code)
+            </button>
+</div>
+<div class="bg-inverse-surface rounded-xl p-space-sm text-surface font-mono text-body-sm flex flex-col gap-2">
+<div class="text-outline-variant text-xs">// Bấm "Chạy thử nghiệm" để xem kết quả console thực tế bên dưới:</div>
+<div class="text-primary-fixed-dim text-xs">
+              Promise.allSettled([getUser(), getStatsError(), getBadges()]).then(render);
+            </div>
+<div class="bg-inverse-surface p-3 rounded-lg text-xs font-mono min-h-[70px] flex flex-col justify-center" id="sandbox-terminal-output">
+<span class="text-outline-variant italic">Nhấn nút xanh phía trên để kích hoạt sandbox VM...</span>
+</div>
+</div>
+</section>
+<!-- Tóm tắt kiến thức cốt lõi qua 3 gạch đầu dòng -->
+<section class="flex flex-col gap-space-xs pt-space-xs">
+<h4 class="text-title-md font-title-md text-on-surface">Tóm tắt cốt lõi bài 14</h4>
+<ul class="flex flex-col gap-2 text-body-md font-body-md text-on-surface-variant">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">eco</span>
+<span><strong>Không ngắt quãng luồng xử lý:</strong> Phù hợp nhất cho các trang tổng hợp dashboard nhiều module độc lập.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">eco</span>
+<span><strong>Cấu trúc chuẩn hóa:</strong> Luôn trả về mảng object chứa cặp khóa <code class="font-mono text-xs text-primary">{ status: 'fulfilled' | 'rejected', value | reason }</code>.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">eco</span>
+<span><strong>Khả năng phục hồi (Resilience):</strong> Dễ dàng lọc qua <code class="font-mono text-xs text-primary">.filter(r =&gt; r.status === 'fulfilled')</code> để hiển thị phần dữ liệu lành lặn.</span>
+</li>
+</ul>
+</section>
+</article>
+</main>
+<!-- 4. RIGHT COLUMN (22%): GROWTH METRICS & DISCUSSION -->
+<aside class="w-full lg:w-[22%] shrink-0 flex flex-col gap-space-md" id="right-growth-col">
+<!-- Student Profile Card in Workspace -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] flex items-center gap-3">
+<img alt="Học viên Anh Khoa" class="w-12 h-12 rounded-full object-cover shadow-sm" src="https://lh3.googleusercontent.com/aida/AEtjO1XUlzZx4dOq5GfpmJ8hXRiOIOOYoFr7bCGf5c3ES49eZBByxkFJWu7mDpcLTBfbrRXlUCWayCqPOhVSMackLDTAEzm_I_l3Uiem7vIpox0VWglm-1eJo2o8Db-aUdvEnesn3boUbsodvkS-lHoQ2NsYEkE2s-J14BxAcswb3ZntRD16LPVK2_c03iYmd8PAKCDtEM6wmNlo_rweURm6-7dDdIp_ViPXdKX6JGnJ4F-nm7UMkXD5hYx3zTk"/>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="text-title-md font-title-md text-on-surface leading-tight">Anh Khoa</span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Mầm tri thức • Cấp 8</span>
+<span class="text-label-sm font-label-sm text-primary font-semibold">Front-end Specialist</span>
+</div>
+</div>
+<!-- Card "Mầm Tri Thức Bài Học" (Botanic Metaphor) -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="text-title-md font-title-md text-on-surface">Mầm tri thức</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm font-bold">
+            +20 Giọt nước
+          </span>
+</div>
+<div class="bg-surface-container-low rounded-xl p-space-sm flex flex-col items-center text-center gap-2">
+<!-- Botanical SVG Progress Art -->
+<div class="w-20 h-20 relative flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-variant" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="65, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="material-symbols-outlined text-secondary text-[24px]">potted_plant</span>
+</div>
+</div>
+<span class="text-title-md font-title-md text-secondary font-bold" id="droplets-counter">13 / 20 Giọt nước</span>
+<p class="text-label-sm font-label-sm text-on-surface-variant">
+            Hoàn thành các mục thực hành để cây JavaScript sinh trưởng sang giai đoạn "Cây cổ thụ".
+          </p>
+</div>
+<!-- Mục tiêu bài học (Checklist) -->
+<div class="flex flex-col gap-2 pt-2">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase font-semibold">Mục tiêu bắt buộc:</span>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">check_box</span>
+<span class="text-body-sm font-body-sm text-on-surface">Hiểu rõ status fulfilled/rejected</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">check_box</span>
+<span class="text-body-sm font-body-sm text-on-surface">Viết code xử lý mảng kết quả an toàn</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-outline text-[18px]">check_box_outline_blank</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Chạy sandbox kiểm chứng timeout</span>
+</div>
+</div>
+</div>
+<!-- Tab: Hỏi đáp & Ghi chú (Mentor Q&A) -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] flex flex-col gap-space-sm">
+<div class="flex items-center justify-between pb-1">
+<span class="text-title-md font-title-md text-on-surface">Hỏi đáp &amp; Ghi chú</span>
+<span class="text-label-sm font-label-sm text-primary font-bold">2 câu hỏi</span>
+</div>
+<!-- Q&A 1 -->
+<div class="bg-surface-container-low p-space-xs rounded-xl flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface font-semibold">Trần Nam • Học viên</span>
+<span class="text-label-sm font-label-sm text-outline">1 giờ trước</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+            Nên dùng Promise.allSettled() thay hoàn toàn cho Promise.all() không ạ?
+          </p>
+<div class="bg-surface-container-lowest p-2 rounded-lg text-body-sm font-body-sm text-primary">
+<strong>Mentor PLT:</strong> Không bạn nhé. Nếu các tác vụ phụ thuộc mật thiết (ví dụ: Tạo đơn hàng và Trừ tiền), 1 cái lỗi thì phải ngắt ngay để rollback, khi đó bắt buộc dùng Promise.all().
+          </div>
+</div>
+<!-- Q&A 2 -->
+<div class="bg-surface-container-low p-space-xs rounded-xl flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface font-semibold">Lê Hương • Học viên</span>
+<span class="text-label-sm font-label-sm text-outline">Hôm qua</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+            Trình duyệt cũ IE có hỗ trợ allSettled() không anh?
+          </p>
+<div class="bg-surface-container-lowest p-2 rounded-lg text-body-sm font-body-sm text-primary">
+<strong>Mentor PLT:</strong> Cần Polyfill của core-js nhé em, tính năng này có từ ES2020.
+          </div>
+</div>
+<button class="w-full py-2 rounded-xl bg-surface-container text-primary text-body-sm font-body-sm font-semibold hover:bg-surface-container-high transition-colors flex items-center justify-center gap-1" type="button">
+<span class="material-symbols-outlined text-[18px]">add_comment</span>
+          Đặt câu hỏi cho Mentor
+        </button>
+</div>
+</aside>
+</div>
+<!-- 5. STICKY LESSON FOOTER -->
+<footer class="sticky bottom-4 left-0 right-0 z-30 mt-space-xl bg-surface-container-lowest/95 backdrop-blur-md rounded-2xl shadow-[0_8px_24px_-4px_rgba(32,34,58,0.12)] p-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<!-- Previous Lesson Button -->
+<a class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high transition-all text-body-md font-body-md w-full sm:w-auto justify-center" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span>Bài trước: Async/Await</span>
+</a>
+<!-- Completed Celebration Toast (Hidden by default) -->
+<div class="hidden items-center gap-2 px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container text-label-md font-label-md animate-bounce" id="complete-celebration-badge">
+<span class="material-symbols-outlined text-[18px]">eco</span>
+      Tuyệt vời! Bạn vừa nhận +20 XP và 20 Giọt nước nuôi cây!
+    </div>
+<!-- Center Primary Action -->
+<button class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary-container text-on-primary font-bold text-body-md hover:bg-primary shadow-[0_4px_16px_0_rgba(111,175,123,0.24)] transition-all transform active:scale-95 w-full sm:w-auto justify-center" id="btn-complete-lesson" onclick="completeLesson()" type="button">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Hoàn thành bài học &amp; Nhận +20 XP 🌱</span>
+</button>
+<!-- Next Lesson Button -->
+<a class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high transition-all text-body-md font-body-md w-full sm:w-auto justify-center" href="#">
+<span>Bài 15: Generator Functions</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</footer>
+</div></main></div></body></html>

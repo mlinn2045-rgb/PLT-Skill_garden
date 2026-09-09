@@ -1,0 +1,658 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-tertiary-container": "#bdbab1", "primary-fixed-dim": "#bfc1ff", "surface-container-highest": "#e0e0ff", "on-error-container": "#93000a", "tertiary-container": "#4c4a44", "primary-container": "#3c4097", "on-surface": "#171a31", "surface": "#fbf8ff", "surface-bright": "#fbf8ff", "surface-container-high": "#e7e6ff", "secondary-fixed": "#aff2b9", "on-secondary-fixed-variant": "#0e5227", "surface-container-lowest": "#ffffff", "background": "#fbf8ff", "secondary": "#2c6a3d", "secondary-container": "#acefb6", "tertiary-fixed-dim": "#cac6be", "inverse-surface": "#2c2e47", "on-tertiary-fixed": "#1c1c16", "on-tertiary": "#ffffff", "tertiary": "#35342e", "on-primary-fixed": "#050369", "on-secondary-fixed": "#00210b", "inverse-primary": "#bfc1ff", "primary": "#24277f", "on-error": "#ffffff", "on-surface-variant": "#464651", "on-primary-fixed-variant": "#383c93", "error-container": "#ffdad6", "surface-variant": "#e0e0ff", "on-tertiary-fixed-variant": "#484740", "surface-dim": "#d7d7f8", "on-secondary-container": "#306f41", "tertiary-fixed": "#e6e2d9", "outline": "#777683", "on-primary": "#ffffff", "secondary-fixed-dim": "#94d69e", "on-background": "#171a31", "on-secondary": "#ffffff", "outline-variant": "#c7c5d3", "error": "#ba1a1a", "surface-container": "#eeecff", "surface-container-low": "#f4f2ff", "surface-tint": "#5155ad", "primary-fixed": "#e1e0ff", "on-primary-container": "#b1b4ff", "inverse-on-surface": "#f1efff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-tablet": "1.5rem", "space-2xs": "0.25rem", "margin-tablet": "2rem", "space-sm": "0.75rem", "space-2xl": "3rem", "gutter-mobile": "1rem", "space-md": "1rem", "space-lg": "1.5rem", "gutter-desktop": "2rem", "space-xs": "0.5rem", "space-3xl": "4rem", "margin-mobile": "1rem", "space-xl": "2rem", "margin-desktop": "3rem" }, "fontFamily": { "headline-lg": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "body-md": [ "Inter" ], "label-md": [ "Inter" ], "label-sm": [ "Inter" ], "body-sm": [ "Inter" ], "display-mobile": [ "Plus Jakarta Sans" ], "body-lg": [ "Inter" ], "display": [ "Plus Jakarta Sans" ], "title-md": [ "Inter" ], "title-lg": [ "Inter" ], "headline-lg-mobile": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ] }, "fontSize": { "headline-lg": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" } ], "body-sm": [ "13px", { "lineHeight": "18px", "fontWeight": "400" } ], "display-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "display": [ "48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "title-md": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "title-lg": [ "18px", { "lineHeight": "26px", "fontWeight": "600" } ], "headline-lg-mobile": [ "26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between py-space-lg px-space-md"><div class="flex flex-col gap-space-lg"><div class="flex items-center gap-space-sm px-space-xs"><img alt="PLT Solutions SkillGarden Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VFgbLuBGoUS37q3J4FMMOblD5vaW7hiVtyKx0bmgegnNRnKxBYWH8XB0hn-GFHARcus3WjLF7QdaafiudZbZzmt1CoEiV4Fj3WO0Zrnm2mESMTU3yuy7L59jQKsRpZ9DiQ-FenWT6eWN_-b5cq5GDsQamzv0E3GKTJyg_fqhwZ5JBA5IDRO2w_NbEgnXrEyAbHStKsJZXCShOy2QcGEaaI3EsXVlHjXvEtZWoTkOMnaDVCO-C73wHO-eE"><div class="flex flex-col"><span class="font-title-md text-title-md text-primary leading-none">SkillGarden</span><span class="font-label-sm text-label-sm text-on-surface-variant">by PLT Solutions</span></div></div><nav class="flex flex-col gap-space-2xs" data-active-classes="bg-primary-container text-on-primary font-bold rounded-xl shadow-[0_4px_16px_0_rgba(111,175,123,0.24)]"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">space_dashboard</span><span class="font-body-md text-body-md">Tổng quan</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="skill-explorer" href="#"><span class="material-symbols-outlined text-[20px]">psychology</span><span class="font-body-md text-body-md">Kỹ năng</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="learning-path" href="#"><span class="material-symbols-outlined text-[20px]">route</span><span class="font-body-md text-body-md">Lộ trình học</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary font-bold rounded-xl shadow-[0_4px_16px_0_rgba(111,175,123,0.24)]" data-path="my-garden" href="#"><span class="material-symbols-outlined text-[20px]">potted_plant</span><span class="font-body-md text-body-md">Khu vườn</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="goals" href="#"><span class="material-symbols-outlined text-[20px]">flag</span><span class="font-body-md text-body-md">Mục tiêu</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="achievements" href="#"><span class="material-symbols-outlined text-[20px]">military_tech</span><span class="font-body-md text-body-md">Thành tích</span></a></nav></div><div class="flex flex-col gap-space-2xs pt-space-md"><nav class="flex flex-col gap-space-2xs" data-active-classes="bg-primary-container text-on-primary font-bold rounded-xl"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="profile" href="#"><span class="material-symbols-outlined text-[20px]">person</span><span class="font-body-md text-body-md">Hồ sơ cá nhân</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-body-md text-body-md">Cài đặt</span></a></nav></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center flex-1 max-w-md"><div class="relative w-full flex items-center"><span class="material-symbols-outlined absolute left-space-sm text-on-surface-variant text-[20px]">search</span><input class="w-full h-11 pl-10 pr-space-md rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/60 font-body-sm text-body-sm shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] focus:outline-none" placeholder="Tìm bài học, kỹ năng, quiz..." type="search"></div></div><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface"><span class="material-symbols-outlined text-[18px] text-error">local_fire_department</span><span class="font-label-md text-label-md">7 Ngày</span></div><div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface"><span class="material-symbols-outlined text-[18px] text-primary">bolt</span><span class="font-label-md text-label-md">1.250 XP</span></div><div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container"><span class="material-symbols-outlined text-[18px]">eco</span><span class="font-label-md text-label-md">Cấp 8 (Mầm tri thức)</span></div></div><div class="relative flex items-center"><button class="p-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all flex items-center justify-center" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface"></span></div><div class="h-6 w-px bg-outline-variant/30 hidden sm:block"></div><div class="flex items-center gap-space-xs cursor-pointer"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK7Le_Ir6NdDEtOPLZe3U54ck46tI-yWhK2BN8Gn6oM2QZll7u8yyK0Cvh3UweLyX4TrGPS39YhGs5h1Lc-khCQAWbjzK2YLYdiYZQcV9507hujSrKW-2EExrGavGlKnrDJenXrsk97XeMukseC0OIf8i7dDHAVOOsNN_7BAjxGSrW_7eMJUpjA3KSvftUL4G0Eo1JUl3b3BB2d583BgUfK2mK-W965Tlvvm1bG9VeFyzGGy6McY0M"><span class="hidden md:inline font-title-md text-body-md text-on-surface">Anh Khoa</span><span class="material-symbols-outlined text-on-surface-variant text-[18px]">expand_more</span></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-xl py-space-xl"><div class="flex flex-col w-full">
+<!-- Top Garden Atmosphere Ribbon & Intro Header -->
+<header class="flex flex-col gap-space-md mb-space-xl">
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs mb-1">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">psychiatry</span>
+            Hệ sinh thái tri thức cá nhân
+          </span>
+<span class="text-on-surface-variant font-label-md text-label-md hidden sm:inline">• Mùa vụ Quý 2/2025</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+          Khu vườn kỹ năng của tôi
+          <span class="text-secondary select-none">🌱</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl mt-1">
+          Mỗi cây đại diện cho một bộ năng lực chuyên môn. Thực hành mã nguồn, hoàn thành bài học và vượt qua thử thách Quiz để tưới mát khu vườn tri thức số.
+        </p>
+</div>
+<!-- Action: Gieo hạt giống mới -->
+<div class="flex items-center gap-space-sm self-start lg:self-center">
+<button class="group relative inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary-container text-on-primary font-title-md text-body-md shadow-[0_4px_16px_0_rgba(60,64,151,0.25)] hover:bg-primary transition-all duration-200" id="btn-seed" type="button">
+<span class="material-symbols-outlined text-[20px] transition-transform group-hover:rotate-90">add_circle</span>
+          Gieo hạt giống mới
+        </button>
+</div>
+</div>
+<!-- Garden Vital Stats Mosaic -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-md mt-space-xs">
+<div class="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-lowest shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)]">
+<div class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">potted_plant</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">5</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Kỹ năng đang chăm sóc</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-lowest shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)]">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">workspace_premium</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">2</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Kỹ năng đã thu hoạch</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-lowest shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)]">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">bolt</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">1.250</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tổng XP tích lũy</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-lowest shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)]">
+<div class="relative w-12 h-12 flex items-center justify-center text-secondary">
+<svg class="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
+<path class="text-surface-container-highest stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3.5"></path>
+<path class="stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="78, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-label-md text-label-md font-bold text-on-surface">78%</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-secondary">Tươi tốt</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sức sống khu vườn</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Filter & View Controls -->
+<section class="flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-space-lg">
+<div class="flex flex-wrap items-center gap-space-xs">
+<button class="filter-chip px-4 py-2 rounded-full font-label-md text-label-md bg-primary-container text-on-primary shadow-sm transition-all" data-filter="all" type="button">
+        Tất cả (6)
+      </button>
+<button class="filter-chip px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-all" data-filter="frontend" type="button">
+        Front-end (2)
+      </button>
+<button class="filter-chip px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-all" data-filter="backend" type="button">
+        Back-end &amp; Cloud (2)
+      </button>
+<button class="filter-chip px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-all" data-filter="data" type="button">
+        Dữ liệu &amp; AI (1)
+      </button>
+<button class="filter-chip px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-all" data-filter="completed" type="button">
+        Đã hoàn thành (1)
+      </button>
+</div>
+<div class="flex items-center gap-space-xs self-end md:self-auto bg-surface-container p-1 rounded-xl">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-label-md text-label-md shadow-sm transition-all" id="btn-view-garden" type="button">
+<span class="material-symbols-outlined text-[18px]">nature</span>
+        Vườn số 3D Canvas
+      </button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" id="btn-view-grid" type="button">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+        Dạng lưới
+      </button>
+</div>
+</section>
+<!-- SIGNATURE INTERACTIVE DIGITAL BOTANICAL GREENHOUSE -->
+<section class="relative w-full rounded-2xl overflow-hidden bg-gradient-to-b from-surface-container-low via-surface-container to-surface shadow-[0_8px_24px_-4px_rgba(32,34,58,0.06)] p-space-lg lg:p-space-2xl mb-space-2xl" id="garden-canvas">
+<!-- Ambient Conservatory Framework Background (Clean Architectural Lines & Glass Roof Pattern) -->
+<div class="absolute inset-0 pointer-events-none opacity-40">
+<svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="28" id="dot-matrix" patternUnits="userSpaceOnUse" width="28">
+<circle cx="2" cy="2" fill="#3c4097" opacity="0.12" r="1.2"></circle>
+</pattern>
+<linearGradient id="terrace-glow" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#acefb6" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#3c4097" stop-opacity="0.0"></stop>
+</linearGradient>
+</defs>
+<rect fill="url(#dot-matrix)" height="100%" width="100%"></rect>
+</svg>
+<!-- Subtle Glasshouse Beams -->
+<div class="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-primary/10 via-transparent to-secondary/10"></div>
+<div class="absolute top-0 left-2/4 w-px h-full bg-gradient-to-b from-primary/10 via-transparent to-secondary/10"></div>
+<div class="absolute top-0 left-3/4 w-px h-full bg-gradient-to-b from-primary/10 via-transparent to-secondary/10"></div>
+</div>
+<!-- Conservatory Info HUD Tag -->
+<div class="relative z-10 flex flex-wrap items-center justify-between gap-space-sm mb-space-xl">
+<div class="flex items-center gap-space-xs bg-surface-container-lowest/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-[0_2px_6px_rgba(0,0,0,0.04)]">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-md text-label-md text-on-surface">Nhà kính thông minh PLT Core • 24°C • Độ ẩm 65%</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant hidden md:inline">Nhấp hoặc rê chuột vào từng cây để xem dinh dưỡng kỹ năng</span>
+</div>
+<!-- The Terrace Platforms Matrix -->
+<div class="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg lg:gap-space-xl">
+<!-- PLANT 1: Python & Machine Learning (100% - Cây Đại Thụ Trĩu Quả Vàng & Huy hiệu Master) -->
+<article class="plant-card group relative bg-surface-container-lowest rounded-2xl p-space-lg transition-all duration-300 hover:-translate-y-1.5 shadow-[0_4px_16px_0_rgba(111,175,123,0.2)] flex flex-col justify-between" data-category="data completed">
+<!-- Floating Status Pill -->
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">stars</span>
+            Thu hoạch • Cây Đại Thụ
+          </span>
+<span class="font-title-md text-title-md text-secondary font-bold">100%</span>
+</div>
+<!-- Botanical Tech Illustration Box -->
+<div class="relative h-56 my-space-md flex flex-col items-center justify-center">
+<!-- Ambient Bloom Aura -->
+<div class="absolute w-36 h-36 rounded-full bg-secondary-container/60 blur-2xl"></div>
+<!-- Master Tree SVG -->
+<svg class="relative z-10 w-44 h-44 drop-shadow-md" fill="none" viewBox="0 0 160 160">
+<!-- Soil Base Disk -->
+<ellipse cx="80" cy="144" fill="#E6E2D9" rx="42" ry="10"></ellipse>
+<ellipse cx="80" cy="142" fill="#4C4A44" opacity="0.3" rx="36" ry="7"></ellipse>
+<!-- Cybernetic Clean Planter -->
+<path d="M54 130 L60 144 H100 L106 130 Z" fill="#EEECFF" stroke="#3C4097" stroke-width="1.5"></path>
+<rect fill="#2C6A3D" height="2" rx="1" width="44" x="58" y="132"></rect>
+<!-- Trunk -->
+<path d="M80 130 V90 C80 84 72 74 65 66 M80 90 C80 80 88 72 95 64 M80 90 V56" stroke="#35342E" stroke-linecap="round" stroke-width="5"></path>
+<!-- Foliage Canopy -->
+<circle cx="80" cy="46" fill="#2C6A3D" r="28"></circle>
+<circle cx="58" cy="62" fill="#306F41" r="22"></circle>
+<circle cx="102" cy="60" fill="#306F41" r="22"></circle>
+<circle cx="80" cy="38" fill="#6FAF7B" opacity="0.5" r="20"></circle>
+<!-- Golden Knowledge Fruits (Glowing) -->
+<circle cx="70" cy="42" fill="#FFD700" r="5"></circle>
+<circle cx="92" cy="48" fill="#FFD700" r="5"></circle>
+<circle cx="56" cy="66" fill="#FFD700" r="4.5"></circle>
+<circle cx="104" cy="68" fill="#FFD700" r="4.5"></circle>
+<circle cx="78" cy="64" fill="#FFD700" r="5"></circle>
+</svg>
+<!-- Master Badge -->
+<div class="absolute bottom-1 right-2 flex items-center gap-1 bg-surface-container-high px-2.5 py-1 rounded-full text-primary font-label-sm text-label-sm shadow-sm">
+<span class="material-symbols-outlined text-[15px] text-amber-500">emoji_events</span>
+            Master Vườn
+          </div>
+</div>
+<!-- Plant Details & Metaphor Details -->
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">Python &amp; Machine Learning</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 line-clamp-1">Toàn bộ 42 bài học &amp; 14 đồ án thực nghiệm</p>
+<div class="mt-space-sm w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+<div class="bg-secondary h-full rounded-full w-full"></div>
+</div>
+<!-- Nutrients Popover / Contextual Expansion -->
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px] text-amber-500">bolt</span>
+              +420 XP thu hoạch
+            </div>
+<button class="inline-flex items-center gap-1 text-primary font-title-md text-label-md hover:underline" type="button">
+              Xem chứng chỉ
+              <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</article>
+<!-- PLANT 2: React Ecosystem (72% - Bonsai Công Nghệ Vươn Cành) -->
+<article class="plant-card group relative bg-surface-container-lowest rounded-2xl p-space-lg transition-all duration-300 hover:-translate-y-1.5 shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] hover:shadow-[0_8px_20px_-4px_rgba(32,34,58,0.08)] flex flex-col justify-between" data-category="frontend">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">eco</span>
+            Giai đoạn: Cây Vươn Nhánh
+          </span>
+<span class="font-title-md text-title-md text-primary font-bold">72%</span>
+</div>
+<div class="relative h-56 my-space-md flex items-center justify-center">
+<div class="absolute w-28 h-28 rounded-full bg-primary/5 blur-xl"></div>
+<!-- Tech Bonsai Plant SVG -->
+<svg class="relative z-10 w-44 h-44" fill="none" viewBox="0 0 160 160">
+<ellipse cx="80" cy="144" fill="#E6E2D9" rx="40" ry="8"></ellipse>
+<!-- Architectural Pot -->
+<rect fill="#3C4097" height="16" rx="4" width="50" x="55" y="128"></rect>
+<rect fill="#B1B4FF" height="3" rx="1.5" width="40" x="60" y="132"></rect>
+<!-- Bonsai Stem with Artful Angles -->
+<path d="M80 128 C80 115 70 108 72 95 C74 82 92 78 88 62 C86 52 74 48 70 42" stroke="#4C4A44" stroke-linecap="round" stroke-width="4.5"></path>
+<path d="M72 95 C60 92 50 82 45 74" stroke="#4C4A44" stroke-linecap="round" stroke-width="3"></path>
+<path d="M88 68 C98 64 108 66 116 58" stroke="#4C4A44" stroke-linecap="round" stroke-width="3"></path>
+<!-- Leaf clusters (Soft Green Foliage) -->
+<ellipse cx="44" cy="72" fill="#2C6A3D" rx="14" ry="8"></ellipse>
+<ellipse cx="118" cy="56" fill="#2C6A3D" rx="16" ry="9"></ellipse>
+<ellipse cx="68" cy="38" fill="#6FAF7B" rx="20" ry="11"></ellipse>
+<circle cx="70" cy="36" fill="#ACEFB6" r="4"></circle>
+<!-- Water Droplet Glow Indicator -->
+<circle cx="116" cy="52" fill="#3C4097" opacity="0.6" r="3"></circle>
+</svg>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">React Ecosystem</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Custom Hooks, Redux Toolkit &amp; Next.js 14</p>
+<div class="mt-space-sm w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 72%"></div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-secondary">water_drop</span>
+              Cần 1 bài học nữa để trổ hoa
+            </div>
+<button class="btn-water inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed transition-colors font-title-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[16px]">opacity</span>
+              Tưới nước
+            </button>
+</div>
+</div>
+</article>
+<!-- PLANT 3: JavaScript Core (68% - Thân Cây Khỏe Khoắn Nhiều Chồi Non) -->
+<article class="plant-card group relative bg-surface-container-lowest rounded-2xl p-space-lg transition-all duration-300 hover:-translate-y-1.5 shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] hover:shadow-[0_8px_20px_-4px_rgba(32,34,58,0.08)] flex flex-col justify-between" data-category="frontend">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">psychiatry</span>
+            Giai đoạn: Đâm chồi mạnh
+          </span>
+<span class="font-title-md text-title-md text-primary font-bold">68%</span>
+</div>
+<div class="relative h-56 my-space-md flex items-center justify-center">
+<div class="absolute w-28 h-28 rounded-full bg-secondary/10 blur-xl"></div>
+<!-- Robust Stem SVG -->
+<svg class="relative z-10 w-44 h-44" fill="none" viewBox="0 0 160 160">
+<ellipse cx="80" cy="144" fill="#E6E2D9" rx="38" ry="8"></ellipse>
+<polygon fill="#EEECFF" points="56,132 104,132 98,144 62,144" stroke="#3C4097" stroke-width="1.5"></polygon>
+<!-- Upright strong young tree trunk -->
+<path d="M80 132 V60" stroke="#35342E" stroke-linecap="round" stroke-width="4"></path>
+<path d="M80 105 L62 90" stroke="#35342E" stroke-linecap="round" stroke-width="3"></path>
+<path d="M80 90 L98 75" stroke="#35342E" stroke-linecap="round" stroke-width="3"></path>
+<path d="M80 75 L65 64" stroke="#35342E" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Lush Young Leaves -->
+<ellipse cx="58" cy="88" fill="#2C6A3D" rx="12" ry="7" transform="rotate(-30 58 88)"></ellipse>
+<ellipse cx="102" cy="74" fill="#2C6A3D" rx="12" ry="7" transform="rotate(30 102 74)"></ellipse>
+<ellipse cx="62" cy="62" fill="#6FAF7B" rx="10" ry="6" transform="rotate(-25 62 62)"></ellipse>
+<circle cx="80" cy="50" fill="#2C6A3D" r="16"></circle>
+<circle cx="80" cy="46" fill="#6FAF7B" r="10"></circle>
+</svg>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">JavaScript Core &amp; ES6+</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Async/Await, Event Loop, Closures &amp; OOP</p>
+<div class="mt-space-sm w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 68%"></div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-primary">bolt</span>
+              +260 XP tích tụ
+            </div>
+<button class="btn-water inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed transition-colors font-title-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+              Học tiếp
+            </button>
+</div>
+</div>
+</article>
+<!-- PLANT 4: SQL & CSDL Quan Hệ (42% - Cây Non Khỏe Khoắn 3 Tầng Lá) -->
+<article class="plant-card group relative bg-surface-container-lowest rounded-2xl p-space-lg transition-all duration-300 hover:-translate-y-1.5 shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] hover:shadow-[0_8px_20px_-4px_rgba(32,34,58,0.08)] flex flex-col justify-between" data-category="backend">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">yard</span>
+            Giai đoạn: Cây non đang lớn
+          </span>
+<span class="font-title-md text-title-md text-on-surface-variant font-bold">42%</span>
+</div>
+<div class="relative h-56 my-space-md flex items-center justify-center">
+<!-- Young Sapling SVG -->
+<svg class="relative z-10 w-40 h-40" fill="none" viewBox="0 0 160 160">
+<ellipse cx="80" cy="144" fill="#E6E2D9" rx="36" ry="7"></ellipse>
+<circle cx="80" cy="138" fill="#CAC6BE" opacity="0.4" r="14"></circle>
+<path d="M64 130 H96 L90 144 H70 Z" fill="#EEECFF" stroke="#3C4097" stroke-width="1.2"></path>
+<!-- Stem with 3 tiers of leaves -->
+<path d="M80 130 V75" stroke="#35342E" stroke-linecap="round" stroke-width="3.5"></path>
+<!-- Tier 1 -->
+<ellipse cx="68" cy="110" fill="#2C6A3D" rx="10" ry="5" transform="rotate(-20 68 110)"></ellipse>
+<ellipse cx="92" cy="108" fill="#2C6A3D" rx="10" ry="5" transform="rotate(20 92 108)"></ellipse>
+<!-- Tier 2 -->
+<ellipse cx="70" cy="92" fill="#306F41" rx="9" ry="5" transform="rotate(-25 70 92)"></ellipse>
+<ellipse cx="90" cy="90" fill="#306F41" rx="9" ry="5" transform="rotate(25 90 90)"></ellipse>
+<!-- Tier 3: Top sprout -->
+<ellipse cx="76" cy="72" fill="#6FAF7B" rx="8" ry="5" transform="rotate(-35 76 72)"></ellipse>
+<ellipse cx="84" cy="72" fill="#6FAF7B" rx="8" ry="5" transform="rotate(35 84 72)"></ellipse>
+</svg>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">SQL &amp; CSDL Quan Hệ</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">PostgreSQL, Indexing, Tối ưu câu truy vấn</p>
+<div class="mt-space-sm w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 42%"></div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">assignment</span>
+              3 Quiz đang chờ hoàn thành
+            </div>
+<button class="btn-water inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors font-title-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[16px]">school</span>
+              Luyện tập
+            </button>
+</div>
+</div>
+</article>
+<!-- PLANT 5: Node.js & Backend (25% - Chồi Non Mầm Xanh 2 Lá) -->
+<article class="plant-card group relative bg-surface-container-lowest rounded-2xl p-space-lg transition-all duration-300 hover:-translate-y-1.5 shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] hover:shadow-[0_8px_20px_-4px_rgba(32,34,58,0.08)] flex flex-col justify-between" data-category="backend">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">energy_savings_leaf</span>
+            Giai đoạn: Mầm xanh hé nở
+          </span>
+<span class="font-title-md text-title-md text-on-surface-variant font-bold">25%</span>
+</div>
+<div class="relative h-56 my-space-md flex items-center justify-center">
+<!-- Sprout Two-Leaf SVG -->
+<svg class="relative z-10 w-36 h-36" fill="none" viewBox="0 0 160 160">
+<ellipse cx="80" cy="144" fill="#E6E2D9" rx="34" ry="6"></ellipse>
+<!-- Bio Planter with nutrient base -->
+<path d="M66 130 H94 L90 144 H70 Z" fill="#EEECFF" stroke="#3C4097" stroke-width="1"></path>
+<circle cx="80" cy="136" fill="#2C6A3D" r="3"></circle>
+<!-- Single Sprout -->
+<path d="M80 130 C80 120 78 105 80 96" stroke="#2C6A3D" stroke-linecap="round" stroke-width="3"></path>
+<!-- Two Fresh Leaves -->
+<path d="M80 98 C72 90 60 92 60 100 C68 102 78 100 80 98 Z" fill="#6FAF7B"></path>
+<path d="M80 98 C88 90 100 92 100 100 C92 102 82 100 80 98 Z" fill="#2C6A3D"></path>
+</svg>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">Node.js &amp; Express API</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">RESTful Services, Middleware, Auth JWT</p>
+<div class="mt-space-sm w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 25%"></div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-secondary">water_drop</span>
+              Độ ẩm đất: Cần tưới thêm
+            </div>
+<button class="btn-water inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed transition-colors font-title-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[16px]">water_drop</span>
+              Tưới nước
+            </button>
+</div>
+</div>
+</article>
+<!-- PLANT 6: Docker & DevOps (0% - Hạt Giống Nảy Mầm Trong Chậu Kính Thông Minh) -->
+<article class="plant-card group relative bg-surface-container-lowest rounded-2xl p-space-lg transition-all duration-300 hover:-translate-y-1.5 shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] flex flex-col justify-between opacity-95" data-category="backend">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">grain</span>
+            Hạt giống chuẩn bị gieo
+          </span>
+<span class="font-title-md text-title-md text-on-surface-variant font-bold">0%</span>
+</div>
+<div class="relative h-56 my-space-md flex items-center justify-center">
+<!-- Glass Capsule with Seed SVG -->
+<svg class="relative z-10 w-36 h-36" fill="none" viewBox="0 0 160 160">
+<ellipse cx="80" cy="144" fill="#E6E2D9" rx="32" ry="6"></ellipse>
+<!-- High-tech transparent bell jar / pot -->
+<path d="M62 136 C62 100 64 80 80 80 C96 80 98 100 98 136 Z" fill="#EEECFF" opacity="0.35" stroke="#777683" stroke-dasharray="3 3" stroke-width="1.2"></path>
+<!-- Nutrient Bed Inside -->
+<ellipse cx="80" cy="136" fill="#35342E" rx="16" ry="4"></ellipse>
+<!-- Glowing Sleeping Seed -->
+<ellipse cx="80" cy="132" fill="#3C4097" rx="5" ry="3.5"></ellipse>
+<circle cx="81" cy="130" fill="#FFFFFF" r="1"></circle>
+<path d="M80 128 C80 124 82 120 84 118" opacity="0.6" stroke="#6FAF7B" stroke-linecap="round" stroke-width="1.5"></path>
+</svg>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">Docker &amp; DevOps Foundation</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Containerization, CI/CD Pipeline, Kubernetes Basic</p>
+<div class="mt-space-sm w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+<div class="bg-outline-variant h-full rounded-full" style="width: 4%"></div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+              Chưa bắt đầu
+            </div>
+<button class="btn-water inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-colors font-title-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[16px]">spa</span>
+              Ươm mầm ngay
+            </button>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- GARDEN CARE TIPS, WEATHER WIDGET & ACTIVITY FEED -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg mb-space-xl">
+<!-- Weather & Biological Boost Widget (5 cols) -->
+<div class="lg:col-span-5 bg-gradient-to-br from-surface-container-lowest to-surface-container-low rounded-2xl p-space-lg shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Vi khí hậu vườn số</span>
+<span class="flex items-center gap-1 font-label-md text-label-md text-secondary">
+<span class="material-symbols-outlined text-[16px]">wb_sunny</span>
+            Nắng ấm quang hợp
+          </span>
+</div>
+<div class="mt-space-md flex items-center gap-space-md">
+<div class="w-16 h-16 rounded-2xl bg-secondary-container/80 flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-[36px]">sunny</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Hiệu Ứng Nắng Ấm</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Chuỗi học tập (Streak) 7 ngày liên tiếp</p>
+</div>
+</div>
+<div class="mt-space-md p-space-md rounded-xl bg-surface-container-lowest/80 text-on-surface flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5">auto_awesome</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Toàn bộ hạt giống và cây non trong vườn nhận thêm <strong class="text-on-surface font-semibold">x1.2 XP thưởng</strong> cho mỗi bài tập hoàn thành trong 24 giờ tới.
+          </p>
+</div>
+</div>
+<div class="mt-space-lg pt-space-md border-t border-surface-container flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Thời gian quang hợp còn lại: 14 giờ</span>
+<button class="inline-flex items-center gap-1 text-primary font-title-md text-body-sm hover:underline" type="button">
+          Quy tắc thời tiết
+          <span class="material-symbols-outlined text-[16px]">info</span>
+</button>
+</div>
+</div>
+<!-- Recent Garden Care Activities & Timeline (7 cols) -->
+<div class="lg:col-span-7 bg-surface-container-lowest rounded-2xl p-space-lg shadow-[0_2px_8px_-2px_rgba(32,34,58,0.04)] flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<h3 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">history_edu</span>
+            Nhật ký chăm sóc vườn gần đây
+          </h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Hôm nay</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Log item 1 -->
+<div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">water_drop</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-body-md text-on-surface font-medium">Đã tưới nước cho cây React Ecosystem</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Vừa hoàn thành Quiz: "React Hooks Lifecycle Mastery"</span>
+</div>
+</div>
+<span class="font-label-md text-label-md text-secondary font-semibold shrink-0 ml-2">+30 Giọt nước số</span>
+</div>
+<!-- Log item 2 -->
+<div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">emoji_events</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-body-md text-on-surface font-medium">Huy hiệu "Nhà Cổ Thụ AI" khai mở</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Python &amp; ML đạt mốc 100% hoàn thiện và thu hoạch thành công</span>
+</div>
+</div>
+<span class="font-label-md text-label-md text-primary font-semibold shrink-0 ml-2">+100 XP Thưởng</span>
+</div>
+<!-- Log item 3 -->
+<div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-body-md text-on-surface font-medium">Gieo hạt giống Docker &amp; DevOps Foundation</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Hạt giống đã được đặt vào chậu ươm số hóa</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant shrink-0 ml-2">2 giờ trước</span>
+</div>
+</div>
+</div>
+<!-- Quick Path Action -->
+<div class="mt-space-lg pt-space-md border-t border-surface-container flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Có 2 bài tập đang trong trạng thái chờ giải quyết để tiếp tục kích thích sinh trưởng.
+        </p>
+<button class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary-container text-on-primary font-title-md text-body-sm hover:bg-primary transition-all shrink-0" type="button">
+<span class="">Ghé thăm lộ trình kế tiếp</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Interactive Seed Planting Dialog / Modal (Hidden by default, triggered by JS) -->
+<dialog class="backdrop:bg-on-surface/40 bg-surface-container-lowest text-on-surface rounded-2xl p-space-xl max-w-lg w-full shadow-[0_24px_48px_-12px_rgba(32,34,58,0.25)] border-0" id="seed-dialog">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[24px]">nature_people</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Gieo Hạt Giống Kỹ Năng Mới</h3>
+</div>
+<button class="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" id="close-seed-dialog" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-lg">
+      Chọn lĩnh vực kiến thức bạn muốn bắt đầu vun trồng. Hệ sinh thái SkillGarden sẽ lập tức thiết lập đất dinh dưỡng và lộ trình bài giảng tương ứng.
+    </p>
+<form class="flex flex-col gap-space-md" method="dialog">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5">Tên kỹ năng hoặc công nghệ</label>
+<input class="w-full h-11 px-space-md rounded-xl bg-surface text-on-surface placeholder:text-on-surface-variant/60 font-body-sm text-body-sm border-0 focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="Ví dụ: TypeScript Pro, Golang Microservices..." type="text">
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5">Mục tiêu tăng trưởng tuần</label>
+<select class="w-full h-11 px-space-md rounded-xl bg-surface text-on-surface font-body-sm text-body-sm border-0 focus:outline-none focus:ring-2 focus:ring-primary-container">
+<option value="light">Mầm non: 2 bài học / tuần (~30 phút)</option>
+<option selected="" value="medium">Cây khỏe: 4 bài học / tuần (~1.5 giờ)</option>
+<option value="intense">Rừng rậm: Hằng ngày (~3 giờ)</option>
+</select>
+</div>
+<div class="flex items-center justify-end gap-space-sm mt-space-md">
+<button class="px-4 py-2 rounded-xl text-on-surface font-title-md text-body-md hover:bg-surface-container-high transition-colors" id="cancel-dialog" type="button">
+          Hủy bỏ
+        </button>
+<button class="px-5 py-2.5 rounded-xl bg-primary-container text-on-primary font-title-md text-body-md hover:bg-primary transition-all" type="submit">
+          Bắt đầu gieo hạt
+        </button>
+</div>
+</form>
+</dialog>
+<!-- Interactive Watering Notification Toast (Floating Micro-interaction) -->
+<div class="fixed bottom-8 right-8 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-4 py-3 rounded-xl bg-inverse-surface text-inverse-on-surface shadow-xl" id="water-toast">
+<span class="material-symbols-outlined text-secondary-fixed text-[22px]">water_drop</span>
+<span class="font-body-md text-body-md" id="toast-message">Đã tưới nước thành công! Cây nhận thêm +15 XP sinh trưởng.</span>
+</div>
+<!-- Client-side Logic for Garden Filtering, Views, Dialogs & Micro-interactions -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Filter Chips Functionality
+      const filterChips = document.querySelectorAll('.filter-chip');
+      const plantCards = document.querySelectorAll('.plant-card');
+
+      filterChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          // Update active styles
+          filterChips.forEach(c => {
+            c.classList.remove('bg-primary-container', 'text-on-primary', 'shadow-sm');
+            c.classList.add('bg-surface-container-lowest', 'text-on-surface');
+          });
+          chip.classList.remove('bg-surface-container-lowest', 'text-on-surface');
+          chip.classList.add('bg-primary-container', 'text-on-primary', 'shadow-sm');
+
+          const category = chip.getAttribute('data-filter');
+          plantCards.forEach(card => {
+            const cardCats = card.getAttribute('data-category') || '';
+            if (category === 'all' || cardCats.includes(category)) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // 2. View Mode Toggle (Canvas vs Grid)
+      const btnGardenView = document.getElementById('btn-view-garden');
+      const btnGridView = document.getElementById('btn-view-grid');
+      const gardenCanvas = document.getElementById('garden-canvas');
+
+      btnGardenView?.addEventListener('click', () => {
+        btnGardenView.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        btnGardenView.classList.remove('text-on-surface-variant');
+        btnGridView.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        btnGridView.classList.add('text-on-surface-variant');
+        
+        gardenCanvas.classList.remove('bg-surface-container-lowest');
+        gardenCanvas.classList.add('bg-gradient-to-b', 'from-surface-container-low', 'via-surface-container', 'to-surface');
+      });
+
+      btnGridView?.addEventListener('click', () => {
+        btnGridView.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        btnGridView.classList.remove('text-on-surface-variant');
+        btnGardenView.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        btnGardenView.classList.add('text-on-surface-variant');
+
+        gardenCanvas.classList.remove('bg-gradient-to-b', 'from-surface-container-low', 'via-surface-container', 'to-surface');
+        gardenCanvas.classList.add('bg-surface-container-lowest');
+      });
+
+      // 3. Seed Planting Dialog Trigger
+      const seedBtn = document.getElementById('btn-seed');
+      const seedDialog = document.getElementById('seed-dialog');
+      const closeDialogBtn = document.getElementById('close-seed-dialog');
+      const cancelDialogBtn = document.getElementById('cancel-dialog');
+
+      seedBtn?.addEventListener('click', () => {
+        seedDialog?.showModal();
+      });
+
+      [closeDialogBtn, cancelDialogBtn].forEach(btn => {
+        btn?.addEventListener('click', () => {
+          seedDialog?.close();
+        });
+      });
+
+      // 4. Water Button Toast Micro-interaction
+      const waterButtons = document.querySelectorAll('.btn-water');
+      const toast = document.getElementById('water-toast');
+      const toastMessage = document.getElementById('toast-message');
+      let toastTimer = null;
+
+      waterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const cardTitle = btn.closest('.plant-card')?.querySelector('h2')?.textContent || 'Kỹ năng';
+          toastMessage.textContent = `Đã tưới nước cho "${cardTitle}"! Nhận thêm +25 Giọt tri thức.`;
+          
+          toast.classList.remove('translate-y-24', 'opacity-0');
+          toast.classList.add('translate-y-0', 'opacity-100');
+
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => {
+            toast.classList.add('translate-y-24', 'opacity-0');
+            toast.classList.remove('translate-y-0', 'opacity-100');
+          }, 3200);
+        });
+      });
+    });
+  </script>
+</div></main></div>
+
+</body></html>

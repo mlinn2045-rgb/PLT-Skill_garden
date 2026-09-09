@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - SkillGarden | PLT Solutions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAFAF7;
+      color: #20223A;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-[#FAFAF7] text-[#20223A]">
+  <!-- Top Minimal Bar -->
+  <header class="w-full px-8 py-5 flex items-center justify-between border-b border-[#EBEBE6] bg-white/80 backdrop-blur-md sticky top-0 z-50">
+    <a href="#" class="flex items-center gap-3 hover:opacity-90 transition">
+      <img src="https://lh3.googleusercontent.com/aida/AEtjO1VFgbLuBGoUS37q3J4FMMOblD5vaW7hiVtyKx0bmgegnNRnKxBYWH8XB0hn-GFHARcus3WjLF7QdaafiudZbZzmt1CoEiV4Fj3WO0Zrnm2mESMTU3yuy7L59jQKsRpZ9DiQ-FenWT6eWN_-b5cq5GDsQamzv0E3GKTJyg_fqhwZ5JBA5IDRO2w_NbEgnXrEyAbHStKsJZXCShOy2QcGEaaI3EsXVlHjXvEtZWoTkOMnaDVCO-C73wHO-eE" alt="PLT Solutions SkillGarden Logo" class="h-9 w-auto object-contain">
+    </a>
+    <div class="flex items-center gap-3 text-sm font-medium text-[#6B6D7A]">
+      <span>Chưa có tài khoản?</span>
+      <a href="#" class="text-[#3C4097] font-semibold hover:underline flex items-center gap-1">
+        Đăng ký ngay
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Auth Container -->
+  <main class="flex-1 flex items-center justify-center p-6 md:p-10">
+    <div class="w-full max-w-5xl bg-white rounded-3xl border border-[#E9E9E2] shadow-[0_10px_35px_rgba(41,44,114,0.04)] overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
+      
+      <!-- Left Visual / Digital Garden Branding Showcase (5 cols) -->
+      <div class="lg:col-span-5 bg-gradient-to-br from-[#F5F4FE] via-[#EDF9F1] to-[#F3F1FA] p-8 md:p-10 flex flex-col justify-between relative overflow-hidden border-r border-[#EFEFE8]">
+        <!-- Decorative Ambient Plant circles -->
+        <div class="absolute -top-16 -left-16 w-56 h-56 bg-[#6FAF7B]/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-[#3C4097]/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[#DCEFE1] text-[#2D7A4F] text-xs font-bold tracking-wide mb-6 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-[#6FAF7B] animate-pulse"></span>
+            HỌC LẬP TRÌNH THEO MÔ HÌNH VƯỜN SỐ
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-[#20223A] tracking-tight leading-snug">
+            Nuôi dưỡng kỹ năng công nghệ mỗi ngày.
+          </h2>
+          <p class="text-[#6B6D7A] text-sm mt-3 leading-relaxed">
+            Đăng nhập để tiếp tục chuỗi streak học tập, tưới nước cho các cây kỹ năng và gặt hái chứng chỉ thực chiến.
+          </p>
+        </div>
+
+        <!-- Visual Plant Card Preview Widget -->
+        <div class="my-8 relative">
+          <!-- Floating mini badge -->
+          <div class="absolute -top-3 right-4 bg-white px-3 py-1 rounded-full shadow-md border border-[#EBEBE6] flex items-center gap-1.5 text-xs font-bold text-[#3C4097] z-10">
+            <span class="text-amber-500">⚡</span> +40 XP hôm nay
+          </div>
+
+          <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-5 border border-[#E2E8F0] shadow-sm">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-[#EBF9F0] flex items-center justify-center flex-shrink-0 border border-[#D1F0DC]">
+                <!-- Plant SVG illustration icon -->
+                <svg class="w-8 h-8 text-[#2D7A4F]" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 32V16" stroke="#2D7A4F" stroke-width="2.5" stroke-linecap="round"/>
+                  <path d="M20 22C20 22 14 20.5 13 15C12 9.5 20 12 20 12C20 12 20 17 20 22Z" fill="#38A169"/>
+                  <path d="M20 18C20 18 26 16.5 27 12C28 7.5 21 9.5 20 11C20 13 20 15.5 20 18Z" fill="#68D391"/>
+                  <circle cx="20" cy="33" r="3" fill="#2D7A4F"/>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-1">
+                  <h4 class="text-sm font-bold text-[#20223A] truncate">JavaScript Core & Async</h4>
+                  <span class="text-xs font-semibold text-[#2D7A4F] bg-[#EBF9F0] px-2 py-0.5 rounded-md">72%</span>
+                </div>
+                <div class="w-full bg-[#EFEFEA] h-2 rounded-full overflow-hidden mb-1.5">
+                  <div class="bg-[#6FAF7B] h-full rounded-full" style="width: 72%"></div>
+                </div>
+                <p class="text-[11px] text-[#6B6D7A] flex items-center gap-1">
+                  <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#6FAF7B]"></span>
+                  Giai đoạn: Cây non đơm chồi mạnh
+                </p>
+              </div>
+            </div>
+
+            <!-- Mini User Testimonial / Social proof -->
+            <div class="mt-4 pt-3 border-t border-[#F0F0EA] flex items-center justify-between text-xs text-[#6B6D7A]">
+              <div class="flex items-center gap-2">
+                <img src="https://lh3.googleusercontent.com/aida/AEtjO1XUlzZx4dOq5GfpmJ8hXRiOIOOYoFr7bCGf5c3ES49eZBByxkFJWu7mDpcLTBfbrRXlUCWayCqPOhVSMackLDTAEzm_I_l3Uiem7vIpox0VWglm-1eJo2o8Db-aUdvEnesn3boUbsodvkS-lHoQ2NsYEkE2s-J14BxAcswb3ZntRD16LPVK2_c03iYmd8PAKCDtEM6wmNlo_rweURm6-7dDdIp_ViPXdKX6JGnJ4F-nm7UMkXD5hYx3zTk" alt="Học viên Anh Khoa" class="w-6 h-6 rounded-full object-cover border border-white">
+                <span class="font-medium text-[#20223A]">Anh Khoa</span>
+              </div>
+              <div class="flex items-center gap-1 text-[#2D7A4F] font-semibold">
+                <span>🔥 Chuỗi 7 ngày</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer note in left pane -->
+        <div class="flex items-center gap-2 text-xs text-[#6B6D7A]/80">
+          <svg class="w-4 h-4 text-[#3C4097]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Hệ sinh thái đào tạo công nghệ chuẩn PLT Solutions
+        </div>
+      </div>
+
+      <!-- Right Form Section (7 cols) -->
+      <div class="lg:col-span-7 p-8 md:p-12 flex flex-col justify-center">
+        <div class="max-w-md w-full mx-auto">
+          
+          <div class="mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-[#20223A] tracking-tight">
+              Chào mừng trở lại 🌱
+            </h1>
+            <p class="text-[#6B6D7A] text-sm mt-1.5">
+              Đăng nhập để tiếp tục hành trình nuôi dưỡng khu vườn kỹ năng.
+            </p>
+          </div>
+
+          <!-- Quick Social Login -->
+          <button type="button" class="w-full py-3 px-4 rounded-xl border border-[#DCE0E5] bg-white hover:bg-[#F9FAFB] text-[#20223A] font-semibold text-sm flex items-center justify-center gap-3 transition shadow-sm hover:border-[#CBD5E1]">
+            <svg class="w-5 h-5" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+            </svg>
+            Tiếp tục với tài khoản Google
+          </button>
+
+          <!-- Divider -->
+          <div class="relative my-6 flex items-center justify-center">
+            <div class="border-t border-[#EAEAE2] w-full"></div>
+            <span class="bg-white px-3 text-xs uppercase tracking-wider text-[#989AA6] font-medium absolute">hoặc email</span>
+          </div>
+
+          <!-- Email / Password Form -->
+          <form class="space-y-4" onsubmit="event.preventDefault();">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-[#454756] mb-1.5" for="email">
+                Địa chỉ Email
+              </label>
+              <div class="relative">
+                <input 
+                  type="email" 
+                  id="email" 
+                  value="anhkhoa.plt@gmail.com"
+                  placeholder="nhap-email-cua-ban@gmail.com" 
+                  class="w-full px-4 py-3 rounded-xl border border-[#D6D9E0] text-sm text-[#20223A] bg-[#FAFBFD] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3C4097] focus:border-transparent transition"
+                  required
+                >
+                <span class="absolute right-3.5 top-3.5 text-[#2D7A4F]">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#454756]" for="password">
+                  Mật khẩu
+                </label>
+                <a href="#" class="text-xs font-semibold text-[#3C4097] hover:underline">
+                  Quên mật khẩu?
+                </a>
+              </div>
+              <div class="relative">
+                <input 
+                  type="password" 
+                  id="password" 
+                  value="••••••••••••"
+                  placeholder="Nhập mật khẩu" 
+                  class="w-full px-4 py-3 rounded-xl border border-[#D6D9E0] text-sm text-[#20223A] bg-[#FAFBFD] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3C4097] focus:border-transparent transition"
+                  required
+                >
+                <button type="button" class="absolute right-3.5 top-3.5 text-[#888A98] hover:text-[#20223A]">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember Me checkbox -->
+            <div class="flex items-center justify-between py-1">
+              <label class="flex items-center gap-2 text-sm text-[#6B6D7A] cursor-pointer">
+                <input type="checkbox" checked class="w-4 h-4 text-[#3C4097] rounded border-gray-300 focus:ring-[#3C4097] accent-[#3C4097]">
+                <span>Ghi nhớ đăng nhập trên thiết bị này</span>
+              </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              class="w-full py-3.5 px-6 rounded-xl bg-[#3C4097] hover:bg-[#292C72] text-white font-bold text-sm shadow-md shadow-[#3C4097]/20 transition flex items-center justify-center gap-2 mt-2"
+            >
+              <span>Vào vườn học ngay</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+          </form>
+
+          <!-- Security reassurance -->
+          <div class="mt-8 pt-6 border-t border-[#EFEFEA] text-center text-xs text-[#828492]">
+            Được bảo mật bởi hạ tầng chứng thực <span class="font-semibold text-[#20223A]">PLT Solutions Security</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="w-full py-4 text-center text-xs text-[#888A96] border-t border-[#EBEBE6] bg-white">
+    © 2026 PLT Solutions &amp; SkillGarden. Nền tảng học IT &amp; mô hình vườn tri thức số.
+  </footer>
+</body>
+</html>
