@@ -1,0 +1,62 @@
+[
+    {
+        "fullName": "Nguyễn Anh Khoa",
+        "email": "anhkhoa.user@gmail.com",
+        "username": "anhkhoa_dev",
+        "password": "Password123!",
+        "role": "USER",
+        "isApproved": true,
+        "level": 5,
+        "totalXp": 1250,
+        "streakDays": 7,
+        "bio": "Lập trình viên React & Node.js yêu thích nuôi dưỡng khu vườn kỹ năng."
+    },
+    {
+        "fullName": "Trần Thị Mai",
+        "email": "maitran@gmail.com",
+        "username": "maitran99",
+        "password": "Password123!",
+        "role": "USER",
+        "isApproved": false,
+        "level": 1,
+        "totalXp": 100,
+        "streakDays": 1,
+        "bio": "Học viên mới theo học lộ trình Frontend React."
+    },
+    {
+        "fullName": "Lê Hoàng Nam",
+        "email": "nam.le@gmail.com",
+        "username": "namle_backend",
+        "password": "Password123!",
+        "role": "USER",
+        "isApproved": true,
+        "level": 3,
+        "totalXp": 680,
+        "streakDays": 4,
+        "bio": "Chuyên viên tư vấn giải pháp PHP & MySQL."
+    },
+    {
+        "fullName": "Phạm Quốc Bảo",
+        "email": "baopq@skillgarden.com",
+        "username": "baopq_admin",
+        "password": "Admin123@",
+        "role": "ADMIN",
+        "isApproved": true,
+        "level": 15,
+        "totalXp": 4500,
+        "streakDays": 14,
+        "bio": "Quản trị viên nội dung khóa học & bài tập thực hành."
+    },
+    {
+        "fullName": "Vũ Minh Tuấn",
+        "email": "tuanvm.pending@gmail.com",
+        "username": "tuanvm",
+        "password": "Password123!",
+        "role": "USER",
+        "isApproved": false,
+        "level": 1,
+        "totalXp": 0,
+        "streakDays": 0,
+        "bio": "Sinh viên Công nghệ Thông tin cần duyệt tài khoản."
+    }
+]
