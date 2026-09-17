@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import { Settings, Save, ShieldCheck, Globe, Lock, Bell, CheckSquare } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { Settings, Save, Globe, Lock, RefreshCw } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { superAdminService } from '../../services/superAdminService'
 
 export const SystemConfigPage: React.FC = () => {
     const [siteName, setSiteName] = useState('PLT Solutions - SkillGarden')
@@ -10,20 +11,72 @@ export const SystemConfigPage: React.FC = () => {
     const [maxLoginAttempts, setMaxLoginAttempts] = useState('5')
     const [sessionTimeout, setSessionTimeout] = useState('120')
 
-    const handleSave = (e: React.FormEvent) => {
+    const [isLoading, setIsLoading] = useState(true)
+    const [isSaving, setIsSaving] = useState(false)
+    const [toastMsg, setToastMsg] = useState('')
+
+    const fetchConfigs = async () => {
+        setIsLoading(true)
+        try {
+            const configs = await superAdminService.getSystemConfigs()
+            configs.forEach((item: any) => {
+                if (item.config_key === 'site_name') setSiteName(item.config_value)
+                if (item.config_key === 'allow_registration') setAllowRegistration(item.config_value === '1' || item.config_value === 'true')
+                if (item.config_key === 'require_approval') setRequireApproval(item.config_value === '1' || item.config_value === 'true')
+                if (item.config_key === 'max_login_attempts') setMaxLoginAttempts(item.config_value)
+                if (item.config_key === 'session_timeout') setSessionTimeout(item.config_value)
+            })
+        } catch {
+            // Keep default fallback values if empty
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchConfigs()
+    }, [])
+
+    const handleSave = async (e: React.FormEvent) => {
         e.preventDefault()
-        alert('Đã cập nhật cấu hình hệ thống thành công!')
+        setIsSaving(true)
+        try {
+            await superAdminService.updateSystemConfigs({
+                site_name: siteName,
+                allow_registration: allowRegistration ? '1' : '0',
+                require_approval: requireApproval ? '1' : '0',
+                max_login_attempts: maxLoginAttempts,
+                session_timeout: sessionTimeout,
+            })
+            setToastMsg('Đã cập nhật cấu hình hệ thống thành công vào MySQL Database!')
+            setTimeout(() => setToastMsg(''), 4000)
+        } catch (err: any) {
+            alert(err.message || 'Lưu cấu hình thất bại.')
+        } finally {
+            setIsSaving(false)
+        }
     }
 
     return (
         <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-5xl mx-auto space-y-6">
             {/* Header */}
-            <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs">
-                <h1 className="text-2xl font-extrabold flex items-center gap-2">
-                    <Settings className="w-6 h-6 text-purple-600" /> Cấu Hình Hệ Thống (System Global Settings)
-                </h1>
-                <p className="text-xs text-[#6B6D7A] mt-1">Cấu hình tên thương hiệu, chính sách đăng ký, bảo mật tài khoản và thời gian phiên đăng nhập (FR-SA07).</p>
+            <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-extrabold flex items-center gap-2">
+                        <Settings className="w-6 h-6 text-purple-600" /> Cấu Hình Hệ Thống (System Global Settings - API Thật)
+                    </h1>
+                    <p className="text-xs text-[#6B6D7A] mt-1">Cấu hình thương hiệu, chính sách đăng ký, bảo mật tài khoản từ CSDL MySQL (FR-SA07).</p>
+                </div>
+                <Button variant="outline" size="sm" onClick={fetchConfigs} disabled={isLoading} className="font-bold flex items-center gap-1">
+                    <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
+                </Button>
             </div>
+
+            {toastMsg && (
+                <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold shadow-xs">
+                    {toastMsg}
+                </div>
+            )}
 
             <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* General Brand & Reg Config */}
@@ -83,8 +136,8 @@ export const SystemConfigPage: React.FC = () => {
                         />
                     </div>
 
-                    <Button type="submit" variant="indigo" fullWidth className="font-bold flex items-center justify-center gap-2 bg-purple-700 hover:bg-purple-800 border-none mt-4">
-                        <Save className="w-4 h-4" /> Lưu Cấu Hình Hệ Thống
+                    <Button type="submit" variant="indigo" disabled={isSaving} fullWidth className="font-bold flex items-center justify-center gap-2 bg-purple-700 hover:bg-purple-800 border-none mt-4">
+                        <Save className="w-4 h-4" /> {isSaving ? 'Đang lưu...' : 'Lưu Cấu Hình Hệ Thống'}
                     </Button>
                 </div>
             </form>
