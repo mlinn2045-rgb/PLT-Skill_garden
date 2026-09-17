@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Play, CheckCircle2, FileText, Download, Bookmark, Award, ChevronRight, Lock } from 'lucide-react'
+import { Play, CheckCircle2, FileText, Download, ChevronRight, Lock, Video, HardDrive } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 
 export const VideoLearningPage: React.FC = () => {
@@ -10,6 +10,10 @@ export const VideoLearningPage: React.FC = () => {
         { id: 2, time: '05:10', content: 'Hàm useState trả về 1 tuple gồm state và hàm setState.' }
     ])
 
+    // Current active lesson state
+    const [currentVideoUrl, setCurrentVideoUrl] = useState('https://www.youtube.com/embed/dQw4w9WgXcQ')
+    const [currentLessonTitle, setCurrentLessonTitle] = useState('Bài 2: React Components & Props cơ bản')
+
     const handleAddNote = () => {
         if (!noteText.trim()) return
         setNotesList([...notesList, { id: Date.now(), time: '06:30', content: noteText }])
@@ -17,11 +21,15 @@ export const VideoLearningPage: React.FC = () => {
     }
 
     const lessons = [
-        { id: 1, title: '1. Giới thiệu tổng quan React 19 & JSX Syntax', duration: '12:45', status: 'completed' },
-        { id: 2, title: '2. React Components & Props cơ bản', duration: '18:20', status: 'active' },
-        { id: 3, title: '3. State Management với useState & useReducer', duration: '25:15', status: 'locked' },
-        { id: 4, title: '4. Side Effects & Lifecycle với useEffect Hook', duration: '20:00', status: 'locked' }
+        { id: 1, title: '1. Giới thiệu tổng quan React 19 & JSX Syntax', duration: '12:45', status: 'completed', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+        { id: 2, title: '2. React Components & Props cơ bản (File Tải lên)', duration: '18:20', status: 'active', videoUrl: 'http://localhost:8000/uploads/videos/sample.mp4' },
+        { id: 3, title: '3. State Management với useState & useReducer', duration: '25:15', status: 'locked', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+        { id: 4, title: '4. Side Effects & Lifecycle với useEffect Hook', duration: '20:00', status: 'locked', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
     ]
+
+    const isYouTubeUrl = (url: string) => {
+        return url.includes('youtube.com') || url.includes('youtu.be')
+    }
 
     return (
         <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12">
@@ -32,7 +40,7 @@ export const VideoLearningPage: React.FC = () => {
                     <ChevronRight className="w-4 h-4" />
                     <span>Chương 1: Core Concepts</span>
                     <ChevronRight className="w-4 h-4" />
-                    <span className="font-bold text-[#3C4097]">Bài 2: React Components & Props</span>
+                    <span className="font-bold text-[#3C4097]">{currentLessonTitle}</span>
                 </div>
                 <div className="flex items-center gap-3">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#DCEFE1] text-[#2C6A3D] text-xs font-bold rounded-full">
@@ -48,22 +56,40 @@ export const VideoLearningPage: React.FC = () => {
             <div className="max-w-7xl mx-auto px-6 pt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left 2 Cols: Video Player & Tabs */}
                 <div className="lg:col-span-2 space-y-6">
-                    {/* Video Player Box */}
+                    {/* Dynamic Video Player Box */}
                     <div className="bg-black rounded-2xl aspect-video overflow-hidden relative shadow-xl flex items-center justify-center border border-[#E2E4EB]">
-                        <iframe
-                            className="w-full h-full"
-                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0"
-                            title="React 19 Video Lesson"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        ></iframe>
+                        {isYouTubeUrl(currentVideoUrl) ? (
+                            <iframe
+                                className="w-full h-full"
+                                src={currentVideoUrl}
+                                title={currentLessonTitle}
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
+                        ) : (
+                            <video
+                                controls
+                                controlsList="nodownload"
+                                className="w-full h-full object-contain"
+                                src={currentVideoUrl}
+                            >
+                                Trình duyệt của bạn không hỗ trợ phát file video này.
+                            </video>
+                        )}
                     </div>
 
                     {/* Lesson Info */}
-                    <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-sm space-y-4">
-                        <h1 className="text-2xl font-bold text-[#20223A]">
-                            Bài 2: React Components & Props cơ bản
-                        </h1>
+                    <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h1 className="text-2xl font-bold text-[#20223A]">
+                                {currentLessonTitle}
+                            </h1>
+                            <span className="text-xs font-extrabold px-3 py-1 bg-purple-50 text-purple-800 rounded-full border border-purple-200 flex items-center gap-1">
+                                {isYouTubeUrl(currentVideoUrl) ? <Video className="w-3.5 h-3.5 text-red-500" /> : <HardDrive className="w-3.5 h-3.5 text-emerald-600" />}
+                                {isYouTubeUrl(currentVideoUrl) ? 'Nguồn YouTube' : 'Nguồn File Tải Lên'}
+                            </span>
+                        </div>
+
                         <p className="text-sm text-[#6B6D7A] leading-relaxed">
                             Trong bài học này, chúng ta sẽ cùng tìm hiểu cách thiết kế các Component độc lập, tái sử dụng và cách truyền nhận dữ liệu thông qua Props trong React 19.
                         </p>
@@ -73,8 +99,8 @@ export const VideoLearningPage: React.FC = () => {
                             <button
                                 onClick={() => setActiveTab('notes')}
                                 className={`pb-3 px-4 font-bold text-sm border-b-2 transition-colors ${activeTab === 'notes'
-                                        ? 'border-[#3C4097] text-[#3C4097]'
-                                        : 'border-transparent text-[#6B6D7A] hover:text-[#20223A]'
+                                    ? 'border-[#3C4097] text-[#3C4097]'
+                                    : 'border-transparent text-[#6B6D7A] hover:text-[#20223A]'
                                     }`}
                             >
                                 Ghi chú cá nhân ({notesList.length})
@@ -82,8 +108,8 @@ export const VideoLearningPage: React.FC = () => {
                             <button
                                 onClick={() => setActiveTab('materials')}
                                 className={`pb-3 px-4 font-bold text-sm border-b-2 transition-colors ${activeTab === 'materials'
-                                        ? 'border-[#3C4097] text-[#3C4097]'
-                                        : 'border-transparent text-[#6B6D7A] hover:text-[#20223A]'
+                                    ? 'border-[#3C4097] text-[#3C4097]'
+                                    : 'border-transparent text-[#6B6D7A] hover:text-[#20223A]'
                                     }`}
                             >
                                 Tài liệu PDF đính kèm (2)
@@ -132,15 +158,19 @@ export const VideoLearningPage: React.FC = () => {
                 </div>
 
                 {/* Right Col: Playlist / Syllabus */}
-                <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-sm space-y-4 h-fit">
+                <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-4 h-fit">
                     <h2 className="text-lg font-bold text-[#20223A]">Nội dung khóa học</h2>
                     <div className="space-y-2">
                         {lessons.map((item) => (
                             <div
                                 key={item.id}
-                                className={`p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${item.status === 'active'
-                                        ? 'border-[#3C4097] bg-[#F4F5FF]'
-                                        : 'border-[#E2E4EB] hover:bg-gray-50'
+                                onClick={() => {
+                                    setCurrentVideoUrl(item.videoUrl)
+                                    setCurrentLessonTitle(item.title)
+                                }}
+                                className={`p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${currentLessonTitle === item.title
+                                    ? 'border-[#3C4097] bg-[#F4F5FF]'
+                                    : 'border-[#E2E4EB] hover:bg-gray-50'
                                     }`}
                             >
                                 <div className="flex items-center gap-3">
