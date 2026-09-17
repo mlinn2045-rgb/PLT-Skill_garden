@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "error-container": "#ffdad6", "on-surface": "#171a31", "primary": "#24277f", "surface-variant": "#e0e0ff", "on-tertiary-fixed": "#1c1c16", "on-primary-fixed": "#050369", "primary-container": "#3c4097", "surface-dim": "#d7d7f8", "surface-container-high": "#e7e6ff", "on-primary-container": "#b1b4ff", "on-tertiary-fixed-variant": "#484740", "on-error-container": "#93000a", "on-secondary": "#ffffff", "primary-fixed": "#e1e0ff", "on-primary-fixed-variant": "#383c93", "on-secondary-fixed-variant": "#0e5227", "secondary": "#2c6a3d", "inverse-surface": "#2c2e47", "tertiary-fixed": "#e6e2d9", "primary-fixed-dim": "#bfc1ff", "surface-tint": "#5155ad", "tertiary-fixed-dim": "#cac6be", "background": "#fbf8ff", "secondary-fixed": "#aff2b9", "tertiary": "#35342e", "tertiary-container": "#4c4a44", "on-secondary-container": "#306f41", "surface-bright": "#fbf8ff", "surface": "#fbf8ff", "secondary-fixed-dim": "#94d69e", "inverse-on-surface": "#f1efff", "surface-container": "#eeecff", "outline-variant": "#c7c5d3", "on-secondary-fixed": "#00210b", "on-error": "#ffffff", "surface-container-highest": "#e0e0ff", "on-background": "#171a31", "surface-container-lowest": "#ffffff", "error": "#ba1a1a", "on-surface-variant": "#464651", "on-primary": "#ffffff", "surface-container-low": "#f4f2ff", "inverse-primary": "#bfc1ff", "outline": "#777683", "on-tertiary-container": "#bdbab1", "secondary-container": "#acefb6", "on-tertiary": "#ffffff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-2xs": "0.25rem", "space-xl": "2rem", "space-3xl": "4rem", "margin-desktop": "3rem", "space-md": "1rem", "space-sm": "0.75rem", "space-lg": "1.5rem", "gutter-desktop": "2rem", "gutter-mobile": "1rem", "margin-tablet": "2rem", "space-xs": "0.5rem", "space-2xl": "3rem", "margin-mobile": "1rem", "gutter-tablet": "1.5rem" }, fontFamily: { "body-lg": ["Inter"], "label-md": ["Inter"], "title-lg": ["Inter"], "display": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "label-sm": ["Inter"], "headline-lg-mobile": ["Plus Jakarta Sans"], "display-mobile": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "title-md": ["Inter"], "body-sm": ["Inter"], "body-md": ["Inter"] }, fontSize: { "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }], "title-lg": ["18px", { lineHeight: "26px", fontWeight: "600" }], "display": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.04em", fontWeight: "600" }], "headline-lg-mobile": ["26px", { lineHeight: "34px", letterSpacing: "-0.015em", fontWeight: "600" }], "display-mobile": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" }], "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }], "title-md": ["16px", { lineHeight: "24px", fontWeight: "600" }], "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }], "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm bg-surface-container-low"><img alt="Brand logo. - Primary color: #3c4097
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XqPIx7U4qs_24Hgodp9CRrMZTZ7jT2G-lcwymNXjaERnyxCUhsRzEg2Rz49vFNvVUZnz7fuV4vFkkgpTwVYecf82QQ7Q40n5Nh1lwiH8YBLGcjNmx1Ouj8Ujx9XbyKK4WjF5faR37-YJmxzz_f4yHXZNora7Xega0jRHGSC1ZMmC1O6d0P5C8yxzKZsA4DKSgjtuidZVaec4cB1ihaMpbRpj1AQx5PfvRVmD1hEvsGPjjhbUVlPRa82a8"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-none tracking-tight">SkillGarden</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">PLT Solutions Admin</span></div></div><div class="px-space-md py-space-sm"><div class="px-space-sm py-space-xs rounded-xl bg-secondary-container/40 flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-secondary-container font-semibold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>Hệ thống Quản trị</span><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded-full bg-surface-container-lowest text-secondary font-bold">PROD</span></div></div><nav class="flex flex-col gap-1 px-space-sm mt-space-xs" data-active-classes="bg-primary-container text-on-primary font-semibold rounded-xl shadow-[0_2px_8px_-2px_rgba(32,34,58,0.08)]"><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="tong-quan" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="font-body-md text-body-md">Tổng quan</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="khoa-hoc" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span class="font-body-md text-body-md">Khóa học</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="bai-hoc" href="#"><span class="material-symbols-outlined text-[20px]">auto_stories</span><span class="font-body-md text-body-md">Bài học</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="tai-lieu-hoc-tap" href="#"><span class="material-symbols-outlined text-[20px]">folder_open</span><span class="font-body-md text-body-md">Tài liệu học tập</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="ngan-hang-quiz" href="#"><span class="material-symbols-outlined text-[20px]">quiz</span><span class="font-body-md text-body-md">Ngân hàng Quiz</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="hoc-vien-giang-vien" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span class="font-body-md text-body-md">Học viên &amp; Giảng viên</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="cau-hinh" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-body-md text-body-md">Cấu hình</span></a></nav></div><div class="p-space-md"><div class="p-space-sm rounded-xl bg-surface-container flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[22px]">eco</span><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface font-semibold">Vườn Tri Thức LMS</span><span class="font-label-sm text-label-sm text-on-surface-variant">Nền tảng đào tạo chuẩn hoá</span></div></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md flex-1 max-w-lg"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span><input class="w-full h-10 pl-10 pr-4 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm font-body-sm shadow-[0_1px_3px_-1px_rgba(32,34,58,0.06)] focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Tìm kiếm khóa học, bài học, học viên..." type="search"/></div><span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Production v2.4</span></div><div class="flex items-center gap-space-md"><button class="inline-flex items-center gap-1.5 px-space-md h-10 rounded-xl bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md transition-all shadow-[0_2px_8px_-2px_rgba(32,34,58,0.08)]" type="button"><span class="material-symbols-outlined text-[18px]">add</span>Tạo nội dung mới</button><button aria-label="Thông báo" class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface"></span></button><div class="h-6 w-[1px] bg-surface-container-high"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right hidden sm:flex"><span class="font-title-md text-title-md leading-tight text-on-surface">Anh Khoa</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">System Administrator</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-container/20" src="https://lh3.googleusercontent.com/aida/AEtjO1WHk7A14J2QJPcZLpvBC5My6mc_rVI7yUyik2KMm7pu_FhIIom-pLdHZKTnfeB0GZBD2CZ_bJQ8ixel8yDevRFvH7hd2qNXuap4SWOlQhKaaGBRKMewfExGc8vAcUimM1aVM_z55yLcmQtSYOMDclFzYe_iBtacHEXtg9EZWlSLerJuhcc2sbj5M-6XXbHmnmrNujwgiEZM9DgL4kaICyO0wSK3DvSmn_IXJgu9thykjxBuGMq1_AXmO0w"/></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<div class="px-space-md sm:px-space-lg lg:px-margin-desktop py-space-lg max-w-[1440px] mx-auto w-full flex flex-col gap-space-xl">
+<!-- Top Action Ribbon & Breadcrumb -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
+<div class="flex flex-col gap-space-2xs">
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant flex-wrap">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">school</span>
+            Khóa học
+          </a>
+<span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+<a class="hover:text-primary transition-colors font-medium" href="#">Backend Development &amp; Cloud Native</a>
+<span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+<span class="text-on-surface font-semibold bg-surface-container-high px-2 py-0.5 rounded-md">Soạn thảo bài học mới</span>
+</nav>
+<div class="flex items-center gap-3 mt-1">
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Tạo &amp; Cấu hình Bài học (Lesson Content Builder)</h1>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Chương 02: Bảo mật &amp; Xác thực
+          </span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap self-end md:self-center">
+<!-- Publishing Status Toggle -->
+<div class="flex items-center bg-surface-container px-3 py-1.5 rounded-xl gap-2 mr-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Trạng thái:</span>
+<label class="relative inline-flex items-center cursor-pointer select-none">
+<input checked="" class="sr-only peer" id="publish-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+<span class="ml-2 font-label-md text-label-md font-semibold text-secondary" id="publish-label">Xuất bản ngay</span>
+</label>
+</div>
+<button class="px-space-md h-10 rounded-xl bg-surface-container-high text-on-surface hover:bg-surface-dim font-label-md text-label-md transition-all" type="button">
+          Hủy
+        </button>
+<button class="inline-flex items-center gap-1.5 px-space-md h-10 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-primary font-label-md text-label-md shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+          Lưu bản nháp
+        </button>
+<button class="inline-flex items-center gap-1.5 px-space-lg h-10 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-md transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+          Xuất bản bài học
+        </button>
+</div>
+</div>
+<!-- Main Builder Layout: Asymmetric 2-Column Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- Primary Column: Lesson Details & Media Configuration -->
+<div class="lg:col-span-8 flex flex-col gap-space-xl">
+<!-- Card: General Information -->
+<section class="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-2xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-6 bg-primary-container rounded-full"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">1. Thông tin cốt lõi bài học</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Thông tin bắt buộc</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md">
+<!-- Title -->
+<div class="md:col-span-12 flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="lesson-title">Tên bài học <span class="text-error">*</span></label>
+<input class="h-11 px-4 rounded-xl bg-surface text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-low transition-all" id="lesson-title" placeholder="Nhập tên tiêu đề bài học..." type="text" value="Authentication với JWT &amp; Refresh Token Mechanism"/>
+</div>
+<!-- Short Description -->
+<div class="md:col-span-12 flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="lesson-desc">Mô tả ngắn &amp; Mục tiêu đầu ra</label>
+<textarea class="p-3.5 rounded-xl bg-surface text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-low transition-all" id="lesson-desc" placeholder="Tóm tắt nội dung chính và kiến thức kỹ sư sẽ làm chủ sau bài giảng..." rows="3">Phân tích chuyên sâu cơ chế cấp phát Access Token &amp; Refresh Token an toàn, phòng chống tấn công CSRF / XSS, kiến trúc Token Rotation và cách thiết lập Redis Blacklist tối ưu hiệu năng microservices.</textarea>
+</div>
+<!-- Sequence / Order -->
+<div class="md:col-span-4 flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface">Thứ tự bài học</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">format_list_numbered</span>
+<input class="w-full h-11 pl-9 pr-3 rounded-xl bg-surface text-on-surface font-body-md text-body-md focus:outline-none" type="text" value="Bài 03 (Module 2.3)"/>
+</div>
+</div>
+<!-- Estimated Duration -->
+<div class="md:col-span-4 flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface">Thời lượng dự kiến</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">schedule</span>
+<input class="w-full h-11 pl-9 pr-3 rounded-xl bg-surface text-on-surface font-body-md text-body-md focus:outline-none" type="text" value="18 phút 30 giây"/>
+</div>
+</div>
+<!-- SkillGarden Gamified Rewards -->
+<div class="md:col-span-4 flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface">Phần thưởng sinh trưởng</label>
+<div class="h-11 px-3.5 rounded-xl bg-secondary-container/40 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 font-label-md text-label-md text-on-secondary-container font-semibold">
+<span class="material-symbols-outlined text-secondary text-[18px]">psychology</span>
+                  +30 XP
+                </span>
+<span class="inline-flex items-center gap-1 font-label-md text-label-md text-primary font-semibold">
+<span class="material-symbols-outlined text-primary-container text-[18px]">water_drop</span>
+                  2 Giọt nước
+                </span>
+</div>
+</div>
+</div>
+<!-- Lesson Type Selector (Interactive Tabs) -->
+<div class="flex flex-col gap-2 pt-space-xs">
+<label class="font-label-md text-label-md text-on-surface">Loại hình định dạng bài học <span class="text-error">*</span></label>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm" id="lesson-type-group">
+<!-- Type 1: Video (Selected) -->
+<label class="cursor-pointer relative flex items-center gap-3 p-3.5 rounded-xl bg-primary-container text-on-primary shadow-sm transition-all">
+<input checked="" class="sr-only" name="lesson_type" type="radio" value="video"/>
+<span class="material-symbols-outlined text-[24px]">movie</span>
+<div class="flex flex-col leading-tight">
+<span class="font-title-md text-title-md font-semibold">Video Bài Giảng</span>
+<span class="font-label-sm text-label-sm opacity-80">Stream 1080p, HLS Cloud</span>
+</div>
+<span class="material-symbols-outlined ml-auto text-[20px]">check_circle</span>
+</label>
+<!-- Type 2: PDF Document -->
+<label class="cursor-pointer relative flex items-center gap-3 p-3.5 rounded-xl bg-surface hover:bg-surface-container text-on-surface transition-all">
+<input class="sr-only" name="lesson_type" type="radio" value="pdf"/>
+<span class="material-symbols-outlined text-[24px] text-outline">description</span>
+<div class="flex flex-col leading-tight">
+<span class="font-title-md text-title-md font-semibold">Tài Liệu PDF</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Đọc trực quan có Bookmark</span>
+</div>
+</label>
+<!-- Type 3: Quiz Assessment -->
+<label class="cursor-pointer relative flex items-center gap-3 p-3.5 rounded-xl bg-surface hover:bg-surface-container text-on-surface transition-all">
+<input class="sr-only" name="lesson_type" type="radio" value="quiz"/>
+<span class="material-symbols-outlined text-[24px] text-outline">quiz</span>
+<div class="flex flex-col leading-tight">
+<span class="font-title-md text-title-md font-semibold">Bài Quiz Đánh Giá</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Trắc nghiệm &amp; Code Challenge</span>
+</div>
+</label>
+</div>
+</div>
+</section>
+<!-- Card: Video Media Builder (Conditional Component) -->
+<section class="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs pb-space-2xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-6 bg-secondary rounded-full"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">2. Cấu hình Tài nguyên Video &amp; Phát trực tuyến</h2>
+</div>
+<!-- Source Selector: Upload vs YouTube -->
+<div class="flex items-center bg-surface-container p-1 rounded-xl">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest font-label-md text-label-md font-semibold text-primary shadow-sm flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[16px]">cloud_upload</span>
+                Tải lên tệp Video
+              </button>
+<button class="px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">smart_display</span>
+                Nhúng link YouTube
+              </button>
+</div>
+</div>
+<!-- Upload Status Notification / Finished State -->
+<div class="bg-surface-container-low p-space-md rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-secondary text-[26px]">video_file</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-on-surface truncate">jwt_auth_architecture_deepdive.mp4</span>
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span>Dung lượng: 245 MB</span>
+<span>•</span>
+<span class="inline-flex items-center gap-1 text-secondary font-semibold">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                    Tải lên hoàn tất &amp; Đã xử lý HLS 1080p (CDN PLT Ready)
+                  </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-highest text-on-surface font-label-sm text-label-sm hover:bg-surface-dim transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">cloud_sync</span>
+                Thay tệp khác
+              </button>
+<button class="p-1.5 rounded-lg text-error hover:bg-error-container transition-colors" title="Xóa tệp" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Video Player Sandbox Preview -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface flex items-center justify-between">
+<span>Trình chiếu thử nghiệm (Sandbox Player)</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mô phỏng giao diện của học viên SkillGarden</span>
+</span>
+<div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-on-surface flex flex-col justify-end shadow-md group">
+<!-- Video Simulated Content / Code Display Frame -->
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A clean modern high-resolution developer code editor screen displaying Node.js TypeScript JWT refresh token implementation code with colorful syntax highlighting in deep indigo and navy editor theme, showing secure cookie signing and payload verification methods clearly on desktop monitor." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCoLKsThIXvSsg5cqB29YvCqeKrxQqgp_QxmLDrn3glOWheDcnO9fVi7qLW_FLCt-25fCVvSpMIK-_wgeKGAmQZhco0x-Q1DzOk1WUou-sMHtD0mmm54L13vpyuddg0Q1SpXXZ2qcqI_lNZeEpQo3n-q4Zb47GeDpXIuFQ-h0mN0Mp_LlCs1BsJTep16jYM4Ii-S2RPBs4O5b8rUCVTrcAKC2aMrPktMlFRQc5rJNOKsETKqQ5wiiYS')"></div>
+<!-- Subtle gradient overlay for controls -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
+<!-- Watermark Stamp -->
+<div class="absolute top-4 left-4 flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full text-white/90">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+<span class="font-label-sm text-label-sm tracking-wide">PLT Solutions • SkillGarden Secure CDN</span>
+</div>
+<div class="absolute top-4 right-4 bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-lg text-white/80 font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">hd</span>
+                1080p 60fps
+              </div>
+<!-- Big Play Indicator on Center -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<button class="w-16 h-16 rounded-full bg-primary-container/90 backdrop-blur-md text-on-primary flex items-center justify-center transform transition-transform group-hover:scale-110 shadow-lg pointer-events-auto" type="button">
+<span class="material-symbols-outlined text-[32px] translate-x-0.5">play_arrow</span>
+</button>
+</div>
+<!-- Video Scrubber & Playbar Mockup -->
+<div class="relative z-10 p-4 flex flex-col gap-2">
+<!-- Scrubber Progress Bar -->
+<div class="w-full bg-white/20 h-1.5 rounded-full overflow-hidden cursor-pointer relative">
+<div class="bg-secondary h-full rounded-full w-[39%] relative">
+<span class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow"></span>
+</div>
+</div>
+<!-- Controls row -->
+<div class="flex items-center justify-between text-white text-xs">
+<div class="flex items-center gap-3 font-label-md text-label-md">
+<button class="hover:text-primary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">pause</span>
+</button>
+<button class="hover:text-primary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">volume_up</span>
+</button>
+<span class="font-mono tracking-tight text-white/90">07:15 / 18:30</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="bg-white/10 px-2 py-0.5 rounded font-label-sm text-label-sm text-white/90 font-medium">1.0x</span>
+<button class="hover:text-primary-fixed transition-colors" title="Phụ đề Tiếng Việt" type="button">
+<span class="material-symbols-outlined text-[20px] text-secondary-fixed">subtitles</span>
+</button>
+<button class="hover:text-primary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+</button>
+<button class="hover:text-primary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">fullscreen</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Video Metadata & Enrichment Settings -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+<!-- Custom Thumbnail Upload -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface">Ảnh bìa Video (Thumbnail)</label>
+<div class="flex items-center gap-space-sm p-3 rounded-xl bg-surface">
+<div class="w-20 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container relative">
+<img class="w-full h-full object-cover" data-alt="A clean modern graphic badge for backend authentication tutorial with green seedling emblem and deep blue padlock illustration on gradient background, professional enterprise training style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCznZ_NtPjEyeBMFIu4ZPu3wEm8vjqt6c6XaFVjCsIZA4IuIsw4KIiGtkQHmfds7UI2o5Mq9j3wwin87kdl2ytm-OUGH2Ya7KHBmve7IPDpTG35klsribmYrk3UGdjitSKjzhh0edU5elyxLtG55HASrpD8G7Xeh07b7bhei71akyCUEDtCHOp-1X9SXwm_PMuH3U6YBUqaHr2GKS1356pAjePjhF_EnDprglbWlzw9lKiHsSiVKx9p"/>
+</div>
+<div class="flex flex-col gap-1 min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate">Tự động chụp tại 00:05</span>
+<div class="flex items-center gap-2">
+<button class="font-label-sm text-label-sm text-primary font-semibold hover:underline" type="button">Tải ảnh bìa tùy chỉnh</button>
+<span class="text-outline">•</span>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:underline" type="button">Chụp lại</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Vietnamese Caption (.VTT) -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface">Phụ đề &amp; Bản ghi âm (Captions)</label>
+<div class="flex items-center justify-between p-3 rounded-xl bg-surface">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="material-symbols-outlined text-secondary text-[22px]">closed_caption</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate">vi_subtitles_jwt_v2.vtt</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tiếng Việt (AI Generated &amp; Verified)</span>
+</div>
+</div>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-dim transition-colors" type="button">
+                  Tải VTT mới
+                </button>
+</div>
+</div>
+<!-- Mandatory 90% Watch Completion Rule -->
+<div class="md:col-span-2 p-space-md rounded-xl bg-surface-container flex items-center justify-between gap-space-md">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-[24px] mt-0.5">verified_user</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Ràng buộc điều kiện hoàn thành bài học</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Bắt buộc học viên theo dõi ít nhất 90% thời lượng video (16 phút 39 giây) trước khi cấp nhận XP và tính chỉ tiêu sinh trưởng.</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+<!-- Secondary Dropzone (For attachments & supplementary handouts) -->
+<div class="flex flex-col gap-2 pt-space-xs">
+<span class="font-label-md text-label-md text-on-surface">Tài liệu đính kèm bổ trợ (Source Code, Cheat sheet)</span>
+<div class="p-6 rounded-2xl bg-surface flex flex-col items-center justify-center text-center gap-2 cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Kéo thả tài nguyên đính kèm hoặc <span class="text-primary underline">Chọn tệp từ máy tính</span></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Hỗ trợ .ZIP, .PDF, .MD, .JSON (Tối đa 50MB)</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Secondary Column: Quiz Bindings & Botanical Garden Growth Impact -->
+<div class="lg:col-span-4 flex flex-col gap-space-xl">
+<!-- Card: Associated Quiz / Checkpoint -->
+<div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[22px]">quiz</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Gắn Quiz kiểm tra</h3>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold">Đã liên kết</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Bài kiểm tra gắn liền với bài học này nhằm bảo đảm học viên hiểu tường tận cơ chế token trước khi đi tiếp.
+          </p>
+<!-- Quiz Preview Item -->
+<div class="p-space-md rounded-xl bg-surface flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">Quiz #03: JWT &amp; Security Patterns</span>
+<span class="font-label-sm text-label-sm text-primary font-mono bg-primary-fixed px-2 py-0.5 rounded">8 Câu hỏi</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant font-label-sm text-label-sm mt-1">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+                Điểm qua môn: 70%
+              </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-outline">timer</span>
+                15 phút
+              </span>
+</div>
+<div class="flex items-center gap-2 mt-2 pt-2 bg-surface-container-lowest -mx-2 -mb-1 p-2 rounded-lg">
+<span class="material-symbols-outlined text-secondary text-[18px]">lock_open</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Mở khóa bài tiếp theo: <strong class="text-on-surface font-medium">Bảo mật API Gateway</strong></span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex-1 py-2 rounded-xl bg-surface-container-high hover:bg-surface-dim text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+              Sửa bộ câu hỏi
+            </button>
+<button class="p-2 rounded-xl bg-surface-container text-outline hover:text-error transition-colors" title="Bỏ liên kết Quiz" type="button">
+<span class="material-symbols-outlined text-[20px]">link_off</span>
+</button>
+</div>
+</div>
+<!-- Card: Digital Garden Growth Impact Matrix -->
+<div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md relative overflow-hidden">
+<!-- Soft Organic Backdrop Glow -->
+<div class="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-secondary-container/40 blur-2xl pointer-events-none"></div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[24px]">psychiatry</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Tác động Cây Sinh Trưởng</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Mô phỏng sự chuyển hóa năng lực của học viên trong khu vườn tri thức khi vượt qua bài 03.
+          </p>
+<!-- Interactive Garden Plant Card -->
+<div class="p-space-md rounded-2xl bg-surface flex flex-col gap-space-md">
+<div class="flex items-center gap-space-md">
+<!-- Botanical Illustration / Plant Node -->
+<div class="w-16 h-16 rounded-2xl bg-secondary-container/80 flex items-center justify-center flex-shrink-0 relative shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[36px]">nature</span>
+<span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-on-primary font-label-sm text-[10px] flex items-center justify-center font-bold">L2</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">Cây Kỹ Năng Mục Tiêu</span>
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">Cây Backend Node.js</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Giai đoạn: Cây Đang Vươn Cành (Sapling)</span>
+</div>
+</div>
+<!-- Growth Progression Metrics -->
+<div class="flex flex-col gap-2 pt-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary text-[16px]">trending_up</span>
+                  Tiến độ sinh khối (Biomass)
+                </span>
+<span class="text-secondary font-bold">58% <span class="text-primary-container">(+4%)</span></span>
+</div>
+<!-- SkillGarden Progress Bar -->
+<div class="h-2.5 w-full bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-secondary rounded-l-full" style="width: 54%;"></div>
+<div class="h-full bg-secondary-fixed animate-pulse rounded-r-full" style="width: 8%;"></div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Hiện tại: 320 / 600 XP</span>
+<span class="text-secondary font-medium">Sau bài: 350 XP</span>
+</div>
+</div>
+<!-- Milestone Unlock Pills -->
+<div class="flex flex-col gap-1.5 pt-2">
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Chồi kỹ năng kích hoạt sau bài học:</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-secondary text-[14px]">eco</span>
+                  JWT Bearer Token
+                </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-secondary text-[14px]">eco</span>
+                  Redis Revocation
+                </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-secondary text-[14px]">eco</span>
+                  HTTP-Only Cookie
+                </span>
+</div>
+</div>
+</div>
+<!-- Garden Tip / Mentor Organic Advice -->
+<div class="p-3.5 rounded-xl bg-tertiary-fixed/40 flex items-start gap-2.5">
+<span class="material-symbols-outlined text-tertiary text-[20px] mt-0.5">tips_and_updates</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-tertiary-fixed font-semibold">Gợi ý từ Vườn Tri Thức LMS:</span>
+<span class="font-body-sm text-body-sm text-on-tertiary-fixed-variant">
+                Bài học này thuộc mắt xích quan trọng cấp chứng chỉ Backend Architect. Hãy chắc chắn phần kiểm tra câu hỏi bao quát đầy đủ lỗ hổng Refresh Token Replay.
+              </span>
+</div>
+</div>
+</div>
+<!-- Card: Publishing Workflow Checklist -->
+<div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-sm">
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider font-semibold">Kiểm tra tính sẵn sàng (Ready Check)</span>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+<span>Video phân giải 1080p đã mã hóa HLS</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+<span>Đã liên kết Quiz đánh giá chất lượng</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+<span>Phần thưởng XP &amp; Giọt nước đã thiết lập</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-outline">
+<span class="material-symbols-outlined text-[18px]">radio_button_unchecked</span>
+<span>Chưa gửi thông báo đẩy (Push notification) tới học viên</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Micro-interaction for publish status switch
+  const publishSwitch = document.getElementById('publish-switch');
+  const publishLabel = document.getElementById('publish-label');
+  if (publishSwitch && publishLabel) {
+    publishSwitch.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        publishLabel.textContent = 'Xuất bản ngay';
+        publishLabel.className = 'ml-2 font-label-md text-label-md font-semibold text-secondary';
+      } else {
+        publishLabel.textContent = 'Lưu bản nháp';
+        publishLabel.className = 'ml-2 font-label-md text-label-md font-semibold text-on-surface-variant';
+      }
+    });
+  }
+
+  // Active Lesson Type Tab Switcher
+  const lessonTypeLabels = document.querySelectorAll('#lesson-type-group label');
+  lessonTypeLabels.forEach((label) => {
+    label.addEventListener('click', () => {
+      lessonTypeLabels.forEach(l => {
+        l.className = 'cursor-pointer relative flex items-center gap-3 p-3.5 rounded-xl bg-surface hover:bg-surface-container text-on-surface transition-all';
+        const icon = l.querySelector('.material-symbols-outlined:first-child');
+        if (icon) icon.className = 'material-symbols-outlined text-[24px] text-outline';
+        const check = l.querySelector('.material-symbols-outlined:last-child');
+        if (check && check.innerText === 'check_circle') check.remove();
+      });
+      label.className = 'cursor-pointer relative flex items-center gap-3 p-3.5 rounded-xl bg-primary-container text-on-primary shadow-sm transition-all';
+      const activeIcon = label.querySelector('.material-symbols-outlined');
+      if (activeIcon) activeIcon.className = 'material-symbols-outlined text-[24px]';
+      
+      const checkEl = document.createElement('span');
+      checkEl.className = 'material-symbols-outlined ml-auto text-[20px]';
+      checkEl.innerText = 'check_circle';
+      label.appendChild(checkEl);
+    });
+  });
+</script></main></div></body></html>

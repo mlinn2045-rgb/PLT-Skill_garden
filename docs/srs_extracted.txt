@@ -1,0 +1,1012 @@
+CÔNG TY TNHH PLT SOLUTIONS PLT  
+    SOLUTIONS COMPANY LIMITED 
+---🙡🙣--- 
+  SRS PHẦN MỀM HỖ TRỢ HỌC TẬP KỸ NĂNG CÔNG NGHỆ THÔNG TIN
+					GIỚI THIỆU
+MỤC ĐÍCH
+Tài liệu Software Requirements Specification (SRS) này được xây dựng nhằm mô tả chi tiết các yêu cầu chức năng và phi chức năng của hệ thống Skill Garden – Phần mềm hỗ trợ học tập và phát triển kỹ năng IT. Tài liệu đóng vai trò làm cơ sở để xác định phạm vi, mục tiêu, các chức năng chính và nguyên tắc hoạt động của hệ thống trong quá trình phân tích, thiết kế, phát triển và kiểm thử phần mềm.
+SkillGarden được xây dựng với mục tiêu hỗ trợ người dùng trong việc học tập, rèn luyện và phát triển các kỹ năng thuộc lĩnh vực Công nghệ thông tin thông qua một môi trường học tập trực quan và có tính tương tác. Hệ thống ứng dụng cơ chế Gamification (trò chơi hóa) nhằm tăng sự hứng thú và động lực học tập của người dùng.
+Điểm đặc biệt của hệ thống là tiến độ học tập được trực quan hóa dưới dạng một khu vườn kỹ năng cá nhân. Mỗi kỹ năng IT được đại diện bởi một loại cây khác nhau, chẳng hạn như cây hoa, cây ăn quả hoặc cây cảnh. Người dùng sẽ thực hiện các bài học, bài tập và bài kiểm tra theo lộ trình đã được xây dựng. Khi hoàn thành các nội dung học tập và đạt yêu cầu, người dùng sẽ nhận được điểm kinh nghiệm (XP), đồng thời cây đại diện cho kỹ năng tương ứng sẽ phát triển qua các giai đoạn khác nhau.
+Thông qua cơ chế trực quan hóa quá trình phát triển của cây, hệ thống giúp người dùng dễ dàng theo dõi tiến độ học tập và nhận thấy sự phát triển của bản thân theo thời gian. Khi hoàn thành toàn bộ lộ trình học tập của một kỹ năng, cây tương ứng sẽ đạt trạng thái phát triển hoàn chỉnh, đánh dấu việc người dùng đã hoàn thành kỹ năng đó.
+Ngoài ra, tài liệu này cũng là cơ sở thống nhất giữa các bên liên quan về các yêu cầu của hệ thống, hỗ trợ quá trình thiết kế cơ sở dữ liệu, xây dựng giao diện, phát triển chức năng và kiểm thử sản phẩm trong các giai đoạn tiếp theo.
+PHẠM VI HỆ THỐNG
+Hệ thống SkillGarden được phát triển dưới dạng ứng dụng web, tập trung hỗ trợ việc học tập và phát triển các kỹ năng trong lĩnh vực Công nghệ thông tin.Trong phạm vi phiên bản hiện tại, hệ thống cung cấp các chức năng chính liên quan đến quản lý tài khoản, quản lý nội dung học tập, thực hiện bài tập và theo dõi tiến độ học tập của người dùng.
+Đối với Quản trị hệ thống (Super Admin)
+Hệ thống cho phép Quản trị hệ thống:
+Đăng nhập và đăng xuất hệ thống.
+Quản lý thông tin tài khoản cá nhân.
+Xem danh sách tài khoản Admin trong hệ thống.
+Thêm mới tài khoản Admin.
+Chỉnh sửa thông tin tài khoản Admin.
+Khóa hoặc mở khóa tài khoản Admin.
+Xóa tài khoản Admin.
+Phân quyền và quản lý quyền truy cập của Admin.
+Xem danh sách người dùng trong hệ thống.
+Theo dõi và quản lý hoạt động của các tài khoản trong hệ thống.
+Xem báo cáo và thống kê tổng quan về hoạt động của hệ thống.
+Theo dõi các thông tin tổng quan như số lượng người dùng, số lượng Admin, số lượng kỹ năng và tình hình hoạt động của hệ thống.
+Lưu ý: Tài khoản Admin không được phép tự đăng ký mà chỉ được tạo và cấp quyền bởi Quản trị hệ thống (Super Admin).
+Đối với người dùng (User)
+Hệ thống cho phép người dùng:
+Đăng ký tài khoản và đăng nhập vào hệ thống. 
+Quản lý thông tin cá nhân. 
+Xem danh sách các kỹ năng được cung cấp. 
+Lựa chọn kỹ năng để bắt đầu quá trình học tập. 
+Xem lộ trình học tập của từng kỹ năng. 
+Thực hiện các bài học theo thứ tự được quy định. 
+Thực hiện bài tập và bài kiểm tra (Quiz). 
+Xem kết quả sau khi hoàn thành bài kiểm tra. 
+Nhận điểm kinh nghiệm (XP) dựa trên kết quả học tập. 
+Theo dõi tiến độ hoàn thành của từng kỹ năng. 
+Theo dõi trạng thái phát triển của cây đại diện cho kỹ năng. 
+Xem khu vườn kỹ năng cá nhân và tổng quan quá trình học tập. 
+Đối với quản trị viên (Admin)
+Hệ thống cho phép quản trị viên:
+Quản lý tài khoản người dùng. 
+Quản lý danh sách kỹ năng trong hệ thống. 
+Thêm, chỉnh sửa và xóa nội dung bài học. 
+Xây dựng và quản lý lộ trình học tập cho từng kỹ năng. 
+Quản lý bài tập và câu hỏi kiểm tra. 
+Thiết lập đáp án và điều kiện đánh giá bài kiểm tra. 
+Quản lý dữ liệu liên quan đến tiến độ học tập của người dung.
+				TỔNG QUAN HỆ THỐNG
+MÔ TẢ HỆ THỐNG
+SkillGarden là một nền tảng web hỗ trợ người dùng học tập và phát triển các kỹ năng trong lĩnh vực Công nghệ thông tin. Hệ thống được xây dựng dựa trên sự kết hợp giữa mô hình học tập theo lộ trình và cơ chế Gamification, nhằm tạo ra trải nghiệm học tập trực quan, sinh động và có tính tương tác.
+Khác với các hình thức theo dõi tiến độ học tập thông thường chỉ sử dụng phần trăm hoàn thành hoặc thanh tiến độ, SkillGarden trực quan hóa quá trình phát triển kỹ năng của người dùng dưới hình ảnh một khu vườn kỹ năng cá nhân. Mỗi người dùng sau khi đăng ký và đăng nhập vào hệ thống sẽ sở hữu một khu vườn riêng, nơi hiển thị các kỹ năng mà người dùng đang học tập và phát triển.
+Mỗi kỹ năng trong hệ thống được đại diện bởi một loại cây khác nhau. Ví dụ, các kỹ năng như Front-end Development, Back-end Development, SQL, Python, Java, Manual Testing hoặc Automation Testing có thể được biểu diễn bằng các loại cây như cây hoa, cây ăn quả, cây cảnh hoặc các loại thực vật khác. Việc sử dụng nhiều loại cây giúp khu vườn của mỗi người dùng trở nên đa dạng và thể hiện trực quan hành trình phát triển các kỹ năng khác nhau.
+Đối với mỗi kỹ năng, hệ thống cung cấp một lộ trình học tập bao gồm các bài học, nội dung kiến thức, bài tập và bài kiểm tra được sắp xếp theo trình tự nhất định. Người dùng thực hiện quá trình học tập bằng cách hoàn thành từng nội dung theo lộ trình. Sau mỗi bài học hoặc bài kiểm tra, hệ thống sẽ ghi nhận kết quả và cập nhật tiến độ học tập của người dùng.
+Khi người dùng hoàn thành các yêu cầu của bài học và đạt kết quả theo điều kiện được hệ thống quy định, người dùng sẽ nhận được điểm kinh nghiệm (XP). Điểm XP và tiến độ hoàn thành sẽ được sử dụng để xác định mức độ phát triển của cây đại diện cho kỹ năng tương ứng. Cây sẽ phát triển qua nhiều giai đoạn, từ trạng thái ban đầu như hạt giống hoặc mầm cây, đến cây non, cây trưởng thành và trạng thái hoàn thiện khi người dùng hoàn thành toàn bộ lộ trình học tập của kỹ năng đó.
+CÁC LOẠI NGƯỜI DÙNG
+Super Admin:
+Đăng nhập
+Quản lý Admin
+Phân quyền Admin
+Quản lý toàn bộ User
+Quản lý toàn bộ hệ thống
+Xem báo cáo hệ thống
+Cấu hình hệ thống
+User:
+Đăng ký
+Đăng nhập
+Quản lý thông tin hồ sơ cá nhâ
+Chọn skill
+Học bài
+Làm bài tập
+Làm Quiz
+Nhận XP theo số điểm sau khi làm Quiz
+Theo dõi cây phát triển
+Xem khu vườn
+Xem thành tích
+Admin:
+Đăng nhập tài khoản Admin
+Quản lý User
+Thêm Skill
+Quản lý bài học
+Thêm câu hỏi
+Quản lý Quiz
+Theo dõi dữ liệu hệ thống
+MÔ HÌNH HOẠT ĐỘNG
+  Hình 1. Activity Diagram User
+		Hình 2. Activity Diagram Admin
+				YÊU CẦU HỆ THỐNG
+YÊU CẦU CHỨC NĂNG
+I. SUPER ADMIN
+1. Đăng nhập
+Mã chức năng: FR-SA01
+Tên chức năng: Đăng nhập
+Super Admin được phép đăng nhập vào hệ thống bằng tài khoản quản trị cấp cao đã được tạo và cấp quyền trước đó.
+Yêu cầu chức năng:
+Super Admin nhập Username hoặc Email. 
+Super Admin nhập Password. 
+Hệ thống xác thực thông tin đăng nhập. 
+Hệ thống kiểm tra vai trò và quyền truy cập của tài khoản. 
+Chỉ tài khoản có quyền Super Admin mới được phép truy cập khu vực quản trị cấp cao. 
+Hệ thống hiển thị thông báo khi thông tin đăng nhập không chính xác. 
+Hệ thống chuyển đến Super Admin Dashboard sau khi đăng nhập thành công. 
+2. Quản lý Admin
+Mã chức năng: FR-SA02
+Tên chức năng: Quản lý Admin
+Super Admin có quyền quản lý toàn bộ tài khoản Admin trong hệ thống.
+2.1 Xem danh sách Admin
+Super Admin có thể:
+Xem danh sách toàn bộ tài khoản Admin. 
+Xem thông tin cơ bản của từng Admin. 
+Tìm kiếm Admin theo Username hoặc Email. 
+Lọc Admin theo trạng thái hoạt động. 
+Lọc Admin theo vai trò hoặc quyền hạn. 
+Thông tin hiển thị bao gồm:
+Admin ID. 
+Avatar. 
+Username. 
+Tag ID. 
+Email. 
+Vai trò. 
+Quyền hạn. 
+Trạng thái tài khoản. 
+Ngày tạo tài khoản. 
+Lần hoạt động gần nhất. 
+2.2 Thêm Admin
+Super Admin có quyền tạo tài khoản Admin mới.
+Thông tin bao gồm:
+Username. 
+Tag ID. 
+Email. 
+Password. 
+Xác nhận Password. 
+Vai trò. 
+Quyền hạn được cấp. 
+Hệ thống kiểm tra tính hợp lệ của thông tin trước khi tạo tài khoản.
+Sau khi tạo thành công, tài khoản được cấp vai trò Admin và được phép truy cập các chức năng tương ứng với quyền đã được phân công.
+2.3 Chỉnh sửa Admin
+Super Admin có thể:
+Cập nhật Username. 
+Cập nhật Email. 
+Cập nhật Avatar. 
+Cập nhật thông tin Admin. 
+Thay đổi vai trò. 
+Thêm hoặc thu hồi quyền hạn. 
+2.4 Khóa/Mở khóa Admin
+Super Admin có thể:
+Khóa tài khoản Admin. 
+Tạm ngừng quyền truy cập hệ thống. 
+Mở khóa tài khoản khi cần thiết. 
+Admin bị khóa sẽ không thể đăng nhập vào hệ thống cho đến khi tài khoản được mở khóa.
+2.5 Xóa Admin
+Super Admin có thể:
+Xóa tài khoản Admin. 
+Hiển thị thông báo xác nhận trước khi xóa. 
+Đảm bảo tài khoản bị xóa không còn quyền truy cập hệ thống. 
+3. Phân quyền Admin
+Mã chức năng: FR-SA03
+Tên chức năng: Phân quyền Admin
+Super Admin có quyền thiết lập và quản lý quyền hạn của từng Admin trong hệ thống.
+Yêu cầu chức năng:
+Super Admin có thể cấp các quyền quản lý:
+Quản lý User:
+Xem danh sách User. 
+Xem thông tin User. 
+Chỉnh sửa thông tin User. 
+Khóa/Mở khóa User. 
+Xóa User. 
+Quản lý Skill:
+Xem danh sách Skill. 
+Thêm Skill. 
+Chỉnh sửa Skill. 
+Xóa Skill. 
+Quản lý Learning Path:
+Xem Learning Path. 
+Tạo Learning Path. 
+Chỉnh sửa Learning Path. 
+Xóa Learning Path. 
+Sắp xếp thứ tự bài học. 
+Quản lý Lesson:
+Thêm Lesson. 
+Chỉnh sửa Lesson. 
+Xóa Lesson. 
+Quản lý Task:
+Tạo Task. 
+Chỉnh sửa Task. 
+Xóa Task. 
+Thiết lập yêu cầu hoàn thành. 
+Quản lý Quiz:
+Tạo Quiz. 
+Thêm câu hỏi. 
+Chỉnh sửa câu hỏi. 
+Xóa câu hỏi. 
+Thiết lập đáp án đúng. 
+Thiết lập điều kiện đạt Quiz. 
+Quản lý Achievement:
+Tạo Achievement. 
+Chỉnh sửa Achievement. 
+Xóa Achievement. 
+Thiết lập điều kiện mở khóa Achievement. 
+Super Admin có thể cấp, chỉnh sửa hoặc thu hồi quyền của từng Admin.
+4. Quản lý toàn bộ User
+Mã chức năng: FR-SA04
+Tên chức năng: Quản lý toàn bộ User
+Super Admin có quyền quản lý tất cả tài khoản User trong hệ thống.
+4.1 Xem danh sách User
+Thông tin hiển thị bao gồm:
+User ID. 
+Avatar. 
+Username. 
+Tag ID. 
+Email. 
+Level. 
+Tổng XP. 
+Số Skill đang học. 
+Số Skill đã hoàn thành. 
+Ngày đăng ký. 
+Trạng thái tài khoản. 
+4.2 Tìm kiếm và lọc User
+Super Admin có thể tìm kiếm User theo:
+Username. 
+Tag ID. 
+Email. 
+Có thể lọc theo:
+Level. 
+Trạng thái tài khoản. 
+Ngày đăng ký. 
+4.3 Xem thông tin chi tiết User
+Super Admin có thể xem:
+Thông tin cá nhân. 
+Level hiện tại. 
+Tổng XP. 
+Các Skill đang học. 
+Các Skill đã hoàn thành. 
+Tiến độ học tập. 
+Kết quả Lesson. 
+Kết quả Task. 
+Kết quả Quiz. 
+Achievement đã đạt được. 
+4.4 Quản lý trạng thái User
+Super Admin có thể:
+Khóa tài khoản User. 
+Mở khóa tài khoản User. 
+Xóa tài khoản User trong trường hợp cần thiết. 
+5. Giám sát hoạt động hệ thống
+Mã chức năng: FR-SA05
+Tên chức năng: Giám sát hoạt động hệ thống
+Super Admin có quyền theo dõi các hoạt động quan trọng diễn ra trong hệ thống.
+Yêu cầu chức năng:
+Super Admin có thể theo dõi:
+User đăng ký tài khoản. 
+User đăng nhập hệ thống. 
+Admin đăng nhập hệ thống. 
+Admin tạo hoặc chỉnh sửa Skill. 
+Admin tạo hoặc chỉnh sửa Learning Path. 
+Admin thêm, chỉnh sửa hoặc xóa Lesson. 
+Admin tạo hoặc chỉnh sửa Task. 
+Admin tạo hoặc chỉnh sửa Quiz. 
+Admin thay đổi nội dung Achievement. 
+Super Admin thay đổi quyền hạn của Admin. 
+Thông tin hoạt động bao gồm:
+Người thực hiện. 
+Hành động thực hiện. 
+Đối tượng bị tác động. 
+Thời gian thực hiện. 
+Trạng thái thực hiện. 
+6. Xem báo cáo hệ thống
+Mã chức năng: FR-SA06
+Tên chức năng: Xem báo cáo hệ thống
+Super Admin có quyền xem các báo cáo và thống kê tổng quan về hoạt động của SkillGarden.
+6.1 Thống kê tài khoản
+Bao gồm:
+Tổng số User. 
+Tổng số Admin. 
+Số tài khoản đang hoạt động. 
+Số User mới đăng ký. 
+Số tài khoản bị khóa. 
+6.2 Thống kê nội dung học tập
+Bao gồm:
+Tổng số Skill. 
+Tổng số Learning Path. 
+Tổng số Lesson. 
+Tổng số Task. 
+Tổng số Quiz. 
+Tổng số Achievement. 
+6.3 Thống kê hoạt động học tập
+Bao gồm:
+Tổng số Lesson đã hoàn thành. 
+Tổng số Task đã hoàn thành. 
+Tổng số Quiz đã thực hiện. 
+Tỷ lệ hoàn thành Quiz. 
+Tổng số Skill đã hoàn thành. 
+6.4 Thống kê kỹ năng
+Hiển thị:
+Các Skill được học nhiều nhất. 
+Các Skill có tỷ lệ hoàn thành cao. 
+Các Skill có tỷ lệ hoàn thành thấp. 
+Tiến độ học tập trung bình của từng Skill. 
+6.5 Thống kê hoạt động hệ thống
+Hiển thị:
+Số lượng User hoạt động. 
+Hoạt động học tập theo thời gian. 
+Số lượng bài học được hoàn thành. 
+Số lượng Quiz được thực hiện. 
+Số lượng User đăng ký mới. 
+Dữ liệu có thể được hiển thị dưới dạng:
+Dashboard tổng quan. 
+Biểu đồ. 
+Bảng thống kê. 
+7. Cấu hình hệ thống
+Mã chức năng: FR-SA07
+Tên chức năng: Cấu hình hệ thống
+Super Admin có quyền thiết lập và quản lý các cấu hình chung của hệ thống SkillGarden.
+7.1 Cấu hình thông tin hệ thống
+Super Admin có thể cập nhật:
+Tên hệ thống. 
+Logo hệ thống. 
+Slogan. 
+Mô tả hệ thống. 
+7.2 Cấu hình đăng ký
+Super Admin có thể:
+Cho phép hoặc tạm dừng đăng ký User. 
+Thiết lập quy tắc Username. 
+Thiết lập định dạng Tag ID. 
+Thiết lập quy tắc Password. 
+Thiết lập thông tin bắt buộc khi đăng ký. 
+7.3 Cấu hình Gamification
+Super Admin có thể thiết lập:
+XP nhận được khi hoàn thành Lesson. 
+XP nhận được khi hoàn thành Task. 
+XP nhận được khi hoàn thành Quiz. 
+XP nhận được khi đạt Achievement. 
+Điều kiện tăng Level. 
+Số XP cần thiết cho từng Level. 
+Điều kiện mở khóa bài học tiếp theo. 
+Điều kiện phát triển cây. 
+Các giai đoạn phát triển của cây. 
+Điều kiện hoàn thành Skill. 
+7.4 Cấu hình hoạt động hệ thống
+Super Admin có thể:
+Thiết lập trạng thái hoạt động của hệ thống. 
+Bật hoặc tắt một số chức năng. 
+Thiết lập thông báo hệ thống. 
+Cập nhật các cấu hình chung phục vụ cho việc vận hành hệ thống.
+II. USER
+1. Đăng ký tài khoản
+Mã chức năng: FR-U01
+Tên chức năng: Đăng ký tài khoản
+Hệ thống cho phép người dùng chưa có tài khoản đăng ký tài khoản mới để sử dụng các chức năng của SkillGarden.
+Yêu cầu chức năng:
+Người dùng có thể truy cập chức năng đăng ký từ trang chủ hoặc trang đăng nhập. 
+Người dùng nhập Email. 
+Người dùng nhập Password.
+Hệ thống kiểm tra tính hợp lệ của các thông tin được nhập. 
+Email không được trùng với tài khoản đã tồn tại. 
+Người dùng lựa chọn hạt giống/kỹ năng ban đầu. 
+Người dùng xác nhận đồng ý với Điều khoản dịch vụ và Chính sách bảo mật. 
+Sau khi đăng ký thành công, hệ thống tạo tài khoản với vai trò User. 
+Hệ thống cấp 100 XP khởi đầu nếu đây là cơ chế bạn muốn giữ. 
+Hệ thống thông báo kết quả đăng ký và chuyển người dùng vào giao diện chính.
+2. Đăng nhập
+Mã chức năng: FR-U02
+Tên chức năng: Đăng nhập
+Hệ thống cho phép User đăng nhập bằng tài khoản đã được đăng ký để truy cập vào các chức năng cá nhân.
+Yêu cầu chức năng:
+  Người dùng nhập Email. 
+  Người dùng nhập Password. 
+  Hệ thống kiểm tra tính hợp lệ của thông tin đăng nhập. 
+  Hệ thống kiểm tra trạng thái tài khoản. 
+  Nếu thông tin chính xác và tài khoản đang hoạt động, hệ thống cho phép đăng  nhập. 
+  Nếu thông tin không chính xác, hệ thống hiển thị thông báo lỗi. 
+  Nếu tài khoản bị khóa, hệ thống không cho phép đăng nhập. 
+  Sau khi đăng nhập thành công, hệ thống chuyển User đến My Garden/Giao diện chính. 
+  Nếu đăng nhập bằng Google, hệ thống thực hiện xác thực thông qua tài khoản Google. 
+  Nếu người dùng chọn Ghi nhớ đăng nhập, hệ thống duy trì thông tin phiên đăng nhập theo cơ chế được cấu hình. 
+Hệ thống xác định vai trò tài khoản để điều hướng đến giao diện phù hợp. 
+3. Quên mật khẩu
+Mã chức năng: FR-U03
+Tên chức năng: Quên mật khẩu
+Hệ thống hỗ trợ người dùng khôi phục mật khẩu khi quên thông tin đăng nhập.
+Yêu cầu chức năng:
+Người dùng có thể truy cập chức năng “Quên mật khẩu” từ trang đăng nhập. 
+Người dùng nhập Email đã đăng ký. 
+Hệ thống kiểm tra Email có tồn tại hay không. 
+Hệ thống cho phép người dùng thực hiện quá trình đặt lại mật khẩu. 
+Người dùng nhập Password mới. 
+Người dùng xác nhận Password mới. 
+Hệ thống kiểm tra tính hợp lệ của mật khẩu mới. 
+Sau khi cập nhật thành công, hệ thống thông báo thay đổi mật khẩu thành công. 
+Người dùng có thể sử dụng mật khẩu mới để đăng nhập. 
+4. Đăng xuất
+Mã chức năng: FR-U04
+Tên chức năng: Đăng xuất
+Hệ thống cho phép người dùng đăng xuất khỏi tài khoản đang sử dụng.
+Yêu cầu chức năng:
+Người dùng có thể chọn chức năng đăng xuất từ menu tài khoản. 
+Hệ thống kết thúc phiên đăng nhập hiện tại. 
+Sau khi đăng xuất, người dùng không thể tiếp tục truy cập các chức năng yêu cầu xác thực. 
+Hệ thống chuyển người dùng về trang chủ hoặc trang đăng nhập. 
+5. Quản lý tài khoản cá nhân
+Mã chức năng: FR-U05
+Tên chức năng: Quản lý tài khoản cá nhân
+Hệ thống cho phép người dùng xem và quản lý thông tin tài khoản cá nhân.
+Yêu cầu chức năng:
+Người dùng có thể xem:
+Avatar. 
+Username. 
+Tag ID. 
+Email. 
+Ngày tham gia hệ thống. 
+Level hiện tại. 
+Tổng XP. 
+Người dùng có thể:
+Cập nhật Avatar. 
+Cập nhật thông tin cá nhân. 
+Thay đổi Email. 
+Thay đổi Password. 
+Xem tổng quan quá trình học tập. 
+Xem số lượng Skill đang học. 
+Xem số lượng Skill đã hoàn thành. 
+Xem các Achievement đã đạt được.
+III. ADMIN
+Admin là người chịu trách nhiệm quản lý nội dung học tập và các thành phần liên quan đến quá trình hc tập của User. Các chức năng Admin được giới hạn theo quyền do Super Admin phân công.
+1. Quản lý User
+Mã chức năng: FR-A01
+Tên chức năng: Quản lý User
+Admin được phép quản lý thông tin User trong phạm vi quyền hạn được cấp.
+Yêu cầu chức năng:
+Admin có thể:
+Xem danh sách User. 
+Tìm kiếm User theo Username, Tag ID hoặc Email. 
+Xem thông tin cơ bản của User. 
+Xem Level và tổng XP của User. 
+Xem tiến độ học tập của User. 
+Xem các Skill User đang học. 
+Xem các Skill User đã hoàn thành. 
+Xem lịch sử hoạt động học tập. 
+Khóa tài khoản User nếu được cấp quyền. 
+Mở khóa tài khoản User nếu được cấp quyền. 
+Thông tin User có thể hiển thị:
+User ID. 
+Avatar. 
+Username. 
+Tag ID. 
+Email. 
+Level. 
+Tổng XP. 
+Ngày đăng ký. 
+Trạng thái tài khoản. 
+2. Quản lý Skill
+Mã chức năng: FR-A02
+Tên chức năng: Quản lý Skill
+Admin có quyền quản lý các kỹ năng được cung cấp trong hệ thống.
+Yêu cầu chức năng:
+Admin có thể:
+Xem danh sách Skill. 
+Thêm Skill mới. 
+Chỉnh sửa thông tin Skill. 
+Xóa Skill. 
+Cập nhật mô tả Skill. 
+Thiết lập trạng thái hoạt động của Skill. 
+Thông tin của một Skill bao gồm:
+Tên Skill. 
+Mô tả Skill. 
+Icon hoặc hình ảnh đại diện. 
+Loại cây đại diện. 
+Learning Path. 
+Số lượng Lesson. 
+Trạng thái hoạt động.
+3. Quản lý Câu hỏi
+Mã chức năng: FR-A03
+Tên chức năng: Quản lý Câu hỏi
+Admin có quyền quản lý các câu hỏi được sử dụng trong hệ thống bài tập và Quiz.
+Yêu cầu chức năng:
+Admin có thể:
+Xem danh sách câu hỏi. 
+Thêm câu hỏi mới. 
+Chỉnh sửa nội dung câu hỏi. 
+Xóa câu hỏi. 
+Phân loại câu hỏi theo Skill. 
+Phân loại câu hỏi theo Lesson. 
+Thiết lập mức độ khó. 
+Thiết lập đáp án đúng. 
+Thiết lập đáp án sai. 
+Thêm giải thích cho đáp án. 
+Thông tin câu hỏi bao gồm:
+Question ID. 
+Nội dung câu hỏi. 
+Loại câu hỏi. 
+Skill liên quan. 
+Mức độ khó. 
+Danh sách đáp án. 
+Đáp án đúng. 
+Giải thích đáp án. 
+4. Quản lý khu vườn
+Mã chức năng: FR-A04
+Tên chức năng: Quản lý khu vườn
+Admin có quyền quản lý các thành phần hiển thị liên quan đến khu vườn kỹ năng của người dùng.
+Yêu cầu chức năng:
+Admin có thể:
+Xem danh sách các loại cây trong hệ thống. 
+Quản lý hình ảnh đại diện của cây. 
+Cập nhật thông tin cây. 
+Thiết lập các trạng thái phát triển của cây. 
+Thiết lập hình ảnh cho từng giai đoạn phát triển. 
+Quản lý vị trí hiển thị cây trong khu vườn nếu hệ thống hỗ trợ. 
+Quản lý hình ảnh và các thành phần trang trí khu vườn. 
+Các thành phần có thể bao gồm:
+Cây. 
+Hoa. 
+Hồ nước. 
+Đường đá. 
+Cầu. 
+Nhà. 
+Các vật phẩm trang trí. 
+5. Gán loại cây cho Skill
+Mã chức năng: FR-A05
+Tên chức năng: Gán loại cây cho Skill
+Admin có quyền thiết lập loại cây đại diện cho từng Skill trong hệ thống.
+Yêu cầu chức năng:
+Admin có thể:
+Chọn một Skill. 
+Chọn loại cây đại diện. 
+Gán cây cho Skill. 
+Thay đổi loại cây của Skill. 
+Xem thông tin cây đã được gán.
+6. Hệ thống bài học
+Mã chức năng: FR-A06
+Tên chức năng: Quản lý hệ thống bài học
+Admin có quyền xây dựng và quản lý nội dung bài học cho từng Skill.
+Yêu cầu chức năng:
+Admin có thể:
+Tạo Learning Path cho từng Skill. 
+Thêm Lesson vào Learning Path. 
+Chỉnh sửa nội dung Lesson. 
+Xóa Lesson. 
+Sắp xếp thứ tự Lesson. 
+Thiết lập Lesson bắt buộc. 
+Thiết lập điều kiện mở khóa Lesson tiếp theo. 
+Thiết lập XP nhận được khi hoàn thành Lesson. 
+Thông tin Lesson có thể bao gồm:
+Tên Lesson. 
+Mô tả. 
+Nội dung lý thuyết. 
+Hình ảnh minh họa. 
+Code Example. 
+Tài liệu tham khảo. 
+XP nhận được. 
+Thứ tự trong Learning Path. 
+7. Hệ thống bài tập và Quiz
+Mã chức năng: FR-A07
+Tên chức năng: Quản lý hệ thống bài tập và Quiz
+Admin có quyền xây dựng và quản lý các bài tập và Quiz phục vụ quá trình học tập.
+Yêu cầu chức năng:
+Admin có thể:
+Tạo Task. 
+Chỉnh sửa Task. 
+Xóa Task. 
+Gán Task vào Lesson hoặc Skill. 
+Tạo Quiz. 
+Chỉnh sửa Quiz. 
+Xóa Quiz. 
+Thêm câu hỏi vào Quiz. 
+Thiết lập số lượng câu hỏi. 
+Thiết lập điểm đạt yêu cầu. 
+Thiết lập số XP nhận được. 
+Thiết lập điều kiện làm lại Quiz. 
+Hệ thống hỗ trợ các loại bài tập như:
+Trắc nghiệm. 
+Đúng/Sai. 
+Điền đáp án. 
+Bài tập thực hành. 
+Quiz tổng kết. 
+8. Hệ thống XP
+Mã chức năng: FR-A08
+Tên chức năng: Quản lý hệ thống XP
+Admin có quyền quản lý các quy tắc liên quan đến điểm kinh nghiệm XP trong hệ thống.
+Yêu cầu chức năng:
+Admin có thể:
+Thiết lập XP nhận được khi hoàn thành Lesson. 
+Thiết lập XP nhận được khi hoàn thành Task. 
+Thiết lập XP nhận được khi hoàn thành Quiz. 
+Thiết lập XP thưởng khi hoàn thành Skill. 
+Thiết lập XP thưởng từ Achievement. 
+Cập nhật giá trị XP theo từng hoạt động. 
+Hệ thống tự động cộng XP cho User khi User hoàn thành các điều kiện tương ứng.
+9. Cơ chế phát triển cây
+Mã chức năng: FR-A09
+Tên chức năng: Quản lý cơ chế phát triển cây
+Admin có quyền thiết lập các giai đoạn phát triển của cây kỹ năng dựa trên tiến độ học tập của User.
+Yêu cầu chức năng:
+Admin có thể:
+Thiết lập các giai đoạn phát triển của cây. 
+Thiết lập điều kiện XP cho từng giai đoạn. 
+Thiết lập tỷ lệ hoàn thành tương ứng. 
+Thiết lập hình ảnh đại diện cho từng giai đoạn. 
+Thiết lập điều kiện cây đạt trạng thái hoàn thành.
+10. Quản lý Thành tích
+Mã chức năng: FR-A10
+Tên chức năng: Quản lý Thành tích
+Admin có quyền quản lý các Achievement trong hệ thống.
+Yêu cầu chức năng:
+Admin có thể:
+Xem danh sách Achievement. 
+Tạo Achievement mới. 
+Chỉnh sửa Achievement. 
+Xóa Achievement. 
+Thiết lập tên Achievement. 
+Thiết lập mô tả Achievement. 
+Thiết lập icon hoặc Badge. 
+Thiết lập điều kiện mở khóa. 
+Thiết lập XP thưởng nếu có. 
+Hệ thống tự động kiểm tra điều kiện và cấp Achievement cho User khi đáp ứng yêu cầu.
+IV. BUSINESS RULES
+Các quy tắc nghiệp vụ của hệ thống SkillGarden được xây dựng nhằm đảm bảo quá trình quản lý tài khoản, học tập, tích lũy XP, phát triển cây và quản lý hệ thống được thực hiện thống nhất. Các quy tắc này là cơ sở để hệ thống xử lý dữ liệu và kiểm soát quyền truy cập của từng đối tượng sử dụng.
+BR-01. Quy tắc phân quyền người dùng
+Hệ thống SkillGarden bao gồm ba nhóm tài khoản:
+Super Admin: Có quyền cao nhất, quản lý Admin và toàn bộ hệ thống. 
+Admin: Quản lý User và nội dung học tập trong phạm vi quyền được cấp. 
+User: Sử dụng các chức năng học tập và quản lý tài khoản cá nhân. 
+Mỗi tài khoản chỉ được phép truy cập các chức năng tương ứng với quyền hạn được cấp.
+BR-02. Quy tắc tạo tài khoản
+User được phép tự đăng ký tài khoản trên hệ thống.
+Admin không được phép tự đăng ký tài khoản. Tài khoản Admin chỉ được tạo bởi Super Admin.
+Super Admin là tài khoản quản trị cấp cao và không được tạo thông qua chức năng đăng ký dành cho User.
+Mỗi Email chỉ được sử dụng cho một tài khoản.
+BR-03. Quy tắc trạng thái tài khoản
+Tài khoản có thể tồn tại ở các trạng thái:
+Active – đang hoạt động. 
+Locked – bị khóa. 
+Inactive – không hoạt động. 
+Chỉ tài khoản ở trạng thái Active mới được phép đăng nhập và sử dụng hệ thống.
+Super Admin có quyền khóa hoặc mở khóa Admin và User.
+Admin chỉ được khóa hoặc mở khóa User khi được cấp quyền tương ứng.
+BR-04. Quy tắc quản lý quyền Admin
+Super Admin có quyền cấp hoặc thu hồi quyền của từng Admin.
+Quyền của Admin có thể bao gồm:
+Quản lý User. 
+Quản lý Skill. 
+Quản lý Lesson. 
+Quản lý Task. 
+Quản lý Quiz. 
+Quản lý Achievement. 
+Quản lý các nội dung khác của hệ thống. 
+Admin không được thực hiện chức năng vượt quá quyền hạn được cấp.
+BR-05. Quy tắc Learning Path
+Mỗi Skill có một Learning Path tương ứng.
+Learning Path bao gồm các Lesson, Task và Quiz được sắp xếp theo một thứ tự nhất định.
+User phải hoàn thành các nội dung bắt buộc theo thứ tự của Learning Path.
+Nội dung tiếp theo chỉ được mở khóa khi User đáp ứng điều kiện hoàn thành nội dung trước đó.
+BR-06. Quy tắc hoàn thành Lesson
+Lesson được xác định là hoàn thành khi User thực hiện đầy đủ yêu cầu được thiết lập cho Lesson.
+Khi Lesson được hoàn thành:
+Trạng thái Lesson được cập nhật thành Completed. 
+Tiến độ Skill được cập nhật. 
+User nhận XP tương ứng. 
+Hệ thống kiểm tra điều kiện mở khóa nội dung tiếp theo. 
+Một Lesson đã hoàn thành không được cộng XP lặp lại khi User truy cập lại, trừ trường hợp hệ thống có thiết lập phần thưởng bổ sung.
+BR-07. Quy tắc thực hiện Task
+User chỉ được thực hiện Task khi Task đã được mở khóa.
+Task có thể được liên kết với một Lesson hoặc Skill cụ thể.
+Task được xác định là hoàn thành khi User đáp ứng điều kiện hoàn thành do Admin thiết lập.
+Sau khi hoàn thành Task, hệ thống cập nhật tiến độ và cộng XP theo cấu hình.
+BR-08. Quy tắc Quiz
+Mỗi Quiz phải có đáp án đúng và mức điểm đạt yêu cầu.
+User phải đạt mức điểm tối thiểu được thiết lập để Quiz được tính là hoàn thành.
+BR-09. Quy tắc tính XP
+XP là điểm kinh nghiệm dùng để phản ánh quá trình học tập và phát triển của User.
+User có thể nhận XP khi:
+Hoàn thành Lesson. 
+Hoàn thành Task. 
+Đạt Quiz. 
+Hoàn thành Skill. 
+Đạt Achievement. 
+Số XP nhận được do hệ thống cấu hình.
+Các giá trị trên có thể được Super Admin thay đổi trong phần cấu hình hệ thống.
+BR-10. Quy tắc tăng Level
+Level của User được xác định dựa trên tổng XP đã tích lũy.
+Khi tổng XP đạt mức yêu cầu của Level tiếp theo, hệ thống tự động tăng Level cho User.
+Mức XP cần thiết cho từng Level có thể được Super Admin cấu hình.
+BR-11. Quy tắc tính tiến độ Skill
+Tiến độ của mỗi Skill được tính dựa trên tỷ lệ nội dung bắt buộc mà User đã hoàn thành.
+Tiến độ được hiển thị dưới dạng phần trăm từ 0% đến 100%.
+Tiến độ của mỗi Skill được quản lý độc lập.
+BR-12. Quy tắc phát triển cây
+Mỗi Skill được đại diện bởi một loại cây riêng trong khu vườn của User.
+Cây phát triển dựa trên tiến độ của Skill.
+Các giai đoạn phát triển gồm:
+Hạt giống → Mầm non → Cây non → Cây trưởng thành → Nở hoa → Ra quả/Hoàn thành.
+Khi tiến độ đạt đến điều kiện của từng giai đoạn, hệ thống tự động cập nhật trạng thái cây.
+Các mốc trên có thể được điều chỉnh trong cấu hình hệ thống.
+BR-13. Quy tắc gán loại cây cho Skill
+Mỗi Skill phải được gán ít nhất một loại cây đại diện.
+Ví dụ:
+Front-end → Cây hoa anh đào. 
+Back-end → Cây cổ thụ. 
+SQL → Cây tre. 
+Python → Cây xương rồng. 
+Manual Test → Cây hoa. 
+Automation Test → Cây thông. 
+Java → Cây cảnh. 
+Admin có thể quản lý loại cây được gán cho Skill khi được cấp quyền.
+Việc thay đổi loại cây không được làm mất tiến độ học tập của User.
+BR-14. Quy tắc hoàn thành Skill
+Skill được xác định là hoàn thành khi User đáp ứng toàn bộ các điều kiện bắt buộc.
+Các điều kiện có thể bao gồm:
+Hoàn thành toàn bộ Lesson. 
+Hoàn thành Task bắt buộc. 
+Đạt các Quiz bắt buộc. 
+Đạt 100% tiến độ Skill. 
+Khi Skill hoàn thành:
+Tiến độ được cập nhật thành 100%. 
+Cây chuyển sang giai đoạn phát triển cuối. 
+User nhận XP thưởng nếu được thiết lập. 
+Hệ thống kiểm tra điều kiện mở Achievement. 
+BR-15. Quy tắc Achievement
+Achievement được mở khóa khi User đáp ứng điều kiện tương ứng.
+Ví dụ:
+Hoàn thành Lesson đầu tiên. 
+Hoàn thành 10 Lesson. 
+Hoàn thành Skill đầu tiên. 
+Đạt Level nhất định. 
+Hoàn thành 5 Skill. 
+Hoàn thành toàn bộ Skill. 
+Mỗi Achievement chỉ được mở khóa một lần cho mỗi User.
+Achievement chưa đạt được sẽ ở trạng thái Locked.
+BR-16. Quy tắc khu vườn cá nhân
+Mỗi User có một khu vườn kỹ năng riêng.
+Mỗi Skill mà User tham gia sẽ tương ứng với một cây trong khu vườn.
+Trạng thái của cây phản ánh tiến độ học tập của Skill tương ứng.
+Khi User bắt đầu một Skill, cây đại diện được tạo ở trạng thái ban đầu.
+Khi User tiến bộ trong Skill, cây sẽ phát triển tương ứng.
+Khi User hoàn thành Skill, cây đạt trạng thái trưởng thành cuối cùng.
+BR-17. Quy tắc bảng xếp hạng
+Bảng xếp hạng được xác định dựa trên các chỉ số được hệ thống lựa chọn, trong đó tổng XP có thể được sử dụng làm tiêu chí chính.
+User có tổng XP cao hơn sẽ có thứ hạng cao hơn.
+Nếu hai User có cùng XP, hệ thống có thể sử dụng tiêu chí phụ như Level hoặc thời điểm đạt XP để xác định thứ hạng.
+BR-18. Quy tắc quản lý nội dung
+Skill, Learning Path, Lesson, Task, Quiz, Question và Achievement phải được quản lý bởi Admin hoặc Super Admin theo quyền được cấp.
+Khi tạo hoặc chỉnh sửa nội dung, dữ liệu phải đáp ứng các trường thông tin bắt buộc.
+Nội dung đang được User sử dụng không nên bị xóa trực tiếp nếu việc xóa có thể làm ảnh hưởng đến tiến độ học tập hoặc tính toàn vẹn dữ liệu.
+BR-19. Quy tắc xóa dữ liệu
+Các thao tác xóa dữ liệu quan trọng phải yêu cầu xác nhận trước khi thực hiện.
+Đối với dữ liệu có liên kết với dữ liệu khác, hệ thống phải kiểm tra mối quan hệ trước khi xóa.
+Super Admin có quyền cao nhất trong việc quản lý và xử lý dữ liệu toàn hệ thống.
+V. YÊU CẦU PHI CHỨC NĂNG (Non-Functional Requirements)
+Yêu cầu phi chức năng mô tả các tiêu chí về chất lượng, bảo mật, khả năng sử dụng, khả năng tương thích và độ ổn định mà hệ thống SkillGarden cần đáp ứng trong quá trình hoạt động.
+4.1. Hiệu năng
+NFR-01 – Thời gian phản hồi
+Hệ thống phải có thời gian phản hồi phù hợp đối với các thao tác thông thường của người dùng trong điều kiện hệ thống hoạt động bình thường.
+Các thao tác bao gồm:
+Đăng nhập và đăng xuất. 
+Đăng ký tài khoản. 
+Xem danh sách Skill. 
+Xem Learning Path. 
+Xem Lesson. 
+Thực hiện Task và Quiz. 
+Xem tiến độ học tập. 
+Xem khu vườn cá nhân. 
+Xem Achievement và Ranking. 
+NFR-02 – Xử lý dữ liệu
+Hệ thống phải đảm bảo dữ liệu được xử lý chính xác khi người dùng thực hiện các hoạt động học tập.
+Khi User hoàn thành Lesson, Task hoặc Quiz, hệ thống phải cập nhật tương ứng:
+Trạng thái hoàn thành. 
+XP nhận được. 
+Tổng XP của User. 
+Level nếu đủ điều kiện. 
+Tiến độ Skill. 
+Giai đoạn phát triển của cây. 
+Achievement nếu User đáp ứng điều kiện. 
+Các chức năng XP và phát triển cây hiện đã được xác định trong phạm vi chức năng Admin và cấu hình Gamification của hệ thống. 
+4.2. Bảo mật
+NFR-03 – Xác thực người dùng
+Hệ thống phải yêu cầu người dùng xác thực trước khi truy cập các chức năng yêu cầu đăng nhập.
+Hệ thống phải phân biệt quyền truy cập giữa các vai trò:
+User. 
+Admin. 
+Super Admin. 
+NFR-04 – Phân quyền
+Hệ thống phải kiểm tra quyền của tài khoản trước khi cho phép thực hiện các chức năng quản trị.
+Admin chỉ được sử dụng các chức năng tương ứng với quyền được Super Admin cấp.
+Super Admin có quyền quản lý và phân quyền Admin.
+NFR-05 – Bảo vệ mật khẩu
+Mật khẩu của người dùng không được hiển thị công khai trong hệ thống và không được lưu trữ dưới dạng văn bản thuần.
+NFR-06 – Bảo vệ dữ liệu
+Hệ thống phải hạn chế việc truy cập hoặc thay đổi dữ liệu trái phép.
+Các thao tác quản trị quan trọng cần được kiểm soát quyền truy cập và ghi nhận hoạt động khi cần thiết.
+Đặc biệt, hệ thống có chức năng giám sát các hoạt động như Admin chỉnh sửa Skill, Learning Path, Lesson, Task, Quiz và thay đổi quyền hạn. 
+4.3. Khả năng sử dụng
+NFR-07 – Giao diện dễ sử dụng
+Giao diện SkillGarden phải có thiết kế rõ ràng, trực quan và phù hợp với mục đích học tập.
+Người dùng có thể dễ dàng nhận biết và truy cập các chức năng chính như:
+Khu vườn cá nhân. 
+Skill. 
+Learning Path. 
+Lesson. 
+Task. 
+Quiz. 
+Achievement. 
+Ranking. 
+Quản lý tài khoản. 
+NFR-08 – Thống nhất giao diện
+Các màn hình trong hệ thống phải sử dụng cách trình bày thống nhất về:
+Thành phần giao diện. 
+Điều hướng. 
+Nút chức năng. 
+Thông báo. 
+Cách hiển thị trạng thái. 
+Cách hiển thị tiến độ học tập. 
+NFR-09 – Phản hồi thao tác
+Hệ thống phải cung cấp thông báo phù hợp khi người dùng thực hiện các thao tác.
+4.4. Khả năng tương thích
+NFR-10 – Tương thích trình duyệt
+Hệ thống phải có khả năng hoạt động trên các trình duyệt web phổ biến.
+Các trình duyệt mục tiêu bao gồm:
+Google Chrome. 
+Microsoft Edge. 
+Mozilla Firefox. 
+NFR-11 – Thiết bị
+Giao diện hệ thống cần có khả năng thích ứng với các kích thước màn hình phổ biến.
+Hệ thống ưu tiên hỗ trợ:
+Máy tính để bàn. 
+Laptop. 
+Máy tính bảng. 
+4.5. Độ tin cậy
+NFR-12 – Tính toàn vẹn dữ liệu
+Hệ thống phải đảm bảo dữ liệu học tập của User không bị mất hoặc thay đổi sai trong quá trình sử dụng.
+Các dữ liệu cần đảm bảo tính toàn vẹn bao gồm:
+Thông tin tài khoản. 
+XP. 
+Level. 
+Tiến độ Skill. 
+Trạng thái Lesson. 
+Kết quả Task. 
+Kết quả Quiz. 
+Achievement. 
+Trạng thái phát triển của cây. 
+NFR-13 – Tính nhất quán
+Khi dữ liệu học tập được cập nhật, các thông tin liên quan phải được cập nhật nhất quán.
+NFR-14 – Xử lý lỗi
+Khi xảy ra lỗi trong quá trình xử lý, hệ thống phải:
+Hiển thị thông báo phù hợp. 
+Không làm mất dữ liệu đã được lưu hợp lệ. 
+Không ghi nhận kết quả học tập không chính xác. 
+Cho phép người dùng thực hiện lại thao tác khi phù hợp. 
+4.6. Khả năng bảo trì
+NFR-15 – Khả năng mở rộng nội dung
+Hệ thống phải cho phép mở rộng số lượng Skill, Learning Path, Lesson, Task, Quiz và Achievement mà không yêu cầu thay đổi toàn bộ hệ thống.
+Điều này phù hợp với các chức năng quản lý nội dung hiện có của Admin, bao gồm quản lý Skill, câu hỏi, Learning Path, Lesson, Task và Quiz. 
+NFR-16 – Khả năng mở rộng cơ chế Gamification
+Hệ thống nên cho phép điều chỉnh các tham số của cơ chế Gamification mà không cần thay đổi toàn bộ logic hệ thống.
+Các tham số có thể cấu hình bao gồm:
+XP nhận được khi hoàn thành Lesson. 
+XP nhận được khi hoàn thành Task. 
+XP nhận được khi hoàn thành Quiz. 
+XP nhận được từ Achievement. 
+Điều kiện tăng Level. 
+Số XP cần thiết cho từng Level. 
+Điều kiện phát triển cây. 
+Các giai đoạn phát triển của cây. 
+Điều kiện hoàn thành Skill. 
+Các nội dung này đã được xác định trong chức năng FR-SA07 – Cấu hình hệ thống của SRS. 
+NFR-17 – Khả năng bảo trì hệ thống
+Mã nguồn và cấu trúc hệ thống cần được tổ chức rõ ràng, phân tách các thành phần theo chức năng nhằm hỗ trợ:
+Sửa lỗi. 
+Bổ sung chức năng. 
+Cập nhật nội dung. 
+Bảo trì hệ thống. 
+Mở rộng hệ thống trong tương lai. 
+4.7. Tóm tắt yêu cầu phi chức năng
+			PHÂN TÍCH GIAO DIỆN HỆ THỐNG
+PHÂN TÍCH MÀN HÌNH USER
+Màn hình Đăng ký
+		                  Hình 1. Giao diện Đăng ký
+Mục đích
+Màn hình Đăng ký cho phép người dùng tạo tài khoản mới để tham gia học tập trên hệ thống SkillGarden. Sau khi đăng ký thành công, người dùng có thể đăng nhập và bắt đầu quá trình học các kỹ năng IT.
+Bố cục màn hình
+Màn hình Đăng ký được chia thành 2 khu vực chính:
+Khu vực bên trái: Giới thiệu SkillGarden
+Logo PLT Solutions SkillGarden. 
+Thông điệp giới thiệu việc xây dựng “vườn kỹ năng”. 
+Các lợi ích khi tham gia hệ thống. 
+Thông tin số lượng học viên và đánh giá. 
+Khu vực bên phải: Form đăng ký
+Tiêu đề “Bắt đầu khu vườn của bạn”. 
+Đăng ký nhanh bằng Google. 
+Form nhập thông tin tài khoản. 
+Lựa chọn hạt giống/kỹ năng ban đầu. 
+Điều khoản dịch vụ và chính sách bảo mật. 
+Nút tạo tài khoản. 
+Thanh Header:
+Logo SkillGarden ở bên trái. 
+“Đã có tài khoản? Đăng nhập” ở bên phải.
+Phân tích thành phần và nút
+Luồng hoạt động
+Quy tắc xử lý
+Một số kiểm tra cần thực hiện:
+Họ và tên không được để trống
+Họ và tên không được chứa ký tự đặc biệt
+Email không được để trống
+Email phải đúng định dạng hợp lệ
+Email không được chứa ký tự đặc biệt
+Email không được trùng với tài khoản đã tồn tại
+Mật khẩu không được để trống
+Mật khẩu phải đáp ứng yêu cầu bảo mật
+Người dùng phải xác nhận điều khoản trước khi đăng ký
+Người dùng phải chọn hạt giống/ kỹ năng ban đầu
+Nếu thông tin không hợp lệ -> Thông báo lỗi
+Nếu thông tin hợp lệ -> đăng ký thành công -> tạo tài khoản User và chuyển người dùng vào hệ thống (màn hình Tổng quan)
+Màn hình Đăng nhập
+			Hình 2. Màn hình Đăng nhập
+Mục đích
+Màn hình Đăng nhập cho phép User đã có tài khoản xác thực thông tin và truy cập vào hệ thống SkillGarden để tiếp tục quá trình học tập và quản lý khu vườn kỹ năng.
+Bố cục màn hình
+Màn hình được chia thành 2 khu vực chính:
+Khu vực bên trái – Giới thiệu hệ thống
+Logo SkillGarden. 
+Thông điệp giới thiệu việc học tập và phát triển kỹ năng. 
+Minh họa tiến độ phát triển Skill. 
+Hiển thị XP, tiến độ Skill và streak học tập. 
+Thông tin về hệ sinh thái đào tạo. 
+Khu vực bên phải – Form đăng nhập
+Tiêu đề “Chào mừng trở lại”. 
+Đăng nhập bằng Google. 
+Đăng nhập bằng Email và Mật khẩu. 
+Chức năng Quên mật khẩu. 
+Ghi nhớ đăng nhập. 
+Nút “Vào vườn học ngay”. 
+Thông tin bảo mật. 
+Thanh Header:
+Logo SkillGarden ở bên trái. 
+“Chưa có tài khoản? Đăng ký ngay” ở bên phải.
+Phân tích thành phần và nút
+Luồng hoạt động
+Quy tắc xử lý
+Một số kiểm tra cần thực hiện:
+  Email và Mật khẩu không được để trống. 
+  Email phải đúng định dạng hợp lệ. 
+  Hệ thống kiểm tra Email và Mật khẩu với thông tin tài khoản đã đăng ký. 
+  Hệ thống kiểm tra trạng thái tài khoản trước khi đăng nhập. 
+  Chỉ tài khoản Active mới được phép đăng nhập. 
+  Tài khoản Locked/Inactive không được phép truy cập hệ thống. 
+  Nếu thông tin đăng nhập không chính xác → hiển thị thông báo lỗi. 
+  Nếu thông tin hợp lệ → tạo phiên đăng nhập và chuyển User đến My Garden. 
+  Nếu chọn Ghi nhớ đăng nhập → hệ thống duy trì phiên đăng nhập theo cấu hình. 
+  Nếu đăng nhập bằng Google → hệ thống thực hiện xác thực thông qua Google. 
+  Người dùng có thể chọn Quên mật khẩu để khôi phục tài khoản hoặc Đăng ký ngay để tạo tài khoản mới.
+Màn hình Tổng quan
+			Hình 3. Màn hình Tổng quan
+Mục đích
+Màn hình Tổng quan là màn hình chính của User sau khi đăng nhập vào SkillGarden. Màn hình cung cấp cái nhìn tổng quát về quá trình học tập, bao gồm tiến độ các kỹ năng, lượng XP, chuỗi ngày học, huy hiệu và tình trạng phát triển của khu vườn kỹ năng.
+Bố cục màn hình
+Màn hình được chia thành các khu vực chính:
+Thanh điều hướng bên trái
+Logo PLT Solutions SkillGarden. 
+Tổng quan. 
+Kỹ năng. 
+Lộ trình học. 
+Khu vườn. 
+Bài kiểm tra. 
+Mục tiêu. 
+Thành tích & Huy hiệu. 
+Hồ sơ cá nhân. 
+Cài đặt. 
+Thanh thông tin phía trên
+Ô tìm kiếm bài học, kỹ năng, Quiz. 
+Số ngày Streak. 
+Tổng XP. 
+Cấp độ hiện tại. 
+Thông báo. 
+Avatar và thông tin User. 
+Khu vực chào mừng
+Hiển thị lời chào User. 
+Hiển thị thông tin về hoạt động học tập hiện tại. 
+Nút Tiếp tục bài học. 
+Khu vực thống kê
+Số lượng cây đang phát triển. 
+Tổng XP. 
+Số ngày Streak. 
+Số huy hiệu đã đạt. 
+Khu vườn kỹ năng
+Hiển thị các Skill đang được học. 
+Tiến độ sinh trưởng của từng cây. 
+Cấp độ của cây. 
+XP đã tích lũy. 
+Trạng thái chăm sóc cây. 
+Nút Chăm sóc cây. 
+Nút Trồng thêm cây mới.
+Phân tích thành phần và nút
+Luồng hoạt động
+Quy tắc xử lý
+  Chỉ User đã đăng nhập thành công mới được truy cập màn hình Tổng quan. 
+  Hệ thống hiển thị thông tin thống kê dựa trên dữ liệu học tập hiện tại của User. 
+  Tổng XP được cập nhật khi User hoàn thành các hoạt động có phần thưởng XP. 
+  Streak được cập nhật dựa trên hoạt động học tập của User theo quy định của hệ    thống. 
+  Tiến độ của từng Skill được cập nhật khi User hoàn thành Lesson, Task hoặc Quiz tương ứng. 
+  Trạng thái và giai đoạn phát triển của cây được cập nhật theo tiến độ Skill. 
+  Nút Tiếp tục bài học đưa User đến nội dung học tập đang được mở khóa và chưa hoàn thành. 
+  Nút Chăm sóc cây đưa User đến nội dung học tập tương ứng với Skill của cây. 
+  User chỉ có thể truy cập những nội dung đã được mở khóa theo Learning Path. 
+  Nút Trồng thêm cây mới cho phép User lựa chọn thêm Skill để bắt đầu học. 
+  Các thông tin trên Dashboard phải được cập nhật phù hợp với dữ liệu thực tế của tài khoản User.
+Màn hình Kỹ Năng
+			Hình 4. Màn hình Kỹ Năng
+			Hình 5. Màn hình Kỹ Năng
+			Hình 6. Màn hình Kỹ Năng
+Màn hình Lộ trình học
+Màn hình Khu vườn
+PHÂN TÍCH MÀN HÌNH ADMIN
+PHÂN TÍCH MÀN HÌNH SUPER ADMIN

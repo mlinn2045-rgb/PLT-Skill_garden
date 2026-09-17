@@ -1,22 +1,31 @@
+// skill_garden-Frontend/src/pages/auth/ForgotPasswordPage.tsx
+
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthLayout } from '../../layouts/AuthLayout'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
-import { ArrowRight, ArrowLeft, Mail, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, ArrowLeft, Mail, CheckCircle2, AlertCircle } from 'lucide-react'
+import { authService } from '../../services/authService'
 
 export const ForgotPasswordPage: React.FC = () => {
-    const [email, setEmail] = useState('anhkhoa.plt@gmail.com')
+    const [email, setEmail] = useState('')
     const [isSent, setIsSent] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setErrorMsg(null)
         setIsLoading(true)
-        setTimeout(() => {
-            setIsLoading(false)
+        try {
+            await authService.forgotPassword(email)
             setIsSent(true)
-        }, 600)
+        } catch (err: any) {
+            setErrorMsg(err.message || 'Gửi liên kết khôi phục thất bại.')
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -35,6 +44,16 @@ export const ForgotPasswordPage: React.FC = () => {
                         Nhập email liên kết với tài khoản SkillGarden của bạn. Chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu ngay lập tức.
                     </p>
                 </div>
+
+                {errorMsg && (
+                    <div className="bg-red-50 border border-red-200 rounded-2xl p-3.5 flex items-start gap-2.5 text-xs text-red-700">
+                        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                        <div>
+                            <strong className="block font-bold">Lỗi</strong>
+                            <span>{errorMsg}</span>
+                        </div>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <Input

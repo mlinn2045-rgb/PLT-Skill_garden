@@ -3,23 +3,24 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AuthLayout } from '../../layouts/AuthLayout'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
-import { Check, Eye, EyeOff, ArrowRight } from 'lucide-react'
+import { Check, Eye, EyeOff, ArrowRight, AlertCircle } from 'lucide-react'
+import { useAuthStore } from '../../stores/authStore'
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate()
-    const [email, setEmail] = useState('anhkhoa.plt@gmail.com')
-    const [password, setPassword] = useState('12345678')
+    const { login, isLoading, error, clearError } = useAuthStore()
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [rememberMe, setRememberMe] = useState(true)
-    const [isLoading, setIsLoading] = useState(false)
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setIsLoading(true)
-        setTimeout(() => {
-            setIsLoading(false)
+        clearError()
+        const success = await login(email, password)
+        if (success) {
             navigate('/dashboard/learning-path/1')
-        }, 600)
+        }
     }
 
     return (
@@ -76,6 +77,17 @@ export const LoginPage: React.FC = () => {
                         HOẶC EMAIL
                     </span>
                 </div>
+
+                {/* Error Banner */}
+                {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-2xl p-3.5 flex items-start gap-3 text-xs text-red-700">
+                        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                        <div>
+                            <span className="font-bold block">Đăng nhập không thành công</span>
+                            <span>{error}</span>
+                        </div>
+                    </div>
+                )}
 
                 {/* Auth Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">

@@ -1,25 +1,58 @@
+// skill_garden-Frontend/src/pages/auth/RegisterPage.tsx
+
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AuthLayout } from '../../layouts/AuthLayout'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
-import { ArrowRight, Code, Terminal, Server } from 'lucide-react'
+import { ArrowRight, Code, Terminal, Server, CheckCircle2, AlertCircle, Check, X } from 'lucide-react'
+import { useAuthStore } from '../../stores/authStore'
 
 export const RegisterPage: React.FC = () => {
     const navigate = useNavigate()
-    const [fullName, setFullName] = useState('Anh Khoa')
-    const [email, setEmail] = useState('email-cua-ban@gmail.com')
-    const [password, setPassword] = useState('••••••••••••')
+    const { register, isLoading } = useAuthStore()
+    const [fullName, setFullName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
     const [selectedSeed, setSelectedSeed] = useState('front-end')
-    const [isLoading, setIsLoading] = useState(false)
+    const [successMessage, setSuccessMessage] = useState<string | null>(null)
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // Password policy criteria
+    const policy = {
+        minLength: password.length >= 8,
+        hasUppercase: /[A-Z]/.test(password),
+        hasLowercase: /[a-z]/.test(password),
+        hasDigit: /[0-9]/.test(password),
+        hasSpecial: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+    }
+
+    const passedCount = Object.values(policy).filter(Boolean).length
+
+    const getStrengthColor = () => {
+        if (passedCount <= 2) return { text: 'Yếu', color: 'text-red-500', bar: 'bg-red-500', count: 1 }
+        if (passedCount <= 4) return { text: 'Trung bình', color: 'text-amber-500', bar: 'bg-amber-500', count: 3 }
+        return { text: 'Rất mạnh (Khuyến nghị)', color: 'text-emerald-600', bar: 'bg-emerald-500', count: 4 }
+    }
+
+    const strength = getStrengthColor()
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setIsLoading(true)
-        setTimeout(() => {
-            setIsLoading(false)
-            navigate('/dashboard/learning-path/1')
-        }, 600)
+        setErrorMessage(null)
+        setSuccessMessage(null)
+
+        if (passedCount < 5) {
+            setErrorMessage('Mật khẩu chưa đáp ứng đầy đủ yêu cầu bảo mật (bao gồm ký tự đặc biệt).')
+            return
+        }
+
+        const res = await register(fullName, email, password)
+        if (res.success) {
+            setSuccessMessage(res.message || 'Đăng ký thành công! Vui lòng chờ quản trị viên phê duyệt tài khoản.')
+        } else {
+            setErrorMessage(res.message || 'Đăng ký không thành công.')
+        }
     }
 
     const seeds = [
@@ -70,92 +103,156 @@ export const RegisterPage: React.FC = () => {
                     </span>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-3.5">
-                    <Input
-                        label="HỌ VÀ TÊN"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        placeholder="Nguyen Van A"
-                        required
-                    />
+                {/* Messages */}
+                {errorMessage && (
+                    <div className="bg-red-50 border border-red-200 rounded-2xl p-3.5 flex items-start gap-2.5 text-xs text-red-700">
+                        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                        <div>
+                            <strong className="block font-bold">Lỗi đăng ký</strong>
+                            <span>{errorMessage}</span>
+                        </div>
+                    </div>
+                )}
 
-                    <Input
-                        label="ĐỊA CHỈ EMAIL HỌC TẬP"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="email-cua-ban@gmail.com"
-                        required
-                    />
-
-                    <div>
+                {successMessage ? (
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 space-y-3">
+                        <div className="flex items-start gap-3 text-emerald-900">
+                            <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0 mt-0.5" />
+                            <div>
+                                <h4 className="text-sm font-bold">Tạo tài khoản thành công!</h4>
+                                <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
+                                    {successMessage}
+                                </p>
+                            </div>
+                        </div>
+                        <Button
+                            variant="indigo"
+                            fullWidth
+                            size="lg"
+                            onClick={() => navigate('/login')}
+                            className="mt-2 text-sm font-bold"
+                        >
+                            Chuyển tới trang Đăng nhập
+                        </Button>
+                    </div>
+                ) : (
+                    <form onSubmit={handleSubmit} className="space-y-3.5">
                         <Input
-                            label="MẬT KHẨU"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••••••"
+                            label="HỌ VÀ TÊN"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            placeholder="Nguyen Van A"
                             required
                         />
-                        {/* Password strength meter matching design */}
-                        <div className="mt-2 space-y-1">
-                            <div className="flex items-center justify-between text-[11px]">
-                                <span className="text-[#718096]">Độ mạnh mật khẩu:</span>
-                                <span className="font-bold text-emerald-600">Tốt (Khuyến nghị)</span>
-                            </div>
-                            <div className="grid grid-cols-4 gap-1.5 h-1.5">
-                                <div className="bg-emerald-500 rounded-full h-full" />
-                                <div className="bg-emerald-500 rounded-full h-full" />
-                                <div className="bg-emerald-500 rounded-full h-full" />
-                                <div className="bg-emerald-300 rounded-full h-full" />
+
+                        <Input
+                            label="ĐỊA CHỈ EMAIL HỌC TẬP"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="email-cua-ban@gmail.com"
+                            required
+                        />
+
+                        <div>
+                            <Input
+                                label="MẬT KHẨU"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="••••••••••••"
+                                required
+                            />
+
+                            {/* Password strength meter matching design */}
+                            {password.length > 0 && (
+                                <div className="mt-2.5 bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
+                                    <div className="flex items-center justify-between text-[11px]">
+                                        <span className="text-[#718096]">Độ mạnh mật khẩu:</span>
+                                        <span className={`font-bold ${strength.color}`}>{strength.text}</span>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-1.5 h-1.5">
+                                        {[1, 2, 3, 4].map((idx) => (
+                                            <div
+                                                key={idx}
+                                                className={`rounded-full h-full transition-all ${idx <= strength.count ? strength.bar : 'bg-gray-200'
+                                                    }`}
+                                            />
+                                        ))}
+                                    </div>
+
+                                    {/* Password policy checks */}
+                                    <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px] pt-1">
+                                        <div className={`flex items-center gap-1.5 ${policy.minLength ? 'text-emerald-600 font-semibold' : 'text-gray-500'}`}>
+                                            {policy.minLength ? <Check className="w-3.5 h-3.5 shrink-0" /> : <X className="w-3.5 h-3.5 shrink-0 text-gray-400" />}
+                                            <span>Tối thiểu 8 ký tự</span>
+                                        </div>
+                                        <div className={`flex items-center gap-1.5 ${policy.hasUppercase ? 'text-emerald-600 font-semibold' : 'text-gray-500'}`}>
+                                            {policy.hasUppercase ? <Check className="w-3.5 h-3.5 shrink-0" /> : <X className="w-3.5 h-3.5 shrink-0 text-gray-400" />}
+                                            <span>Ít nhất 1 chữ hoa (A-Z)</span>
+                                        </div>
+                                        <div className={`flex items-center gap-1.5 ${policy.hasLowercase ? 'text-emerald-600 font-semibold' : 'text-gray-500'}`}>
+                                            {policy.hasLowercase ? <Check className="w-3.5 h-3.5 shrink-0" /> : <X className="w-3.5 h-3.5 shrink-0 text-gray-400" />}
+                                            <span>Ít nhất 1 chữ thường (a-z)</span>
+                                        </div>
+                                        <div className={`flex items-center gap-1.5 ${policy.hasDigit ? 'text-emerald-600 font-semibold' : 'text-gray-500'}`}>
+                                            {policy.hasDigit ? <Check className="w-3.5 h-3.5 shrink-0" /> : <X className="w-3.5 h-3.5 shrink-0 text-gray-400" />}
+                                            <span>Ít nhất 1 chữ số (0-9)</span>
+                                        </div>
+                                        <div className={`col-span-2 flex items-center gap-1.5 ${policy.hasSpecial ? 'text-emerald-600 font-semibold' : 'text-gray-500'}`}>
+                                            {policy.hasSpecial ? <Check className="w-3.5 h-3.5 shrink-0" /> : <X className="w-3.5 h-3.5 shrink-0 text-gray-400" />}
+                                            <span>Ít nhất 1 ký tự đặc biệt (!@#$%^&*)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Seed Selection */}
+                        <div className="space-y-1.5 pt-1">
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-[#4A5568] block">
+                                CHỌN HẠT GIỐNG ĐẦU TIÊN MUỐN GIEO:
+                            </label>
+                            <div className="grid grid-cols-3 gap-2">
+                                {seeds.map((seed) => {
+                                    const isSelected = selectedSeed === seed.id
+                                    return (
+                                        <button
+                                            key={seed.id}
+                                            type="button"
+                                            onClick={() => setSelectedSeed(seed.id)}
+                                            className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${isSelected
+                                                    ? 'border-[#3F49C8] bg-[#EEF0FD] text-[#3F49C8] shadow-xs ring-1 ring-[#3F49C8]'
+                                                    : 'border-[#E2E8F0] bg-[#F7FAF7] text-[#4A5568] hover:bg-white'
+                                                }`}
+                                        >
+                                            {seed.icon}
+                                            <span>{seed.label}</span>
+                                        </button>
+                                    )
+                                })}
                             </div>
                         </div>
-                    </div>
 
-                    {/* Seed Selection */}
-                    <div className="space-y-1.5 pt-1">
-                        <label className="text-[11px] font-bold uppercase tracking-wider text-[#4A5568] block">
-                            CHỌN HẠT GIỐNG ĐẦU TIÊN MUỐN GIEO:
-                        </label>
-                        <div className="grid grid-cols-3 gap-2">
-                            {seeds.map((seed) => {
-                                const isSelected = selectedSeed === seed.id
-                                return (
-                                    <button
-                                        key={seed.id}
-                                        type="button"
-                                        onClick={() => setSelectedSeed(seed.id)}
-                                        className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${isSelected
-                                            ? 'border-[#3F49C8] bg-[#EEF0FD] text-[#3F49C8] shadow-xs ring-1 ring-[#3F49C8]'
-                                            : 'border-[#E2E8F0] bg-[#F7FAF7] text-[#4A5568] hover:bg-white'
-                                            }`}
-                                    >
-                                        {seed.icon}
-                                        <span>{seed.label}</span>
-                                    </button>
-                                )
-                            })}
-                        </div>
-                    </div>
+                        <p className="text-[11px] text-[#718096] leading-relaxed pt-1">
+                            Bằng việc đăng ký, bạn đồng ý với{' '}
+                            <a href="#" className="font-semibold text-[#3F49C8] underline">Điều khoản dịch vụ</a> và{' '}
+                            <a href="#" className="font-semibold text-[#3F49C8] underline">Chính sách bảo mật</a> của SkillGarden.
+                        </p>
 
-                    <p className="text-[11px] text-[#718096] leading-relaxed pt-1">
-                        Bằng việc đăng ký, bạn đồng ý với{' '}
-                        <a href="#" className="font-semibold text-[#3F49C8] underline">Điều khoản dịch vụ</a> và{' '}
-                        <a href="#" className="font-semibold text-[#3F49C8] underline">Chính sách bảo mật</a> của SkillGarden.
-                    </p>
-
-                    <Button
-                        type="submit"
-                        variant="indigo"
-                        size="lg"
-                        fullWidth
-                        disabled={isLoading}
-                        iconRight={<ArrowRight className="w-4 h-4" />}
-                        className="text-sm font-bold shadow-md"
-                    >
-                        {isLoading ? 'Đang khởi tạo...' : 'Tạo tài khoản & Nhận 100 XP'}
-                    </Button>
-                </form>
+                        <Button
+                            type="submit"
+                            variant="indigo"
+                            size="lg"
+                            fullWidth
+                            disabled={isLoading}
+                            iconRight={<ArrowRight className="w-4 h-4" />}
+                            className="text-sm font-bold shadow-md"
+                        >
+                            {isLoading ? 'Đang khởi tạo...' : 'Tạo tài khoản & Nhận 100 XP'}
+                        </Button>
+                    </form>
+                )}
             </div>
         </AuthLayout>
     )
