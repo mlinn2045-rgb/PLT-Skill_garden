@@ -48,9 +48,9 @@ export const MyGardenPage: React.FC = () => {
     const trees = gardenData?.trees || []
 
     return (
-        <div className="min-h-screen bg-[#F7F9F7] text-[#1A2E22] pb-16 pt-6 px-4 md:px-8 max-w-7xl mx-auto space-y-8">
+        <div className="min-h-screen bg-[#F7F9F7] dark:bg-gray-900 text-[#1A2E22] dark:text-gray-100 pb-16 pt-6 px-4 md:px-8 max-w-7xl mx-auto space-y-8">
             {/* Header Banner */}
-            <div className="relative overflow-hidden bg-gradient-to-r from-[#1B3624] via-[#244A32] to-[#1B3624] rounded-3xl p-6 md:p-8 text-white shadow-xl">
+            <div className="relative overflow-hidden bg-gradient-to-r from-[#1B3624] via-[#244A32] to-[#1B3624] dark:from-gray-900 dark:via-emerald-950 dark:to-gray-900 rounded-3xl p-6 md:p-8 text-white shadow-xl border border-emerald-900/40">
                 <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-10 -translate-y-10">
                     <Sprout className="w-96 h-96" />
                 </div>
@@ -93,14 +93,14 @@ export const MyGardenPage: React.FC = () => {
             {/* Interactive Featured 3D Tree Spotlight */}
             <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-base font-black text-[#1A2E22] flex items-center gap-2">
-                        <Box className="w-5 h-5 text-emerald-600" /> Mô Phỏng Cây Kỹ Năng 3D Tương Tác
+                    <h2 className="text-base font-black text-[#1A2E22] dark:text-white flex items-center gap-2">
+                        <Box className="w-5 h-5 text-emerald-600 dark:text-emerald-400" /> Mô Phỏng Cây Kỹ Năng 3D Tương Tác
                     </h2>
                     <button
                         onClick={() => setViewMode3D(!viewMode3D)}
-                        className="px-3 py-1 bg-white border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800 hover:bg-emerald-50 transition-colors shadow-2xs"
+                        className="px-3 py-1 bg-white dark:bg-gray-800 border border-emerald-200 dark:border-gray-700 rounded-xl text-xs font-bold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors shadow-2xs cursor-pointer"
                     >
-                        {viewMode3D ? 'Chuyển Chế Độ Chế Bản 2D' : 'Bật Đồ Họa 3D (Three.js)'}
+                        {viewMode3D ? 'Chuyển Chế Độ 2D' : 'Bật Đồ Họa 3D (Three.js)'}
                     </button>
                 </div>
 
@@ -116,27 +116,27 @@ export const MyGardenPage: React.FC = () => {
             </div>
 
             {toastMsg && (
-                <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold shadow-xs">
+                <div className="p-4 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs font-bold shadow-xs">
                     {toastMsg}
                 </div>
             )}
             {errorMsg && (
-                <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-bold">
+                <div className="p-4 bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-xl text-xs font-bold">
                     {errorMsg}
                 </div>
             )}
 
             {/* Actions & Filters */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-[#E6ECE6] shadow-xs">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-4 rounded-2xl border border-[#E6ECE6] dark:border-gray-700 shadow-xs">
                 <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={fetchGarden} disabled={isLoading} className="font-bold flex items-center gap-1">
+                    <Button variant="outline" size="sm" onClick={fetchGarden} disabled={isLoading} className="font-bold flex items-center gap-1 cursor-pointer">
                         <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại vườn
                     </Button>
                 </div>
 
                 <Button
                     variant="indigo"
-                    className="font-bold flex items-center gap-2 shadow-xs shrink-0"
+                    className="font-bold flex items-center gap-2 shadow-xs shrink-0 cursor-pointer"
                     onClick={() => navigate('/dashboard/skill-catalog')}
                 >
                     <Plus className="w-4 h-4" /> Trồng Thêm Cây Mới
@@ -145,12 +145,12 @@ export const MyGardenPage: React.FC = () => {
 
             {/* Garden Grid */}
             {isLoading ? (
-                <div className="p-12 text-center text-xs font-bold text-[#6B6D7A] space-y-2 bg-white rounded-2xl border border-[#E6ECE6]">
+                <div className="p-12 text-center text-xs font-bold text-[#6B6D7A] dark:text-gray-400 space-y-2 bg-white dark:bg-gray-800 rounded-2xl border border-[#E6ECE6] dark:border-gray-700">
                     <RefreshCw className="w-6 h-6 animate-spin mx-auto text-emerald-600" />
                     <p>Đang tải trạng thái khu vườn sinh thái từ Backend...</p>
                 </div>
             ) : trees.length === 0 ? (
-                <div className="p-12 text-center text-xs text-[#6B6D7A] bg-white rounded-2xl border border-[#E6ECE6]">
+                <div className="p-12 text-center text-xs text-[#6B6D7A] dark:text-gray-400 bg-white dark:bg-gray-800 rounded-2xl border border-[#E6ECE6] dark:border-gray-700">
                     Bạn chưa bắt đầu trồng cây kỹ năng nào. Hãy đến Danh mục kỹ năng để nhận hạt mầm đầu tiên!
                 </div>
             ) : (
@@ -158,19 +158,19 @@ export const MyGardenPage: React.FC = () => {
                     {trees.map((tree) => (
                         <div
                             key={tree.id}
-                            className="bg-white rounded-3xl p-6 border border-[#E6ECE6] shadow-xs hover:shadow-md transition-all duration-300 space-y-5 relative overflow-hidden group"
+                            className="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-[#E6ECE6] dark:border-gray-700 shadow-xs hover:shadow-md transition-all duration-300 space-y-5 relative overflow-hidden group"
                         >
                             {/* Plant Top Info */}
                             <div className="flex items-start justify-between gap-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-3xl shadow-md shrink-0">
+                                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-3xl shadow-md shrink-0">
                                         🌸
                                     </div>
                                     <div>
-                                        <span className="text-[11px] font-bold text-[#3F49C8] uppercase tracking-wider">
+                                        <span className="text-[11px] font-bold text-[#3F49C8] dark:text-indigo-400 uppercase tracking-wider">
                                             {tree.plant_name || 'Cây kỹ năng'}
                                         </span>
-                                        <h3 className="text-base font-extrabold text-[#1A2E22] group-hover:text-[#3F49C8] transition-colors">
+                                        <h3 className="text-base font-extrabold text-[#1A2E22] dark:text-white group-hover:text-[#3F49C8] dark:group-hover:text-indigo-400 transition-colors">
                                             {tree.skill_name || `Kỹ năng #${tree.skill_id}`}
                                         </h3>
                                     </div>
@@ -181,21 +181,28 @@ export const MyGardenPage: React.FC = () => {
                                 </Badge>
                             </div>
 
-                            {/* Stage Progress Visual */}
-                            <div className="bg-[#F8FAF8] p-4 rounded-2xl border border-[#E6ECE6] space-y-3">
+                            {/* Stage Progress Visual & Bold Milestone Requirement */}
+                            <div className="bg-[#F8FAF8] dark:bg-gray-900 p-4 rounded-2xl border border-[#E6ECE6] dark:border-gray-700 space-y-3">
                                 <div className="flex items-center justify-between text-xs">
-                                    <span className="font-bold text-[#2D3748] flex items-center gap-1.5">
-                                        <Sprout className="w-4 h-4 text-emerald-600" />
-                                        Giai đoạn: <span className="text-emerald-700 font-extrabold">{tree.stage_name || 'Đang sinh trưởng'}</span>
+                                    <span className="font-bold text-[#2D3748] dark:text-gray-300 flex items-center gap-1.5">
+                                        <Sprout className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                                        Giai đoạn: <span className="text-emerald-700 dark:text-emerald-400 font-extrabold">{tree.stage_name || 'Đang sinh trưởng'}</span>
                                     </span>
-                                    <span className="font-extrabold text-[#3F49C8]">+{tree.xp_accumulated} XP</span>
+                                    <span className="font-extrabold text-[#3F49C8] dark:text-indigo-400">+{tree.xp_accumulated} XP</span>
+                                </div>
+
+                                {/* Bolded Milestone Text */}
+                                <div className="p-2.5 bg-emerald-100/80 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 rounded-xl text-[11px]">
+                                    <p className="font-black text-emerald-900 dark:text-emerald-200 uppercase tracking-wide flex items-center gap-1">
+                                        <Droplets className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" /> HẠN MỨC TƯỚI NƯỚC HÔM NAY: <strong>ĐÃ ĐẠT CHUẨN (+10 XP)</strong>
+                                    </p>
                                 </div>
                             </div>
 
                             {/* Bottom Actions & Stats */}
-                            <div className="flex items-center justify-between pt-2 border-t border-[#E6ECE6]">
-                                <div className="text-xs text-[#718096]">
-                                    <div className="text-[11px] text-gray-400">Trạng thái: {tree.status}</div>
+                            <div className="flex items-center justify-between pt-2 border-t border-[#E6ECE6] dark:border-gray-700">
+                                <div className="text-xs text-[#718096] dark:text-gray-400">
+                                    <div className="text-[11px] text-gray-500 dark:text-gray-400">Trạng thái: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{tree.status}</strong></div>
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -203,7 +210,7 @@ export const MyGardenPage: React.FC = () => {
                                         variant="outline"
                                         size="sm"
                                         onClick={() => handleWatering(tree.skill_id)}
-                                        className="border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-bold flex items-center gap-1 text-xs"
+                                        className="border-emerald-300 text-emerald-700 dark:text-emerald-300 dark:border-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-950 font-bold flex items-center gap-1 text-xs cursor-pointer"
                                     >
                                         <Droplets className="w-3.5 h-3.5 text-blue-500" /> Tưới Nước (+10 XP)
                                     </Button>
@@ -211,8 +218,8 @@ export const MyGardenPage: React.FC = () => {
                                     <Button
                                         variant="indigo"
                                         size="sm"
-                                        onClick={() => navigate(`/dashboard/learning-path/${tree.skill_id}`)}
-                                        className="font-bold flex items-center gap-1 text-xs"
+                                        onClick={() => navigate(`/dashboard/video-learning?skill_id=${tree.skill_id}`)}
+                                        className="font-bold flex items-center gap-1 text-xs cursor-pointer"
                                     >
                                         <span>Học Tiếp</span>
                                         <ChevronRight className="w-3.5 h-3.5" />

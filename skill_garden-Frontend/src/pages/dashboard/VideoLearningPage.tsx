@@ -1,23 +1,68 @@
-import React, { useState } from 'react'
-import { Play, CheckCircle2, FileText, Download, ChevronRight, Lock, Video, HardDrive } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { Play, CheckCircle2, FileText, Download, ChevronRight, Lock, Video, HardDrive, Trash2 } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
+import { useSearchParams } from 'react-router-dom'
+
+interface NoteItem {
+    id: number
+    time: string
+    content: string
+}
 
 export const VideoLearningPage: React.FC = () => {
+    const [searchParams] = useSearchParams()
+    const skillId = searchParams.get('skill_id') || '1'
+
     const [activeTab, setActiveTab] = useState<'notes' | 'materials'>('notes')
     const [noteText, setNoteText] = useState('')
-    const [notesList, setNotesList] = useState([
-        { id: 1, time: '02:45', content: 'Cần lưu ý cơ chế Virtual DOM của React giúp tối ưu render.' },
-        { id: 2, time: '05:10', content: 'Hàm useState trả về 1 tuple gồm state và hàm setState.' }
-    ])
 
     // Current active lesson state
-    const [currentVideoUrl, setCurrentVideoUrl] = useState('https://www.youtube.com/embed/dQw4w9WgXcQ')
+    const [currentLessonId, setCurrentLessonId] = useState<number>(2)
+    const [currentVideoUrl, setCurrentVideoUrl] = useState('http://localhost:8000/uploads/videos/sample.mp4')
     const [currentLessonTitle, setCurrentLessonTitle] = useState('Bài 2: React Components & Props cơ bản')
+
+    const storageKey = `skillgarden_notes_skill_${skillId}_lesson_${currentLessonId}`
+
+    const [notesList, setNotesList] = useState<NoteItem[]>(() => {
+        const saved = localStorage.getItem(storageKey)
+        if (saved) {
+            try { return JSON.parse(saved) } catch { }
+        }
+        return [
+            { id: 1, time: '02:45', content: 'Cần lưu ý cơ chế Virtual DOM của React giúp tối ưu render.' },
+            { id: 2, time: '05:10', content: 'Hàm useState trả về 1 tuple gồm state và hàm setState.' }
+        ]
+    })
+
+    useEffect(() => {
+        const saved = localStorage.getItem(storageKey)
+        if (saved) {
+            try {
+                setNotesList(JSON.parse(saved))
+            } catch {
+                setNotesList([])
+            }
+        } else {
+            setNotesList([
+                { id: 1, time: '02:45', content: 'Cần lưu ý cơ chế Virtual DOM của React giúp tối ưu render.' },
+                { id: 2, time: '05:10', content: 'Hàm useState trả về 1 tuple gồm state và hàm setState.' }
+            ])
+        }
+    }, [storageKey])
 
     const handleAddNote = () => {
         if (!noteText.trim()) return
-        setNotesList([...notesList, { id: Date.now(), time: '06:30', content: noteText }])
+        const newNote = { id: Date.now(), time: '06:30', content: noteText.trim() }
+        const updated = [newNote, ...notesList]
+        setNotesList(updated)
+        localStorage.setItem(storageKey, JSON.stringify(updated))
         setNoteText('')
+    }
+
+    const handleDeleteNote = (id: number) => {
+        const updated = notesList.filter(n => n.id !== id)
+        setNotesList(updated)
+        localStorage.setItem(storageKey, JSON.stringify(updated))
     }
 
     const lessons = [
@@ -32,18 +77,18 @@ export const VideoLearningPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12">
+        <div className="min-h-screen bg-[#FAFAF7] dark:bg-gray-900 text-[#20223A] dark:text-gray-100 pb-12">
             {/* Header breadcrumb */}
-            <div className="bg-white border-b border-[#E2E4EB] px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-[#6B6D7A]">
+            <div className="bg-white dark:bg-gray-800 border-b border-[#E2E4EB] dark:border-gray-700 px-6 py-4 flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-[#6B6D7A] dark:text-gray-400">
                     <span>Khóa học Frontend React</span>
                     <ChevronRight className="w-4 h-4" />
                     <span>Chương 1: Core Concepts</span>
                     <ChevronRight className="w-4 h-4" />
-                    <span className="font-bold text-[#3C4097]">{currentLessonTitle}</span>
+                    <span className="font-bold text-[#3C4097] dark:text-indigo-400">{currentLessonTitle}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#DCEFE1] text-[#2C6A3D] text-xs font-bold rounded-full">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#DCEFE1] dark:bg-emerald-950 text-[#2C6A3D] dark:text-emerald-300 text-xs font-bold rounded-full">
                         +50 XP Thưởng
                     </span>
                     <Button variant="indigo" size="sm" className="font-bold">
@@ -57,7 +102,7 @@ export const VideoLearningPage: React.FC = () => {
                 {/* Left 2 Cols: Video Player & Tabs */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Dynamic Video Player Box */}
-                    <div className="bg-black rounded-2xl aspect-video overflow-hidden relative shadow-xl flex items-center justify-center border border-[#E2E4EB]">
+                    <div className="bg-black rounded-2xl aspect-video overflow-hidden relative shadow-xl flex items-center justify-center border border-[#E2E4EB] dark:border-gray-700">
                         {isYouTubeUrl(currentVideoUrl) ? (
                             <iframe
                                 className="w-full h-full"
@@ -79,37 +124,37 @@ export const VideoLearningPage: React.FC = () => {
                     </div>
 
                     {/* Lesson Info */}
-                    <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-700 shadow-xs space-y-4">
                         <div className="flex items-center justify-between">
-                            <h1 className="text-2xl font-bold text-[#20223A]">
+                            <h1 className="text-2xl font-bold text-[#20223A] dark:text-white">
                                 {currentLessonTitle}
                             </h1>
-                            <span className="text-xs font-extrabold px-3 py-1 bg-purple-50 text-purple-800 rounded-full border border-purple-200 flex items-center gap-1">
+                            <span className="text-xs font-extrabold px-3 py-1 bg-purple-50 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 rounded-full border border-purple-200 dark:border-purple-800 flex items-center gap-1">
                                 {isYouTubeUrl(currentVideoUrl) ? <Video className="w-3.5 h-3.5 text-red-500" /> : <HardDrive className="w-3.5 h-3.5 text-emerald-600" />}
                                 {isYouTubeUrl(currentVideoUrl) ? 'Nguồn YouTube' : 'Nguồn File Tải Lên'}
                             </span>
                         </div>
 
-                        <p className="text-sm text-[#6B6D7A] leading-relaxed">
+                        <p className="text-sm text-[#6B6D7A] dark:text-gray-300 leading-relaxed">
                             Trong bài học này, chúng ta sẽ cùng tìm hiểu cách thiết kế các Component độc lập, tái sử dụng và cách truyền nhận dữ liệu thông qua Props trong React 19.
                         </p>
 
                         {/* Tabs */}
-                        <div className="flex border-b border-[#E2E4EB] pt-2">
+                        <div className="flex border-b border-[#E2E4EB] dark:border-gray-700 pt-2">
                             <button
                                 onClick={() => setActiveTab('notes')}
-                                className={`pb-3 px-4 font-bold text-sm border-b-2 transition-colors ${activeTab === 'notes'
-                                    ? 'border-[#3C4097] text-[#3C4097]'
-                                    : 'border-transparent text-[#6B6D7A] hover:text-[#20223A]'
+                                className={`pb-3 px-4 font-bold text-sm border-b-2 transition-colors cursor-pointer ${activeTab === 'notes'
+                                    ? 'border-[#3C4097] text-[#3C4097] dark:text-indigo-400 dark:border-indigo-400'
+                                    : 'border-transparent text-[#6B6D7A] dark:text-gray-400 hover:text-[#20223A]'
                                     }`}
                             >
                                 Ghi chú cá nhân ({notesList.length})
                             </button>
                             <button
                                 onClick={() => setActiveTab('materials')}
-                                className={`pb-3 px-4 font-bold text-sm border-b-2 transition-colors ${activeTab === 'materials'
-                                    ? 'border-[#3C4097] text-[#3C4097]'
-                                    : 'border-transparent text-[#6B6D7A] hover:text-[#20223A]'
+                                className={`pb-3 px-4 font-bold text-sm border-b-2 transition-colors cursor-pointer ${activeTab === 'materials'
+                                    ? 'border-[#3C4097] text-[#3C4097] dark:text-indigo-400 dark:border-indigo-400'
+                                    : 'border-transparent text-[#6B6D7A] dark:text-gray-400 hover:text-[#20223A]'
                                     }`}
                             >
                                 Tài liệu PDF đính kèm (2)
@@ -124,28 +169,42 @@ export const VideoLearningPage: React.FC = () => {
                                         type="text"
                                         value={noteText}
                                         onChange={(e) => setNoteText(e.target.value)}
-                                        placeholder="Nhập ghi chú tại thời điểm video này..."
-                                        className="flex-1 px-4 py-2 bg-gray-50 border border-[#E2E4EB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3C4097]"
+                                        onKeyDown={(e) => e.key === 'Enter' && handleAddNote()}
+                                        placeholder="Nhập ghi chú cá nhân cho bài học này..."
+                                        className="flex-1 px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-[#E2E4EB] dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3C4097] dark:text-white"
                                     />
                                     <Button variant="indigo" onClick={handleAddNote}>Lưu ghi chú</Button>
                                 </div>
                                 <div className="space-y-2">
-                                    {notesList.map((n) => (
-                                        <div key={n.id} className="p-3 bg-gray-50 rounded-xl flex items-start justify-between text-xs">
-                                            <span className="font-mono bg-[#3C4097] text-white px-2 py-0.5 rounded font-bold">{n.time}</span>
-                                            <p className="flex-1 mx-3 text-[#20223A] font-medium">{n.content}</p>
-                                        </div>
-                                    ))}
+                                    {notesList.length === 0 ? (
+                                        <p className="text-xs text-gray-400 italic py-2">Chưa có ghi chú nào cho bài học này. Hãy nhập ghi chú đầu tiên!</p>
+                                    ) : (
+                                        notesList.map((n) => (
+                                            <div key={n.id} className="p-3 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-between text-xs border border-gray-100 dark:border-gray-700">
+                                                <div className="flex items-center gap-3 flex-1">
+                                                    <span className="font-mono bg-[#3C4097] text-white px-2 py-0.5 rounded font-bold shrink-0">{n.time}</span>
+                                                    <p className="text-[#20223A] dark:text-gray-200 font-medium">{n.content}</p>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleDeleteNote(n.id)}
+                                                    className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors"
+                                                    title="Xóa ghi chú"
+                                                >
+                                                    <Trash2 className="w-3.5 h-3.5" />
+                                                </button>
+                                            </div>
+                                        ))
+                                    )}
                                 </div>
                             </div>
                         ) : (
                             <div className="space-y-3 pt-2">
-                                <div className="p-3 bg-gray-50 rounded-xl flex items-center justify-between">
+                                <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-between border border-gray-100 dark:border-gray-700">
                                     <div className="flex items-center gap-3">
-                                        <FileText className="w-5 h-5 text-[#3C4097]" />
+                                        <FileText className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" />
                                         <div>
-                                            <p className="text-xs font-bold">Slide_Bai_2_React_Props.pdf</p>
-                                            <p className="text-[11px] text-[#6B6D7A]">Dung lượng: 2.4 MB</p>
+                                            <p className="text-xs font-bold text-[#20223A] dark:text-white">Slide_Bai_2_React_Props.pdf</p>
+                                            <p className="text-[11px] text-[#6B6D7A] dark:text-gray-400">Dung lượng: 2.4 MB</p>
                                         </div>
                                     </div>
                                     <Button variant="outline" size="sm" className="flex items-center gap-1">
@@ -158,28 +217,29 @@ export const VideoLearningPage: React.FC = () => {
                 </div>
 
                 {/* Right Col: Playlist / Syllabus */}
-                <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-4 h-fit">
-                    <h2 className="text-lg font-bold text-[#20223A]">Nội dung khóa học</h2>
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-700 shadow-xs space-y-4 h-fit">
+                    <h2 className="text-lg font-bold text-[#20223A] dark:text-white">Nội dung khóa học</h2>
                     <div className="space-y-2">
                         {lessons.map((item) => (
                             <div
                                 key={item.id}
                                 onClick={() => {
+                                    setCurrentLessonId(item.id)
                                     setCurrentVideoUrl(item.videoUrl)
                                     setCurrentLessonTitle(item.title)
                                 }}
                                 className={`p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${currentLessonTitle === item.title
-                                    ? 'border-[#3C4097] bg-[#F4F5FF]'
-                                    : 'border-[#E2E4EB] hover:bg-gray-50'
+                                    ? 'border-[#3C4097] bg-[#F4F5FF] dark:bg-indigo-950/60 dark:border-indigo-400'
+                                    : 'border-[#E2E4EB] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                                     }`}
                             >
                                 <div className="flex items-center gap-3">
-                                    {item.status === 'completed' && <CheckCircle2 className="w-5 h-5 text-[#6FAF7B]" />}
-                                    {item.status === 'active' && <Play className="w-5 h-5 text-[#3C4097] fill-[#3C4097]" />}
+                                    {item.status === 'completed' && <CheckCircle2 className="w-5 h-5 text-[#6FAF7B] dark:text-emerald-400" />}
+                                    {item.status === 'active' && <Play className="w-5 h-5 text-[#3C4097] fill-[#3C4097] dark:text-indigo-400 dark:fill-indigo-400" />}
                                     {item.status === 'locked' && <Lock className="w-5 h-5 text-gray-400" />}
                                     <div>
-                                        <p className="text-xs font-bold text-[#20223A]">{item.title}</p>
-                                        <span className="text-[11px] text-[#6B6D7A]">{item.duration}</span>
+                                        <p className="text-xs font-bold text-[#20223A] dark:text-white">{item.title}</p>
+                                        <span className="text-[11px] text-[#6B6D7A] dark:text-gray-400">{item.duration}</span>
                                     </div>
                                 </div>
                             </div>
