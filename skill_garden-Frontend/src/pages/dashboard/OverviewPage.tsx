@@ -36,6 +36,9 @@ export const OverviewPage: React.FC = () => {
         }
         fetchGardenData()
     }, [])
+        }
+        fetchGardenData()
+    }, [])
 
     const trees: GardenTree[] = gardenData?.trees || []
     const totalTrees = gardenData?.stats.total_trees || trees.length || 0
@@ -51,7 +54,7 @@ export const OverviewPage: React.FC = () => {
                     <div className="space-y-2">
                         <Badge variant="skill">VƯỜN TRÍ THỨC SỐ • PLT SKILLGARDEN</Badge>
                         <h1 className="text-2xl sm:text-3xl font-black text-[#1A2E22] dark:text-white tracking-tight">
-                            Chào mừng trở lại khu vườn, {user?.full_name || 'Học Viên'}! 🌱
+                            Chào mừng trở lại khu vườn, {user?.full_name || user?.email?.split('@')[0] || 'Học Viên'}! 🌱
                         </h1>
                         <p className="text-xs sm:text-sm text-[#4A5568] dark:text-gray-300 max-w-xl">
                             Hôm nay khí hậu khu vườn rất lý tưởng. Hãy duy trì chuỗi <strong>{streakDays} ngày streak</strong> của bạn bằng cách tưới nước và học bài hôm nay!

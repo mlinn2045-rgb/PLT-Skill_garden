@@ -28,6 +28,28 @@ export const MyGardenPage: React.FC = () => {
         } finally {
             setIsLoading(false)
         }
+<<<<<<< HEAD
+=======
+    ])
+
+    const handleWatering = (plantId: string) => {
+        setPlants(prev => prev.map(p => {
+            if (p.id === plantId) {
+                const newProgress = Math.min(100, p.progress + 5)
+                const newStageLevel = Math.min(5, Math.floor(newProgress / 25) + 1)
+                const stageNames: PlantCard['stageName'][] = ['Hạt giống', 'Mầm xanh', 'Cây xòe lá', 'Đơm hoa', 'Đơm quả / Hoàn thành']
+                return {
+                    ...p,
+                    progress: newProgress,
+                    stageLevel: newStageLevel,
+                    stageName: stageNames[newStageLevel - 1],
+                    xpEarned: p.xpEarned + 10,
+                    lastWatered: 'Vừa tưới xong'
+                }
+            }
+            return p
+        }))
+>>>>>>> 30ef4b5 (Update SkillGarden features)
     }
 
     useEffect(() => {
@@ -82,7 +104,11 @@ export const MyGardenPage: React.FC = () => {
                         </div>
                         <div className="text-center px-3">
                             <div className="text-2xl font-black text-rose-300 flex items-center justify-center gap-1">
+<<<<<<< HEAD
                                 <Flame className="w-5 h-5 fill-rose-400" /> {gardenData?.stats.streak_days || 1}
+=======
+                                <Flame className="w-5 h-5 fill-rose-400" /> 7
+>>>>>>> 30ef4b5 (Update SkillGarden features)
                             </div>
                             <div className="text-[11px] text-emerald-200">Streak Ngày</div>
                         </div>
