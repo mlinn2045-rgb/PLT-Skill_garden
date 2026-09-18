@@ -78,7 +78,7 @@ export const SkillDetailPage: React.FC = () => {
                         </p>
 
                         <div className="flex flex-wrap items-center gap-3 pt-2">
-                            <Link to="/dashboard/learning-path/1">
+                            <Link to="/dashboard/video-learning?skill_id=1">
                                 <Button variant="indigo" size="md" iconRight={<ArrowRight className="w-4 h-4" />}>
                                     Tiếp tục học bài tiếp theo
                                 </Button>

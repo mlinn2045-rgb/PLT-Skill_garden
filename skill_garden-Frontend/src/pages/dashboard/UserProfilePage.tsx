@@ -5,7 +5,7 @@ import { Input } from '../../components/ui/Input'
 import { useAuthStore } from '../../stores/authStore'
 
 export const UserProfilePage: React.FC = () => {
-    const { user } = useAuthStore()
+    const { user, updateUser } = useAuthStore()
     const [fullName, setFullName] = useState(user?.full_name || 'Nguyễn Anh Khoa')
     const [bio, setBio] = useState('Lập trình viên React & Node.js đam mê học hỏi và nuôi dưỡng khu vườn kỹ năng PLT Solutions.')
     const [oldPassword, setOldPassword] = useState('')
@@ -21,14 +21,14 @@ export const UserProfilePage: React.FC = () => {
     const emojiList = ['🌱', '🌳', '🌸', '🌵', '🦁', '🦉', '🚀', '⭐', '🎓', '👑']
 
     useEffect(() => {
-        // Remove legacy global key if it exists
-        localStorage.removeItem('skillgarden_custom_avatar')
-
+        if (user?.full_name) {
+            setFullName(user.full_name)
+        }
         if (user?.email) {
             const userAvatar = localStorage.getItem('skillgarden_avatar_' + user.email) || user.avatar_url || null
             setCustomAvatarUrl(userAvatar)
         }
-    }, [user?.email, user?.avatar_url])
+    }, [user?.full_name, user?.email, user?.avatar_url])
 
     // Handle Local Image Upload from Computer (Scoped to user.email)
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,49 +45,61 @@ export const UserProfilePage: React.FC = () => {
             const result = reader.result as string
             setCustomAvatarUrl(result)
 
-            // Save ONLY for this specific user email
-            localStorage.setItem('skillgarden_avatar_' + user.email, result)
+            // Update Zustand authStore and localStorage
+            updateUser({ avatar_url: result })
             setSuccessMsg('Đã tải lên ảnh đại diện từ máy tính thành công!')
             setShowAvatarModal(false)
             setTimeout(() => setSuccessMsg(''), 4000)
 
-            // Sync to backend API
-            fetch('http://localhost:8000/api/user/profile.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: user.email,
-                    full_name: fullName,
-                    avatar_url: result,
-                    bio: bio
+            // Sync to backend API silently if endpoint exists
+            try {
+                fetch('http://localhost:8000/api/user/profile.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: user.email,
+                        full_name: fullName,
+                        avatar_url: result,
+                        bio: bio
+                    })
                 })
-            })
+            } catch {
+                // Ignore API sync errors
+            }
         }
         reader.readAsDataURL(file)
     }
 
     const handleSaveProfile = (e: React.FormEvent) => {
         e.preventDefault()
+
+        // 1. Update in-memory Zustand store and localStorage
+        updateUser({ full_name: fullName, avatar_url: customAvatarUrl || undefined })
         setSuccessMsg('Đã cập nhật thông tin hồ sơ cá nhân thành công!')
 
+        // 2. Sync to backend API silently
         if (user?.email) {
-            fetch('http://localhost:8000/api/user/profile.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: user.email,
-                    full_name: fullName,
-                    avatar_url: customAvatarUrl || '',
-                    bio: bio
+            try {
+                fetch('http://localhost:8000/api/user/profile.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: user.email,
+                        full_name: fullName,
+                        avatar_url: customAvatarUrl || '',
+                        bio: bio
+                    })
                 })
-            })
+            } catch {
+                // Ignore API sync errors
+            }
         }
 
         setTimeout(() => setSuccessMsg(''), 4000)
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-5xl mx-auto space-y-8">
+        <div className="min-h-screen bg-[#FAFAF7] dark:bg-gray-900 text-[#20223A] dark:text-gray-100 pb-12 pt-6 px-6 max-w-5xl mx-auto space-y-8">
             {/* Hidden Input for Local Computer Image Selection */}
             <input
                 type="file"
@@ -98,16 +110,16 @@ export const UserProfilePage: React.FC = () => {
             />
 
             {/* Header Profile Card */}
-            <div className="bg-white rounded-2xl p-8 border border-[#E2E4EB] shadow-md flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 border border-[#E2E4EB] dark:border-gray-700 shadow-md flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
                 <div className="relative group cursor-pointer" onClick={() => setShowAvatarModal(true)}>
                     {customAvatarUrl ? (
                         <img
                             src={customAvatarUrl}
                             alt="Avatar"
-                            className="w-24 h-24 rounded-full object-cover border-4 border-[#DCEFE1] shadow-lg"
+                            className="w-24 h-24 rounded-full object-cover border-4 border-[#DCEFE1] dark:border-emerald-700 shadow-lg"
                         />
                     ) : (
-                        <div className="w-24 h-24 rounded-full bg-[#3C4097] text-white font-extrabold text-3xl flex items-center justify-center border-4 border-[#DCEFE1] shadow-lg">
+                        <div className="w-24 h-24 rounded-full bg-[#3C4097] text-white font-extrabold text-3xl flex items-center justify-center border-4 border-[#DCEFE1] dark:border-emerald-700 shadow-lg">
                             {selectedEmoji.length <= 2 ? selectedEmoji : fullName.charAt(0).toUpperCase()}
                         </div>
                     )}
@@ -127,30 +139,30 @@ export const UserProfilePage: React.FC = () => {
 
                 <div className="space-y-1 text-center md:text-left flex-1">
                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                        <h1 className="text-2xl font-extrabold text-[#20223A]">{fullName}</h1>
+                        <h1 className="text-2xl font-extrabold text-[#20223A] dark:text-white">{fullName}</h1>
                         <span className="px-2.5 py-0.5 bg-[#3C4097] text-white text-xs font-bold rounded-full">
                             {user?.role || 'Học viên'}
                         </span>
                     </div>
-                    <p className="text-xs text-[#6B6D7A] font-mono">Tag ID: AnhKhoa#2026 | {user?.email || 'khoanguyenl.140490@gmail.com'}</p>
-                    <p className="text-xs text-[#20223A] pt-1 max-w-lg">{bio}</p>
+                    <p className="text-xs text-[#6B6D7A] dark:text-gray-400 font-mono">Email: {user?.email || 'user_khoa@pltsolutions.com'}</p>
+                    <p className="text-xs text-[#20223A] dark:text-gray-300 pt-1 max-w-lg">{bio}</p>
                 </div>
 
-                <div className="flex md:flex-col gap-2 border-t md:border-t-0 md:border-l border-[#E2E4EB] pt-4 md:pt-0 md:pl-6 text-center">
+                <div className="flex md:flex-col gap-2 border-t md:border-t-0 md:border-l border-[#E2E4EB] dark:border-gray-700 pt-4 md:pt-0 md:pl-6 text-center">
                     <div>
-                        <p className="text-xs text-[#6B6D7A]">Cấp độ Vườn</p>
-                        <p className="text-xl font-extrabold text-[#3C4097]">Level 5</p>
+                        <p className="text-xs text-[#6B6D7A] dark:text-gray-400">Cấp độ Vườn</p>
+                        <p className="text-xl font-extrabold text-[#3C4097] dark:text-indigo-400">Level 5</p>
                     </div>
                     <div>
-                        <p className="text-xs text-[#6B6D7A]">Cây Trưởng Thành</p>
-                        <p className="text-xl font-extrabold text-[#6FAF7B]">3 Cây</p>
+                        <p className="text-xs text-[#6B6D7A] dark:text-gray-400">Cây Trưởng Thành</p>
+                        <p className="text-xl font-extrabold text-[#6FAF7B] dark:text-emerald-400">3 Cây</p>
                     </div>
                 </div>
             </div>
 
             {/* Notification alert */}
             {successMsg && (
-                <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm">
+                <div className="p-4 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm">
                     <Check className="w-4 h-4 text-emerald-600" />
                     <span>{successMsg}</span>
                 </div>
@@ -159,9 +171,9 @@ export const UserProfilePage: React.FC = () => {
             {/* Profile Form & Settings */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Form Thông tin cá nhân */}
-                <form onSubmit={handleSaveProfile} className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-sm space-y-4">
-                    <h2 className="text-lg font-bold flex items-center gap-2 border-b border-[#E2E4EB] pb-3">
-                        <User className="w-5 h-5 text-[#3C4097]" /> Thông Tin Cá Nhân
+                <form onSubmit={handleSaveProfile} className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-700 shadow-sm space-y-4">
+                    <h2 className="text-lg font-bold flex items-center gap-2 border-b border-[#E2E4EB] dark:border-gray-700 pb-3 text-[#20223A] dark:text-white">
+                        <User className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" /> Thông Tin Cá Nhân
                     </h2>
 
                     <Input
@@ -173,20 +185,20 @@ export const UserProfilePage: React.FC = () => {
 
                     <Input
                         label="ĐỊA CHỈ EMAIL"
-                        value={user?.email || 'khoanguyenl.140490@gmail.com'}
+                        value={user?.email || 'user_khoa@pltsolutions.com'}
                         disabled
                         iconRight={<Mail className="w-4 h-4 text-gray-400" />}
                     />
 
                     <div>
-                        <label className="text-xs font-semibold uppercase tracking-wider text-[#4A5568] block mb-1">
+                        <label className="text-xs font-semibold uppercase tracking-wider text-[#4A5568] dark:text-gray-300 block mb-1">
                             GIỚI THIỆU BẢN THÂN (BIO)
                         </label>
                         <textarea
                             value={bio}
                             onChange={(e) => setBio(e.target.value)}
                             rows={3}
-                            className="w-full px-4 py-2.5 bg-white border border-[#E2E4EB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3C4097]"
+                            className="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-[#E2E4EB] dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3C4097] text-[#20223A] dark:text-gray-100"
                         />
                     </div>
 
@@ -196,9 +208,9 @@ export const UserProfilePage: React.FC = () => {
                 </form>
 
                 {/* Form Đổi mật khẩu */}
-                <form onSubmit={handleSaveProfile} className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-sm space-y-4">
-                    <h2 className="text-lg font-bold flex items-center gap-2 border-b border-[#E2E4EB] pb-3">
-                        <Key className="w-5 h-5 text-[#3C4097]" /> Đổi Mật Khẩu
+                <form onSubmit={handleSaveProfile} className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-700 shadow-sm space-y-4">
+                    <h2 className="text-lg font-bold flex items-center gap-2 border-b border-[#E2E4EB] dark:border-gray-700 pb-3 text-[#20223A] dark:text-white">
+                        <Key className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" /> Đổi Mật Khẩu
                     </h2>
 
                     <Input
@@ -217,8 +229,8 @@ export const UserProfilePage: React.FC = () => {
                         placeholder="••••••••••••"
                     />
 
-                    <div className="p-3 bg-[#FAFAF7] rounded-xl text-[11px] text-[#6B6D7A] space-y-1 border border-[#E2E4EB]">
-                        <p className="font-bold text-[#20223A]">Yêu cầu mật khẩu chuẩn:</p>
+                    <div className="p-3 bg-[#FAFAF7] dark:bg-gray-900 rounded-xl text-[11px] text-[#6B6D7A] dark:text-gray-400 space-y-1 border border-[#E2E4EB] dark:border-gray-700">
+                        <p className="font-bold text-[#20223A] dark:text-white">Yêu cầu mật khẩu chuẩn:</p>
                         <p>• Ít nhất 8 ký tự</p>
                         <p>• Bao gồm chữ hoa, chữ thường, chữ số và ký tự đặc biệt (!@#$%^&*)</p>
                     </div>
@@ -232,7 +244,7 @@ export const UserProfilePage: React.FC = () => {
             {/* Avatar Selection & Upload Modal */}
             {showAvatarModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] max-w-md w-full space-y-5 shadow-2xl relative">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-700 max-w-md w-full space-y-5 shadow-2xl relative text-[#20223A] dark:text-gray-100">
                         <button
                             onClick={() => setShowAvatarModal(false)}
                             className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 rounded-lg"
@@ -240,16 +252,16 @@ export const UserProfilePage: React.FC = () => {
                             <X className="w-5 h-5" />
                         </button>
 
-                        <div className="flex items-center gap-2 text-[#3C4097]">
+                        <div className="flex items-center gap-2 text-[#3C4097] dark:text-indigo-400">
                             <Sparkles className="w-5 h-5" />
                             <h3 className="text-lg font-bold">Thay Đổi Ảnh Đại Diện</h3>
                         </div>
 
                         {/* Upload from Computer Box */}
-                        <div className="p-4 bg-[#F4F5FF] border-2 border-dashed border-[#3C4097]/40 rounded-2xl text-center space-y-2">
-                            <Upload className="w-8 h-8 text-[#3C4097] mx-auto" />
-                            <p className="text-xs font-bold text-[#20223A]">Tải ảnh trực tiếp từ Máy tính của bạn</p>
-                            <p className="text-[11px] text-[#6B6D7A]">Hỗ trợ các định dạng PNG, JPG, WEBP (Tối đa 5MB)</p>
+                        <div className="p-4 bg-[#F4F5FF] dark:bg-gray-900 border-2 border-dashed border-[#3C4097]/40 dark:border-indigo-500/40 rounded-2xl text-center space-y-2">
+                            <Upload className="w-8 h-8 text-[#3C4097] dark:text-indigo-400 mx-auto" />
+                            <p className="text-xs font-bold text-[#20223A] dark:text-white">Tải ảnh trực tiếp từ Máy tính của bạn</p>
+                            <p className="text-[11px] text-[#6B6D7A] dark:text-gray-400">Hỗ trợ các định dạng PNG, JPG, WEBP (Tối đa 5MB)</p>
                             <Button
                                 type="button"
                                 variant="indigo"
@@ -259,13 +271,6 @@ export const UserProfilePage: React.FC = () => {
                             >
                                 <ImageIcon className="w-4 h-4" /> Chọn ảnh từ máy tính
                             </Button>
-                        </div>
-
-                        {/* Divider */}
-                        <div className="flex items-center gap-2 text-[11px] text-gray-400 font-bold uppercase tracking-wider">
-                            <div className="flex-1 h-px bg-[#E2E4EB]" />
-                            <span>Hoặc chọn Linh vật Vườn</span>
-                            <div className="flex-1 h-px bg-[#E2E4EB]" />
                         </div>
 
                         {/* Emoji List */}
@@ -282,8 +287,8 @@ export const UserProfilePage: React.FC = () => {
                                         }
                                     }}
                                     className={`w-14 h-14 rounded-2xl text-2xl flex items-center justify-center border transition-all ${selectedEmoji === av && !customAvatarUrl
-                                            ? 'border-[#3C4097] bg-[#F4F5FF] shadow-md scale-105'
-                                            : 'border-[#E2E4EB] hover:bg-gray-50'
+                                        ? 'border-[#3C4097] bg-[#F4F5FF] dark:bg-indigo-950 shadow-md scale-105'
+                                        : 'border-[#E2E4EB] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                                         }`}
                                 >
                                     {av}
@@ -291,7 +296,7 @@ export const UserProfilePage: React.FC = () => {
                             ))}
                         </div>
 
-                        <div className="flex justify-end gap-2 pt-2 border-t border-[#E2E4EB]">
+                        <div className="flex justify-end gap-2 pt-2 border-t border-[#E2E4EB] dark:border-gray-700">
                             <Button variant="outline" onClick={() => setShowAvatarModal(false)}>Hủy</Button>
                             <Button variant="indigo" className="font-bold" onClick={() => setShowAvatarModal(false)}>
                                 Áp dụng thay đổi

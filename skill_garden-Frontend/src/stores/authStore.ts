@@ -9,26 +9,35 @@ interface AuthState {
     isLoading: boolean;
     isInitialized: boolean;
     error: string | null;
+    isDarkMode: boolean;
 
     checkAuth: () => Promise<void>;
     login: (email: string, password: string) => Promise<boolean>;
     register: (fullName: string, email: string, password: string) => Promise<{ success: boolean; message: string }>;
     logout: () => Promise<void>;
+    updateUser: (updatedData: Partial<UserProfile>) => void;
+    toggleDarkMode: () => void;
     clearError: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
     user: null,
     isAuthenticated: false,
     isLoading: false,
     isInitialized: false,
     error: null,
+    isDarkMode: localStorage.getItem('skillgarden_theme') === 'dark',
 
     checkAuth: async () => {
         set({ isLoading: true });
         try {
             const user = await authService.getMe();
             if (user) {
+                // Merge local avatar if set
+                const localAvatar = localStorage.getItem('skillgarden_avatar_' + user.email);
+                if (localAvatar) {
+                    user.avatar_url = localAvatar;
+                }
                 set({ user, isAuthenticated: true, isInitialized: true, isLoading: false, error: null });
             } else {
                 set({ user: null, isAuthenticated: false, isInitialized: true, isLoading: false });
@@ -43,7 +52,12 @@ export const useAuthStore = create<AuthState>((set) => ({
         try {
             const res = await authService.login(email, password);
             if (res.data?.user) {
-                set({ user: res.data.user, isAuthenticated: true, isLoading: false, error: null });
+                const user = res.data.user;
+                const localAvatar = localStorage.getItem('skillgarden_avatar_' + user.email);
+                if (localAvatar) {
+                    user.avatar_url = localAvatar;
+                }
+                set({ user, isAuthenticated: true, isLoading: false, error: null });
                 return true;
             }
             set({ isLoading: false, error: res.message || 'Đăng nhập thất bại' });
@@ -74,6 +88,27 @@ export const useAuthStore = create<AuthState>((set) => ({
             // Ignore logout errors
         } finally {
             set({ user: null, isAuthenticated: false, isLoading: false, error: null });
+        }
+    },
+
+    updateUser: (updatedData: Partial<UserProfile>) => {
+        const currentUser = get().user;
+        if (!currentUser) return;
+        const newUser = { ...currentUser, ...updatedData };
+        set({ user: newUser });
+        if (updatedData.avatar_url) {
+            localStorage.setItem('skillgarden_avatar_' + currentUser.email, updatedData.avatar_url);
+        }
+    },
+
+    toggleDarkMode: () => {
+        const nextDark = !get().isDarkMode;
+        set({ isDarkMode: nextDark });
+        localStorage.setItem('skillgarden_theme', nextDark ? 'dark' : 'light');
+        if (nextDark) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
     },
 
