@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # 1. MySQL Database Container
+  db:
+    image: mysql:8.0
+    container_name: skillgarden_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: skill_garden
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # 2. PHP 8.3 Backend API Container
+  backend:
+    build:
+      context: ./skill_garden-Backend
+      dockerfile: Dockerfile
+    container_name: skillgarden_backend
+    restart: always
+    ports:
+      - "8000:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: skill_garden
+      DB_USER: root
+      DB_PASS: root
+    depends_on:
+      - db
+    volumes:
+      - ./skill_garden-Backend:/var/www/html
+
+  # 3. React 19 Frontend Container
+  frontend:
+    build:
+      context: ./skill_garden-Frontend
+      dockerfile: Dockerfile
+    container_name: skillgarden_frontend
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
