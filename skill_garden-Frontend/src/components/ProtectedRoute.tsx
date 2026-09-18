@@ -4,6 +4,11 @@ import React, { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 
+interface RoleProtectedRouteProps {
+    allowedRoles: Array<'SUPER_ADMIN' | 'ADMIN' | 'USER'>;
+    children: React.ReactNode;
+}
+
 export const ProtectedRoute: React.FC = () => {
     const { isAuthenticated, isInitialized, checkAuth, isLoading } = useAuthStore();
 
@@ -29,4 +34,14 @@ export const ProtectedRoute: React.FC = () => {
     }
 
     return <Outlet />;
+};
+
+export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({ allowedRoles, children }) => {
+    const { user } = useAuthStore();
+
+    if (!user || !allowedRoles.includes(user.role)) {
+        return <Navigate to="/dashboard" replace />;
+    }
+
+    return <>{children}</>;
 };

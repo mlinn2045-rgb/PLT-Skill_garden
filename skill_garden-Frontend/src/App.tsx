@@ -24,12 +24,14 @@ import { CourseManagementPage } from './pages/admin/CourseManagementPage'
 import { LessonManagementPage } from './pages/admin/LessonManagementPage'
 import { CreateLessonVideoPage } from './pages/admin/CreateLessonVideoPage'
 import { QuizBankManagementPage } from './pages/admin/QuizBankManagementPage'
+import { CreateQuizQuestionPage } from './pages/admin/CreateQuizQuestionPage'
 import { PDFMaterialsManagementPage } from './pages/admin/PDFMaterialsManagementPage'
 
 // New User pages
 import { MyGardenPage } from './pages/dashboard/MyGardenPage'
 import { SkillCatalogPage } from './pages/dashboard/SkillCatalogPage'
 import { LeaderboardPage } from './pages/dashboard/LeaderboardPage'
+import { PlantSkillPage } from './pages/dashboard/PlantSkillPage'
 
 // New Admin pages
 import { PlantManagementPage } from './pages/admin/PlantManagementPage'
@@ -44,7 +46,7 @@ import { SystemReportsPage } from './pages/superadmin/SystemReportsPage'
 import { AuditLogsPage } from './pages/superadmin/AuditLogsPage'
 import { SystemConfigPage } from './pages/superadmin/SystemConfigPage'
 
-import { ProtectedRoute } from './components/ProtectedRoute'
+import { ProtectedRoute, RoleProtectedRoute } from './components/ProtectedRoute'
 
 /** Smart redirect component for /dashboard based on user role */
 const DashboardRedirect: React.FC = () => {
@@ -85,6 +87,7 @@ export const App: React.FC = () => {
                         {/* User Routes */}
                         <Route path="garden" element={<MyGardenPage />} />
                         <Route path="skill-catalog" element={<SkillCatalogPage />} />
+                        <Route path="skill/:id/plant" element={<PlantSkillPage />} />
                         <Route path="leaderboard" element={<LeaderboardPage />} />
 
                         {/* Admin LMS & Management Routes */}
@@ -92,7 +95,8 @@ export const App: React.FC = () => {
                         <Route path="admin/courses" element={<CourseManagementPage />} />
                         <Route path="admin/lessons" element={<LessonManagementPage />} />
                         <Route path="admin/create-video-lesson" element={<CreateLessonVideoPage />} />
-                        <Route path="admin/quiz-bank" element={<QuizBankManagementPage />} />
+                        <Route path="admin/quiz-bank" element={<RoleProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}><QuizBankManagementPage /></RoleProtectedRoute>} />
+                        <Route path="admin/quiz-bank/create" element={<RoleProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}><CreateQuizQuestionPage /></RoleProtectedRoute>} />
                         <Route path="admin/pdf-materials" element={<PDFMaterialsManagementPage />} />
                         <Route path="admin/plants" element={<PlantManagementPage />} />
                         <Route path="admin/achievements" element={<AchievementManagementPage />} />

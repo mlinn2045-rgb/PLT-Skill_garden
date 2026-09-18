@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
-import { HelpCircle, Plus, Edit, Trash2, CheckCircle, Search } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { HelpCircle, Plus, Edit, Trash2, CheckCircle } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 
 export const QuizBankManagementPage: React.FC = () => {
+    const navigate = useNavigate()
     const [questions, setQuestions] = useState([
         {
             id: 1,
@@ -34,7 +36,7 @@ export const QuizBankManagementPage: React.FC = () => {
                     </h1>
                     <p className="text-xs text-[#6B6D7A] mt-1">Tạo và thiết lập bộ câu hỏi trắc nghiệm, đáp án đúng và mức độ khó.</p>
                 </div>
-                <Button variant="indigo" className="font-bold flex items-center gap-2">
+                <Button variant="indigo" className="font-bold flex items-center gap-2" onClick={() => navigate('/dashboard/admin/quiz-bank/create')}>
                     <Plus className="w-4 h-4" /> Tạo câu hỏi mới
                 </Button>
             </div>

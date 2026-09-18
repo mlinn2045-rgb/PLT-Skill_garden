@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
     CheckCircle2,
     Lock,
@@ -16,7 +16,52 @@ import { Card } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { Avatar } from '../../components/ui/Avatar'
 
+const learningPaths = {
+    '1': {
+        title: 'Frontend React 19 Mastery',
+        subtitle: 'React 19 & Front-end Career Path 2026',
+        description: 'Làm chủ React 19, Hooks, State Management, Server Components và Tailwind CSS qua các bài học thực chiến.',
+        goal: 'Junior/Mid Front-end Engineer @ PLT Solutions Lab',
+        nextLesson: 'React Hooks & State Management trong ứng dụng thực tế',
+        activeChapter: 'React 19, Hooks & Quản lý trạng thái',
+        activeDescription: 'Xây dựng tư duy Component-driven, làm chủ React 19, Custom Hooks và quản lý State toàn cục với Zustand.',
+        unlockedChapter: 'Server Components, Next.js & tối ưu trải nghiệm người dùng',
+    },
+    '2': {
+        title: 'Backend NestJS & Node.js System',
+        subtitle: 'Backend Engineering Career Path 2026',
+        description: 'Xây dựng RESTful API, Microservices, Dependency Injection và Authentication theo tiêu chuẩn enterprise.',
+        goal: 'Junior/Mid Backend Engineer @ PLT Solutions Lab',
+        nextLesson: 'Dependency Injection & Module Architecture trong NestJS',
+        activeChapter: 'NestJS Core & kiến trúc Backend',
+        activeDescription: 'Thiết kế module, controller, service và hệ thống xác thực có thể mở rộng bằng NestJS và Node.js.',
+        unlockedChapter: 'Microservices, Queues & triển khai hệ thống',
+    },
+    '3': {
+        title: 'Database SQL & MySQL Architect',
+        subtitle: 'Database Engineering Career Path 2026',
+        description: 'Thiết kế cơ sở dữ liệu quan hệ, viết SQL query phức tạp và tối ưu Index, Transaction cho hệ thống lớn.',
+        goal: 'Database Engineer @ PLT Solutions Lab',
+        nextLesson: 'Index, Query Plan & tối ưu truy vấn MySQL',
+        activeChapter: 'SQL chuyên sâu & thiết kế dữ liệu',
+        activeDescription: 'Thực hành chuẩn hóa dữ liệu, JOIN, transaction và chiến lược index cho các truy vấn thực tế.',
+        unlockedChapter: 'Database Architecture & High Availability',
+    },
+    '4': {
+        title: 'Python & Data Analysis Core',
+        subtitle: 'Python Data Career Path 2026',
+        description: 'Học Python từ nền tảng đến phân tích dữ liệu với Pandas, NumPy và Matplotlib qua các bài tập trực quan.',
+        goal: 'Python Data Analyst @ PLT Solutions Lab',
+        nextLesson: 'DataFrame, Filtering & GroupBy với Pandas',
+        activeChapter: 'Python Core & xử lý dữ liệu',
+        activeDescription: 'Nắm chắc cú pháp Python, cấu trúc dữ liệu và quy trình làm sạch dữ liệu cho bài toán phân tích.',
+        unlockedChapter: 'Trực quan hóa dữ liệu & Machine Learning Foundation',
+    },
+} as const
+
 export const LearningPathPage: React.FC = () => {
+    const { id = '1' } = useParams<{ id: string }>()
+    const path = learningPaths[id as keyof typeof learningPaths] ?? learningPaths['1']
     const [activeTab, setActiveTab] = useState<'all' | 'active' | 'locked'>('all')
 
     return (
@@ -33,11 +78,11 @@ export const LearningPathPage: React.FC = () => {
                         </Badge>
 
                         <h1 className="text-2xl sm:text-4xl font-black text-[#1A2E22] tracking-tight">
-                            Kỹ sư Front-end Toàn Diện <span className="text-[#3F49C8] font-normal">(Front-end Career Path 2026)</span>
+                            {path.title} <span className="text-[#3F49C8] font-normal">({path.subtitle})</span>
                         </h1>
 
                         <p className="text-sm text-[#4A5568] leading-relaxed max-w-2xl">
-                            Hành trình từ người mới bắt đầu đến khi tự tay kiến tạo các ứng dụng web quy mô lớn, làm chủ hệ sinh thái React, TypeScript, Next.js và tích hợp AI vào quy trình sản xuất phần mềm.
+                            {path.description}
                         </p>
 
                         <div className="flex items-center gap-3 pt-2">
@@ -49,7 +94,7 @@ export const LearningPathPage: React.FC = () => {
                                         Cấp 8 • Mầm Tri Thức
                                     </span>
                                 </div>
-                                <span className="text-[11px] text-[#718096]">Mục tiêu: Junior/Mid Front-end Engineer @ PLT Solutions Lab</span>
+                                <span className="text-[11px] text-[#718096]">Mục tiêu: {path.goal}</span>
                             </div>
                         </div>
                     </div>
@@ -90,7 +135,7 @@ export const LearningPathPage: React.FC = () => {
                         </div>
 
                         <div className="space-y-2 pt-1">
-                            <Link to="/dashboard/skill/1">
+                            <Link to={`/dashboard/skill/${id}`}>
                                 <Button variant="indigo" fullWidth size="md" iconRight={<ArrowRight className="w-4 h-4" />}>
                                     Tiếp tục chặng hiện tại
                                 </Button>
@@ -185,11 +230,11 @@ export const LearningPathPage: React.FC = () => {
                                 </div>
 
                                 <h3 className="text-xl font-extrabold text-[#1A2E22]">
-                                    JavaScript Chuyên sâu, ESNext & Mô hình Bất đồng bộ
+                                    {path.activeChapter}
                                 </h3>
 
                                 <p className="text-xs text-[#4A5568] leading-relaxed mt-2">
-                                    Hiểu sâu bản chất JavaScript Runtime, Execution Context, Event Loop, cùng như kỹ thuật giải quyết bài toán xử lý Concurrent Async với Promise.
+                                    {path.activeDescription}
                                 </p>
 
                                 {/* Next Lesson Box */}
@@ -200,11 +245,11 @@ export const LearningPathPage: React.FC = () => {
                                         </div>
                                         <div>
                                             <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#718096]">BÀI HỌC TIẾP THEO</span>
-                                            <h4 className="text-xs font-bold text-[#1A2E22]">Promise.allSettled() vs Promise.any() trong xử lý API</h4>
+                                            <h4 className="text-xs font-bold text-[#1A2E22]">{path.nextLesson}</h4>
                                         </div>
                                     </div>
 
-                                    <Link to="/dashboard/skill/1">
+                                    <Link to={`/dashboard/skill/${id}`}>
                                         <Button variant="indigo" size="sm">Vào học ngay &rsaquo;</Button>
                                     </Link>
                                 </div>
@@ -229,7 +274,7 @@ export const LearningPathPage: React.FC = () => {
                                 </div>
 
                                 <h3 className="text-lg font-bold text-[#1A2E22]">
-                                    React Ecosystem & Quản lý trạng thái phức hợp
+                                    {path.unlockedChapter}
                                 </h3>
 
                                 <p className="text-xs text-[#4A5568] leading-relaxed mt-1">
