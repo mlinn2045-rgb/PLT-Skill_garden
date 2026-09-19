@@ -80,9 +80,8 @@ export const UserProfilePage: React.FC = () => {
 
         // 2. Sync to backend API silently
         if (user?.email) {
-<<<<<<< HEAD
             try {
-                fetch('http://localhost:8000/api/user/profile.php', {
+                fetch(`${API_BASE_URL}/user/profile.php`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -91,16 +90,6 @@ export const UserProfilePage: React.FC = () => {
                         avatar_url: customAvatarUrl || '',
                         bio: bio
                     })
-=======
-            fetch(`${API_BASE_URL}/user/profile.php`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: user.email,
-                    full_name: fullName,
-                    avatar_url: customAvatarUrl || '',
-                    bio: bio
->>>>>>> b774379 (fix FE)
                 })
             } catch {
                 // Ignore API sync errors

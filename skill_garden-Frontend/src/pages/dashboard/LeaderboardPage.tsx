@@ -47,33 +47,25 @@ export const LeaderboardPage: React.FC = () => {
                             <Sparkles className="w-3.5 h-3.5" />
                             <span>BẢNG VINH DANH HỌC VIÊN XUẤT SẮC (API THẬT)</span>
                         </div>
-                        <h1 className="text-2xl md:text-3xl font-extrabold flex items-center gap-2">
-                            <Trophy className="w-8 h-8 text-yellow-400" /> Bảng Xếp Hạng Vườn Kỹ Năng
+                        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+                            Bảng Xếp Hạng Trí Thức PLT 🏆
                         </h1>
-                        <p className="text-xs md:text-sm text-emerald-100/80 mt-1 max-w-xl leading-relaxed">
-                            Cạnh tranh lành mạnh cùng các học viên trên toàn hệ thống PLT Solutions. Hoàn thành bài học, giữ streak và tích lũy XP!
+                        <p className="text-xs md:text-sm text-emerald-100/80 leading-relaxed max-w-xl">
+                            Cạnh tranh lành mạnh, tích lũy XP từ các bài học và quiz mỗi ngày để vươn lên vị trí dẫn đầu toàn hệ thống!
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" onClick={fetchLeaderboard} disabled={isLoading} className="text-white border-white/30 hover:bg-white/10 font-bold flex items-center gap-1">
-                            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
-                        </Button>
-                    </div>
+                    <Button variant="outline" size="sm" onClick={fetchLeaderboard} disabled={isLoading} className="border-white/30 text-white hover:bg-white/10 font-bold flex items-center gap-1 cursor-pointer">
+                        <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại bảng xếp hạng
+                    </Button>
                 </div>
             </div>
 
-            {errorMsg && (
-                <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-bold">
-                    {errorMsg}
-                </div>
-            )}
-
-            {/* Podium Top 3 */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-                {/* Rank 2 */}
-                <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm flex flex-col items-center text-center space-y-3 relative order-2 md:order-1">
-                    <div className="absolute -top-4 bg-slate-300 text-slate-800 text-xs font-extrabold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+            {/* Top 3 Podium */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 items-end">
+                {/* Top 2 - Silver */}
+                <div className="bg-white rounded-3xl p-6 border border-[#E6ECE6] shadow-md text-center space-y-3 relative order-2 md:order-1 flex flex-col items-center">
+                    <div className="absolute -top-4 bg-slate-500 text-white text-xs font-extrabold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
                         <Medal className="w-3.5 h-3.5" /> Hạng 2
                     </div>
                     <div className="w-20 h-20 rounded-full bg-slate-100 border-4 border-slate-300 flex items-center justify-center text-3xl font-extrabold text-slate-700 shadow-inner mt-2">
@@ -82,31 +74,31 @@ export const LeaderboardPage: React.FC = () => {
                     <div>
                         <h3 className="font-extrabold text-[#1A2E22] text-base">{top2.full_name || top2.username}</h3>
                     </div>
-                    <div className="bg-slate-50 border border-slate-200 p-3 rounded-2xl w-full flex items-center justify-around text-xs font-bold text-slate-700">
+                    <div className="bg-slate-50 border border-slate-200 p-3 rounded-2xl w-full flex items-center justify-around text-xs font-bold text-slate-800">
                         <span>Level {top2.level}</span>
                         <span className="text-emerald-700">+{top2.total_xp} XP</span>
                     </div>
                 </div>
 
-                {/* Rank 1 */}
-                <div className="bg-gradient-to-b from-amber-50 to-white rounded-3xl p-6 border-2 border-amber-300 shadow-md flex flex-col items-center text-center space-y-3 relative order-1 md:order-2 transform md:-translate-y-4">
-                    <div className="absolute -top-5 bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-900 text-xs font-black px-4 py-1.5 rounded-full flex items-center gap-1 shadow-md">
-                        <Crown className="w-4 h-4 fill-amber-900 text-amber-900" /> Quán Quân Hạng 1
+                {/* Top 1 - Gold */}
+                <div className="bg-gradient-to-b from-amber-500/10 via-amber-50/50 to-white rounded-3xl p-6 border-2 border-amber-400 shadow-xl text-center space-y-4 relative order-1 md:order-2 flex flex-col items-center -translate-y-2">
+                    <div className="absolute -top-5 bg-gradient-to-r from-amber-500 to-yellow-500 text-white text-xs font-black px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-md uppercase tracking-wider">
+                        <Crown className="w-4 h-4 fill-white text-white" /> QUÁN QUÂN #1
                     </div>
-                    <div className="w-24 h-24 rounded-full bg-amber-100 border-4 border-amber-400 flex items-center justify-center text-4xl font-extrabold text-amber-800 shadow-inner mt-2">
-                        🥇
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-300 to-yellow-500 border-4 border-amber-400 flex items-center justify-center text-4xl shadow-lg mt-2">
+                        👑
                     </div>
                     <div>
-                        <h3 className="font-black text-[#1A2E22] text-lg text-amber-950">{top1.full_name || top1.username}</h3>
+                        <h3 className="font-black text-[#1A2E22] text-lg">{top1.full_name || top1.username}</h3>
                     </div>
-                    <div className="bg-amber-100/70 border border-amber-300 p-3 rounded-2xl w-full flex items-center justify-around text-xs font-black text-amber-900">
+                    <div className="bg-amber-100/60 border border-amber-300 p-3.5 rounded-2xl w-full flex items-center justify-around text-xs font-extrabold text-amber-950">
                         <span>Level {top1.level}</span>
-                        <span className="text-emerald-800 text-sm">+{top1.total_xp} XP</span>
+                        <span className="text-emerald-800 font-mono text-sm">+{top1.total_xp} XP</span>
                     </div>
                 </div>
 
-                {/* Rank 3 */}
-                <div className="bg-white rounded-3xl p-6 border-2 border-amber-100 shadow-sm flex flex-col items-center text-center space-y-3 relative order-3">
+                {/* Top 3 - Bronze */}
+                <div className="bg-white rounded-3xl p-6 border border-[#E6ECE6] shadow-md text-center space-y-3 relative order-3 flex flex-col items-center">
                     <div className="absolute -top-4 bg-amber-600 text-white text-xs font-extrabold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
                         <Medal className="w-3.5 h-3.5" /> Hạng 3
                     </div>
@@ -125,7 +117,6 @@ export const LeaderboardPage: React.FC = () => {
 
             {/* Rankings Table */}
             <div className="bg-white rounded-3xl border border-[#E6ECE6] shadow-xs overflow-hidden">
-<<<<<<< HEAD
                 {isLoading ? (
                     <div className="p-12 text-center text-xs font-bold text-[#6B6D7A] space-y-2">
                         <RefreshCw className="w-6 h-6 animate-spin mx-auto text-emerald-600" />
@@ -149,59 +140,6 @@ export const LeaderboardPage: React.FC = () => {
                                         <span className={`w-8 text-center text-sm font-black ${u.rank === 1 ? 'text-amber-500 text-lg' : u.rank === 2 ? 'text-slate-400 text-lg' : u.rank === 3 ? 'text-amber-700 text-lg' : 'text-[#718096]'
                                             }`}>
                                             #{u.rank}
-=======
-                <div className="p-5 border-b border-[#E6ECE6] bg-gray-50 flex items-center justify-between">
-                    <h2 className="text-sm font-extrabold text-[#1A2E22] uppercase tracking-wider">
-                        Danh Sách Thứ Hạng Chi Tiết
-                    </h2>
-                    <span className="text-xs font-semibold text-[#718096]">
-                        Cập nhật theo thời gian thực
-                    </span>
-                </div>
-
-                <div className="divide-y divide-[#E6ECE6]">
-                    {rankings.map(u => {
-                        const isCurrentUser = u.rank === 0
-                        return (
-                            <div
-                                key={u.rank}
-                                className={`p-4 md:p-5 flex items-center justify-between gap-4 transition-colors ${isCurrentUser ? 'bg-[#EEF0FD] border-l-4 border-l-[#3F49C8]' : 'hover:bg-gray-50'
-                                    }`}
-                            >
-                                <div className="flex items-center gap-4">
-                                    <span className={`w-8 text-center text-sm font-black ${u.rank === 1 ? 'text-amber-500 text-lg' : u.rank === 2 ? 'text-slate-400 text-lg' : u.rank === 3 ? 'text-amber-700 text-lg' : 'text-[#718096]'
-                                        }`}>
-                                        #{u.rank}
-                                    </span>
-
-                                    <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 font-extrabold flex items-center justify-center text-sm border border-emerald-300">
-                                        {u.name.charAt(0)}
-                                    </div>
-
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            <h4 className="text-xs md:text-sm font-extrabold text-[#1A2E22]">
-                                                {u.name}
-                                            </h4>
-                                            {isCurrentUser && (
-                                                <Badge variant="indigo" className="text-[10px]">Bạn</Badge>
-                                            )}
-                                        </div>
-                                        <p className="text-[11px] text-[#718096] font-medium">{u.badge}</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-6 text-xs font-bold">
-                                    <div className="hidden sm:block text-right">
-                                        <span className="text-[#718096] block text-[10px]">Cấp độ</span>
-                                        <span className="text-[#1A2E22]">Level {u.level}</span>
-                                    </div>
-
-                                    <div className="hidden sm:block text-right">
-                                        <span className="text-[#718096] block text-[10px]">Streak</span>
-                                        <span className="text-rose-600 flex items-center justify-end gap-1">
-                                            <Flame className="w-3.5 h-3.5 fill-rose-500" /> {u.streak} Ngày
->>>>>>> b774379 (fix FE)
                                         </span>
 
                                         <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 font-extrabold flex items-center justify-center text-sm border border-emerald-300">
