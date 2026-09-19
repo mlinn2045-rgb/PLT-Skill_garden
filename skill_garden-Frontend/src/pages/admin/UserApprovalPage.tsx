@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { CheckCircle2, XCircle, Search, Shield, AlertTriangle, RefreshCw, Check, Clock } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
+import { API_BASE_URL } from '../../services/authService'
 
 interface RealUser {
     id: number
@@ -31,7 +32,7 @@ export const UserApprovalPage: React.FC = () => {
         setIsLoading(true)
         setErrorMsg('')
         try {
-            const res = await fetch('http://localhost:8000/api/admin/users.php')
+            const res = await fetch(`${API_BASE_URL}/admin/users.php`)
             const json = await res.json()
             if (json.success && Array.isArray(json.data)) {
                 setUsersList(json.data)
@@ -58,7 +59,7 @@ export const UserApprovalPage: React.FC = () => {
     const handleApprove = async (user: RealUser) => {
         setIsSubmitting(true)
         try {
-            const res = await fetch('http://localhost:8000/api/admin/users.php', {
+            const res = await fetch(`${API_BASE_URL}/admin/users.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'approve', user_id: user.id })
@@ -82,7 +83,7 @@ export const UserApprovalPage: React.FC = () => {
         if (!selectedUser) return
         setIsSubmitting(true)
         try {
-            const res = await fetch('http://localhost:8000/api/admin/users.php', {
+            const res = await fetch(`${API_BASE_URL}/admin/users.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'reject', user_id: selectedUser.id, reason: rejectReason })

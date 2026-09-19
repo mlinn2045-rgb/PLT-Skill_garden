@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` VARCHAR(255) NOT NULL UNIQUE,
   `full_name` VARCHAR(255) NOT NULL,
   `username` VARCHAR(100) NULL UNIQUE,
-  `tag_id` VARCHAR(20) NULL, -- e.g. AnhKhoa#1234
+  `tag_id` VARCHAR(50) NULL, -- e.g. AnhKhoa#1234
   `password_hash` VARCHAR(255) NOT NULL,
   `avatar` VARCHAR(500) NULL DEFAULT NULL,
   `bio` TEXT NULL DEFAULT NULL,

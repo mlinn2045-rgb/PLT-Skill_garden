@@ -125,6 +125,7 @@ export const LeaderboardPage: React.FC = () => {
 
             {/* Rankings Table */}
             <div className="bg-white rounded-3xl border border-[#E6ECE6] shadow-xs overflow-hidden">
+<<<<<<< HEAD
                 {isLoading ? (
                     <div className="p-12 text-center text-xs font-bold text-[#6B6D7A] space-y-2">
                         <RefreshCw className="w-6 h-6 animate-spin mx-auto text-emerald-600" />
@@ -148,6 +149,59 @@ export const LeaderboardPage: React.FC = () => {
                                         <span className={`w-8 text-center text-sm font-black ${u.rank === 1 ? 'text-amber-500 text-lg' : u.rank === 2 ? 'text-slate-400 text-lg' : u.rank === 3 ? 'text-amber-700 text-lg' : 'text-[#718096]'
                                             }`}>
                                             #{u.rank}
+=======
+                <div className="p-5 border-b border-[#E6ECE6] bg-gray-50 flex items-center justify-between">
+                    <h2 className="text-sm font-extrabold text-[#1A2E22] uppercase tracking-wider">
+                        Danh Sách Thứ Hạng Chi Tiết
+                    </h2>
+                    <span className="text-xs font-semibold text-[#718096]">
+                        Cập nhật theo thời gian thực
+                    </span>
+                </div>
+
+                <div className="divide-y divide-[#E6ECE6]">
+                    {rankings.map(u => {
+                        const isCurrentUser = u.rank === 0
+                        return (
+                            <div
+                                key={u.rank}
+                                className={`p-4 md:p-5 flex items-center justify-between gap-4 transition-colors ${isCurrentUser ? 'bg-[#EEF0FD] border-l-4 border-l-[#3F49C8]' : 'hover:bg-gray-50'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <span className={`w-8 text-center text-sm font-black ${u.rank === 1 ? 'text-amber-500 text-lg' : u.rank === 2 ? 'text-slate-400 text-lg' : u.rank === 3 ? 'text-amber-700 text-lg' : 'text-[#718096]'
+                                        }`}>
+                                        #{u.rank}
+                                    </span>
+
+                                    <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 font-extrabold flex items-center justify-center text-sm border border-emerald-300">
+                                        {u.name.charAt(0)}
+                                    </div>
+
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <h4 className="text-xs md:text-sm font-extrabold text-[#1A2E22]">
+                                                {u.name}
+                                            </h4>
+                                            {isCurrentUser && (
+                                                <Badge variant="indigo" className="text-[10px]">Bạn</Badge>
+                                            )}
+                                        </div>
+                                        <p className="text-[11px] text-[#718096] font-medium">{u.badge}</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-6 text-xs font-bold">
+                                    <div className="hidden sm:block text-right">
+                                        <span className="text-[#718096] block text-[10px]">Cấp độ</span>
+                                        <span className="text-[#1A2E22]">Level {u.level}</span>
+                                    </div>
+
+                                    <div className="hidden sm:block text-right">
+                                        <span className="text-[#718096] block text-[10px]">Streak</span>
+                                        <span className="text-rose-600 flex items-center justify-end gap-1">
+                                            <Flame className="w-3.5 h-3.5 fill-rose-500" /> {u.streak} Ngày
+>>>>>>> b774379 (fix FE)
                                         </span>
 
                                         <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 font-extrabold flex items-center justify-center text-sm border border-emerald-300">

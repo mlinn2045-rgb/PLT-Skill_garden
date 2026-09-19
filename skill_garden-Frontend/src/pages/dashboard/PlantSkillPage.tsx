@@ -31,8 +31,8 @@ export const PlantSkillPage: React.FC = () => {
     const navigate = useNavigate()
     const { id = '5' } = useParams<{ id: string }>()
     const skill = skills[id as keyof typeof skills] ?? skills['5']
-    const [plantName, setPlantName] = useState(skill.plant)
-    const [selectedPlant, setSelectedPlant] = useState(skill.plant)
+    const [plantName, setPlantName] = useState<string>(skill.plant)
+    const [selectedPlant, setSelectedPlant] = useState<string>(skill.plant)
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()

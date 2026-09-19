@@ -2,7 +2,7 @@ import React from 'react'
 import { clsx } from 'clsx'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'indigo' | 'secondary' | 'ghost' | 'streak' | 'outline'
+    variant?: 'primary' | 'indigo' | 'secondary' | 'ghost' | 'streak' | 'outline' | 'success'
     size?: 'sm' | 'md' | 'lg'
     icon?: React.ReactNode
     iconRight?: React.ReactNode
@@ -28,7 +28,8 @@ export const Button: React.FC<ButtonProps> = ({
         secondary: 'bg-[#E6FFFA] text-[#2D7A4F] hover:bg-[#9AE6B4]/30 border border-[#68D391]',
         outline: 'bg-white text-[#1A2E22] hover:bg-[#F7FAF7] border border-[#E6ECE6] shadow-xs',
         ghost: 'bg-transparent text-[#4A5568] hover:bg-[#F3F6F3] hover:text-[#1A2E22]',
-        streak: 'bg-[#ED8936] text-white hover:bg-[#DD6B20] shadow-sm hover:-translate-y-0.5'
+        streak: 'bg-[#ED8936] text-white hover:bg-[#DD6B20] shadow-sm hover:-translate-y-0.5',
+        success: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm hover:shadow-md hover:-translate-y-0.5'
     }
 
     const sizes = {

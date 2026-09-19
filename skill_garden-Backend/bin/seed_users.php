@@ -36,7 +36,7 @@ foreach ($usersData as $u) {
     $totalXp = (int) ($u['totalXp'] ?? 0);
     $streakDays = (int) ($u['streakDays'] ?? 0);
     $bio = $u['bio'] ?? null;
-    $tagId = ucfirst($username) . '#' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+    $tagId = substr(ucfirst($username), 0, 44) . '#' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
 
     $passwordHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]);
 

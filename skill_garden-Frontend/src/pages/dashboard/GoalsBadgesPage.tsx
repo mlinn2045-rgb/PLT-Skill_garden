@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { Award, Flame, Target, CheckCircle2, Lock, Star } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
+import { getChapterProgress, isSkillCompleted, isSkillGrowing } from '../../services/learningProgress'
+import { getStudentStats } from '../../services/studentStats'
 import { useAuthStore } from '../../stores/authStore'
 
 export const GoalsBadgesPage: React.FC = () => {
     const { user } = useAuthStore()
-    const storageKey = `skillgarden_claimed_quests_${user?.email || 'guest'}`
+    const userKey = user?.email || 'guest'
+    const storageKey = `skillgarden_claimed_quests_${userKey}`
+    const studentStats = getStudentStats(userKey)
+    const skillIds = ['1', '2', '3', '4', '5', '6']
+    const completedQuizCount = skillIds.reduce((count, skillId) => (
+        count + (getChapterProgress(skillId, '1', userKey).quizCompleted ? 1 : 0)
+    ), 0)
+    const growingSkillCount = skillIds.filter(skillId => isSkillGrowing(skillId, userKey)).length
 
     const [claimedQuests, setClaimedQuests] = useState<number[]>(() => {
         const saved = localStorage.getItem(storageKey)
@@ -23,18 +32,18 @@ export const GoalsBadgesPage: React.FC = () => {
     }, [storageKey])
 
     const quests = [
-        { id: 1, title: 'Hoàn thành 2 bài học Video hôm nay', xp: 50, current: 2, target: 2 },
-        { id: 2, title: 'Đạt điểm tuyệt đối 1 bài Quiz đánh giá', xp: 100, current: 1, target: 1 },
-        { id: 3, title: 'Duy trì Streak học tập 7 ngày liên tục', xp: 150, current: 5, target: 7 }
+        { id: 1, title: 'Hoàn thành 2 bài học Video hôm nay', xp: 50, current: Math.min(completedQuizCount, 2), target: 2 },
+        { id: 2, title: 'Đạt điểm tuyệt đối 1 bài Quiz đánh giá', xp: 100, current: Math.min(completedQuizCount, 1), target: 1 },
+        { id: 3, title: 'Duy trì Streak học tập 7 ngày liên tục', xp: 150, current: Math.min(studentStats.streakDays, 7), target: 7 }
     ]
 
     const badges = [
-        { id: 1, name: 'Mầm Xanh Đầu Tiên', desc: 'Trồng cây kỹ năng đầu tiên', unlocked: true, icon: '🌱' },
-        { id: 2, name: 'Chiến Sĩ Quiz Core', desc: 'Đạt 100% điểm bài Quiz React', unlocked: true, icon: '⚡' },
-        { id: 3, name: 'Bậc Thầy Streak 7', desc: 'Học tập liên tục 7 ngày', unlocked: false, icon: '🔥' },
-        { id: 4, name: 'Cây Đại Thụ Python', desc: 'Hoàn thành khóa học Python Advanced', unlocked: false, icon: '🌳' },
-        { id: 5, name: 'Chuyên Gia Database', desc: 'Hoàn thành lộ trình SQL', unlocked: false, icon: '🗄️' },
-        { id: 6, name: 'Học Viên Xuất Sắc', desc: 'Tích lũy 5,000 XP', unlocked: false, icon: '👑' }
+        { id: 1, name: 'Mầm Xanh Đầu Tiên', desc: 'Trồng cây kỹ năng đầu tiên', unlocked: growingSkillCount >= 1, icon: '🌱' },
+        { id: 2, name: 'Chiến Sĩ Quiz Core', desc: 'Hoàn thành bài Quiz đầu tiên', unlocked: completedQuizCount >= 1, icon: '⚡' },
+        { id: 3, name: 'Bậc Thầy Streak 7', desc: 'Học tập liên tục 7 ngày', unlocked: studentStats.streakDays >= 7, icon: '🔥' },
+        { id: 4, name: 'Cây Đại Thụ Python', desc: 'Hoàn thành khóa học Python Advanced', unlocked: isSkillCompleted('4', userKey), icon: '🌳' },
+        { id: 5, name: 'Chuyên Gia Database', desc: 'Hoàn thành lộ trình SQL', unlocked: isSkillCompleted('3', userKey), icon: '🗄️' },
+        { id: 6, name: 'Học Viên Xuất Sắc', desc: 'Tích lũy 5,000 XP', unlocked: studentStats.xp >= 5000, icon: '👑' }
     ]
 
     const handleClaim = (id: number) => {
@@ -59,12 +68,12 @@ export const GoalsBadgesPage: React.FC = () => {
                 <div className="flex gap-4">
                     <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 text-center border border-white/20 min-w-[110px]">
                         <Flame className="w-6 h-6 text-orange-400 mx-auto mb-1" />
-                        <p className="text-2xl font-extrabold">7 Ngày</p>
+                        <p className="text-2xl font-extrabold">{studentStats.streakDays} Ngày</p>
                         <p className="text-[11px] text-indigo-200 font-semibold">Streak Hiện Tại</p>
                     </div>
                     <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 text-center border border-white/20 min-w-[110px]">
                         <Star className="w-6 h-6 text-yellow-300 mx-auto mb-1" />
-                        <p className="text-2xl font-extrabold">1,250</p>
+                        <p className="text-2xl font-extrabold">{studentStats.xp.toLocaleString('vi-VN')}</p>
                         <p className="text-[11px] text-indigo-200 font-semibold">Tổng XP</p>
                     </div>
                 </div>

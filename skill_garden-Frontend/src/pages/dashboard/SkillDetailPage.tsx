@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
     CheckCircle2,
     Lock,
@@ -26,6 +26,7 @@ import { Avatar } from '../../components/ui/Avatar'
 import { CircularProgress } from '../../components/ui/CircularProgress'
 
 export const SkillDetailPage: React.FC = () => {
+    const { id = '1' } = useParams<{ id: string }>()
     const [openModules, setOpenModules] = useState<number[]>([3])
 
     const toggleModule = (modId: number) => {
@@ -251,7 +252,9 @@ export const SkillDetailPage: React.FC = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <span className="text-[11px] font-semibold text-[#718096]">Ôn lại</span>
+                                    <Link to={`/dashboard/video-lesson/${id}`} className="text-[11px] font-semibold text-[#3F49C8] hover:underline">
+                                        Ôn lại
+                                    </Link>
                                 </div>
 
                                 {/* 3.2 */}
@@ -267,7 +270,9 @@ export const SkillDetailPage: React.FC = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <span className="text-[11px] font-semibold text-[#718096]">Ôn lại</span>
+                                    <Link to={`/dashboard/video-lesson/${id}`} className="text-[11px] font-semibold text-[#3F49C8] hover:underline">
+                                        Ôn lại
+                                    </Link>
                                 </div>
 
                                 {/* 3.3 - CURRENT LESSON */}

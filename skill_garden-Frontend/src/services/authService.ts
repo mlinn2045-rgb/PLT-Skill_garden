@@ -1,6 +1,7 @@
 // skill_garden-Frontend/src/services/authService.ts
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+export const API_BASE_URL = import.meta.env.VITE_API_URL
+    || `${window.location.origin}/api`;
 
 export interface UserProfile {
     uuid: string;
@@ -9,6 +10,9 @@ export interface UserProfile {
     avatar_url?: string;
     role: 'SUPER_ADMIN' | 'ADMIN' | 'USER';
     is_approved: boolean;
+    level?: number;
+    total_xp?: number;
+    streak_days?: number;
     created_at?: string;
 }
 
