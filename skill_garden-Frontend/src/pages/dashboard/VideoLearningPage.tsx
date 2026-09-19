@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Play, CheckCircle2, FileText, Download, ChevronRight, Lock, Video, HardDrive, Trash2 } from 'lucide-react'
+import { Play, CheckCircle2, FileText, Download, ChevronRight, Lock, Video, HardDrive, Trash2, HelpCircle, Sparkles } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate, Link } from 'react-router-dom'
 import { getChapterProgress, updateChapterProgress } from '../../services/learningProgress'
 import { useAuthStore } from '../../stores/authStore'
 
@@ -12,6 +12,7 @@ interface NoteItem {
 }
 
 export const VideoLearningPage: React.FC = () => {
+    const navigate = useNavigate()
     const [searchParams] = useSearchParams()
     const skillId = searchParams.get('skill_id') || '1'
     const chapterId = searchParams.get('chapter') || '1'
@@ -21,13 +22,20 @@ export const VideoLearningPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'notes' | 'materials'>('notes')
     const [noteText, setNoteText] = useState('')
     const [currentVideoTime, setCurrentVideoTime] = useState(0)
+    const [toastMsg, setToastMsg] = useState('')
 
     // Current active lesson state
     const [currentLessonId, setCurrentLessonId] = useState<number>(2)
     const [currentVideoUrl, setCurrentVideoUrl] = useState('http://localhost:8000/uploads/videos/sample.mp4')
     const [currentLessonTitle, setCurrentLessonTitle] = useState('Bài 2: React Components & Props cơ bản')
+    const [currentDescription, setCurrentDescription] = useState(
+        'Trong bài học này, chúng ta sẽ cùng tìm hiểu cách thiết kế các Component độc lập, tái sử dụng và cách truyền nhận dữ liệu thông qua Props trong React 19.'
+    )
 
     const [chapterProgress, setChapterProgress] = useState(() => getChapterProgress(skillId, chapterId, userKey))
+
+    // Admin created custom lessons list for this skill
+    const [customLessons, setCustomLessons] = useState<any[]>([])
 
     const storageKey = `skillgarden_notes_skill_${skillId}_lesson_${currentLessonId}`
 
@@ -41,6 +49,20 @@ export const VideoLearningPage: React.FC = () => {
             { id: 2, time: '05:10', content: 'Hàm useState trả về 1 tuple gồm state và hàm setState.' }
         ]
     })
+
+    // Sync admin lessons from localStorage
+    useEffect(() => {
+        try {
+            const saved = localStorage.getItem('skillgarden_custom_lessons') || '[]'
+            const parsed = JSON.parse(saved)
+            if (Array.isArray(parsed)) {
+                const filtered = parsed.filter((item: any) => String(item.skillId) === String(skillId))
+                setCustomLessons(filtered)
+            }
+        } catch {
+            setCustomLessons([])
+        }
+    }, [skillId])
 
     useEffect(() => {
         const saved = localStorage.getItem(storageKey)
@@ -74,11 +96,15 @@ export const VideoLearningPage: React.FC = () => {
     }
 
     const handleCompleteVideo = () => {
-        setChapterProgress(updateChapterProgress(skillId, { videoCompleted: true }, chapterId, userKey))
+        const updated = updateChapterProgress(skillId, { videoCompleted: true }, chapterId, userKey)
+        setChapterProgress(updated)
+        setToastMsg('🎉 Đã xem xong video! Bài Quiz của bài học này đã được MỞ KHÓA!')
+        setTimeout(() => setToastMsg(''), 5000)
     }
 
     const handleCompletePdf = () => {
-        setChapterProgress(updateChapterProgress(skillId, { pdfCompleted: true }, chapterId, userKey))
+        const updated = updateChapterProgress(skillId, { pdfCompleted: true }, chapterId, userKey)
+        setChapterProgress(updated)
     }
 
     const formatVideoTime = (totalSeconds: number) => {
@@ -130,12 +156,24 @@ startxref
         URL.revokeObjectURL(downloadUrl)
     }
 
-    const lessons = [
+    const defaultLessons = [
         { id: 1, title: '1. Giới thiệu tổng quan React 19 & JSX Syntax', duration: '12:45', status: 'completed', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
         { id: 2, title: '2. React Components & Props cơ bản (File Tải lên)', duration: '18:20', status: 'active', videoUrl: 'http://localhost:8000/uploads/videos/sample.mp4' },
         { id: 3, title: '3. State Management với useState & useReducer', duration: '25:15', status: 'locked', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
         { id: 4, title: '4. Side Effects & Lifecycle với useEffect Hook', duration: '20:00', status: 'locked', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
     ]
+
+    const formattedCustomLessons = customLessons.map((item, idx) => ({
+        id: 100 + idx,
+        title: `${defaultLessons.length + idx + 1}. ${item.title} (Admin Thêm 🚀)`,
+        duration: item.duration || '15:00',
+        status: 'active',
+        videoUrl: item.videoUrl,
+        description: item.description,
+        isAdminAdded: true
+    }))
+
+    const lessons = [...defaultLessons, ...formattedCustomLessons]
 
     const isYouTubeUrl = (url: string) => {
         return url.includes('youtube.com') || url.includes('youtu.be')
@@ -143,22 +181,65 @@ startxref
 
     return (
         <div className="min-h-screen bg-[#FAFAF7] dark:bg-gray-900 text-[#20223A] dark:text-gray-100 pb-12">
-            {/* Header breadcrumb */}
-            <div className="bg-white dark:bg-gray-800 border-b border-[#E2E4EB] dark:border-gray-700 px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-[#6B6D7A] dark:text-gray-400">
-                    <span>Khóa học Frontend React</span>
-                    <ChevronRight className="w-4 h-4" />
-                    <span>Chương 1: Core Concepts</span>
-                    <ChevronRight className="w-4 h-4" />
-                    <span className="font-bold text-[#3C4097] dark:text-indigo-400">{currentLessonTitle}</span>
-                </div>
-                <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#DCEFE1] dark:bg-emerald-950 text-[#2C6A3D] dark:text-emerald-300 text-xs font-bold rounded-full">
-                        +50 XP Thưởng
-                    </span>
-                    <Button variant={chapterProgress.videoCompleted ? 'success' : 'indigo'} size="sm" className="font-bold cursor-pointer" onClick={handleCompleteVideo}>
-                        {chapterProgress.videoCompleted ? 'Video đã hoàn thành' : 'Đánh dấu hoàn thành'}
+            {/* Toast alert */}
+            {toastMsg && (
+                <div className="bg-emerald-600 text-white text-xs font-black p-4 text-center sticky top-0 z-50 shadow-md animate-bounce flex items-center justify-center gap-2">
+                    <Sparkles className="w-4 h-4 text-yellow-300" />
+                    <span>{toastMsg}</span>
+                    <Button
+                        size="sm"
+                        variant="primary"
+                        className="bg-white text-emerald-800 hover:bg-emerald-50 text-xs font-black ml-3"
+                        onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${chapterId}`)}
+                    >
+                        Làm Bài Quiz Ngay 📝
                     </Button>
+                </div>
+            )}
+
+            {/* Header breadcrumb */}
+            <div className="bg-white dark:bg-gray-800 border-b border-[#E2E4EB] dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-sm text-[#6B6D7A] dark:text-gray-400">
+                    <span>Khóa học</span>
+                    <ChevronRight className="w-4 h-4" />
+                    <span>Kỹ năng #{skillId}</span>
+                    <ChevronRight className="w-4 h-4" />
+                    <span className="font-bold text-[#3C4097] dark:text-indigo-400 truncate max-w-[250px]">{currentLessonTitle}</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    {chapterProgress.videoCompleted ? (
+                        <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-black rounded-full border border-emerald-300">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Đã Xem Xong Video
+                            </span>
+
+                            <Button
+                                variant="indigo"
+                                size="sm"
+                                className="font-black text-xs flex items-center gap-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md animate-pulse cursor-pointer"
+                                onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${chapterId}`)}
+                            >
+                                <HelpCircle className="w-4 h-4 text-yellow-300" />
+                                <span>Làm Quiz Ngay (+100 XP)</span>
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <Button variant="indigo" size="sm" className="font-bold cursor-pointer" onClick={handleCompleteVideo}>
+                                Đánh Dấu Đã Xem Xong Video
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled
+                                className="font-bold text-xs opacity-60 flex items-center gap-1 cursor-not-allowed"
+                                title="Xem xong video để mở khóa Quiz"
+                            >
+                                <Lock className="w-3.5 h-3.5" /> Quiz (Đang khóa)
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -183,6 +264,7 @@ startxref
                                 className="w-full h-full object-contain"
                                 src={currentVideoUrl}
                                 onTimeUpdate={(e) => setCurrentVideoTime(Math.floor(e.currentTarget.currentTime))}
+                                onEnded={handleCompleteVideo}
                             >
                                 Trình duyệt của bạn không hỗ trợ phát file video này.
                             </video>
@@ -202,8 +284,29 @@ startxref
                         </div>
 
                         <p className="text-sm text-[#6B6D7A] dark:text-gray-300 leading-relaxed">
-                            Trong bài học này, chúng ta sẽ cùng tìm hiểu cách thiết kế các Component độc lập, tái sử dụng và cách truyền nhận dữ liệu thông qua Props trong React 19.
+                            {currentDescription}
                         </p>
+
+                        {/* Direct Quiz Call to Action Banner when Unlocked */}
+                        {chapterProgress.videoCompleted && (
+                            <div className="p-4 bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-purple-500/10 border-2 border-emerald-400 dark:border-emerald-600 rounded-2xl flex items-center justify-between gap-4">
+                                <div className="space-y-0.5">
+                                    <h3 className="text-sm font-black text-emerald-900 dark:text-emerald-200 flex items-center gap-1.5">
+                                        <Sparkles className="w-4 h-4 text-yellow-500" /> BÀI QUIZ ĐÃ ĐƯỢC MỞ KHÓA!
+                                    </h3>
+                                    <p className="text-xs text-[#4A5568] dark:text-gray-300">
+                                        Hãy làm bài quiz ngay để củng cố kiến thức và nhận ngay <strong>+100 XP</strong> cho mầm cây kỹ năng.
+                                    </p>
+                                </div>
+                                <Button
+                                    variant="indigo"
+                                    className="font-extrabold text-xs shrink-0 cursor-pointer shadow-md bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                                    onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${chapterId}`)}
+                                >
+                                    Vào Làm Quiz Ngay 📝
+                                </Button>
+                            </div>
+                        )}
 
                         {/* Tabs */}
                         <div className="flex border-b border-[#E2E4EB] dark:border-gray-700 pt-2">
@@ -294,7 +397,13 @@ startxref
 
                 {/* Right Col: Playlist / Syllabus */}
                 <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-700 shadow-xs space-y-4 h-fit">
-                    <h2 className="text-lg font-bold text-[#20223A] dark:text-white">Nội dung khóa học</h2>
+                    <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-3">
+                        <h2 className="text-lg font-bold text-[#20223A] dark:text-white">Nội dung khóa học</h2>
+                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-md">
+                            {lessons.length} Bài học
+                        </span>
+                    </div>
+
                     <div className="space-y-2">
                         {lessons.map((item) => (
                             <div
@@ -303,9 +412,12 @@ startxref
                                     setCurrentLessonId(item.id)
                                     setCurrentVideoUrl(item.videoUrl)
                                     setCurrentLessonTitle(item.title)
+                                    if (item.description) {
+                                        setCurrentDescription(item.description)
+                                    }
                                 }}
                                 className={`p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${currentLessonTitle === item.title
-                                    ? 'border-[#3C4097] bg-[#F4F5FF] dark:bg-indigo-950/60 dark:border-indigo-400'
+                                    ? 'border-[#3C4097] bg-[#F4F5FF] dark:bg-indigo-950/60 dark:border-indigo-400 shadow-xs'
                                     : 'border-[#E2E4EB] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                                     }`}
                             >
@@ -314,7 +426,9 @@ startxref
                                     {item.status === 'active' && <Play className="w-5 h-5 text-[#3C4097] fill-[#3C4097] dark:text-indigo-400 dark:fill-indigo-400" />}
                                     {item.status === 'locked' && <Lock className="w-5 h-5 text-gray-400" />}
                                     <div>
-                                        <p className="text-xs font-bold text-[#20223A] dark:text-white">{item.title}</p>
+                                        <p className="text-xs font-bold text-[#20223A] dark:text-white flex items-center gap-1">
+                                            <span>{item.title}</span>
+                                        </p>
                                         <span className="text-[11px] text-[#6B6D7A] dark:text-gray-400">{item.duration}</span>
                                     </div>
                                 </div>
