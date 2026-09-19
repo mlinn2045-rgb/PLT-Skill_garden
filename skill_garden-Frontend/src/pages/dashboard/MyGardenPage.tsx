@@ -76,25 +76,13 @@ export const MyGardenPage: React.FC = () => {
                         </div>
                         <div className="text-center px-3 border-r border-white/10">
                             <div className="text-2xl font-black text-emerald-300">
-<<<<<<< HEAD
                                 {gardenData?.stats.total_xp || 0}
-=======
-                                {studentStats.xp}
->>>>>>> b774379 (fix FE)
                             </div>
                             <div className="text-[11px] text-emerald-200">XP Tích Lũy</div>
                         </div>
                         <div className="text-center px-3">
                             <div className="text-2xl font-black text-rose-300 flex items-center justify-center gap-1">
-<<<<<<< HEAD
-<<<<<<< HEAD
                                 <Flame className="w-5 h-5 fill-rose-400" /> {gardenData?.stats.streak_days || 1}
-=======
-                                <Flame className="w-5 h-5 fill-rose-400" /> 7
->>>>>>> 30ef4b5 (Update SkillGarden features)
-=======
-                                <Flame className="w-5 h-5 fill-rose-400" /> {studentStats.streakDays}
->>>>>>> b774379 (fix FE)
                             </div>
                             <div className="text-[11px] text-emerald-200">Streak Ngày</div>
                         </div>
@@ -239,46 +227,9 @@ export const MyGardenPage: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                     ))}
                 </div>
             )}
-=======
-
-                        {/* Bottom Actions & Stats */}
-                        <div className="flex items-center justify-between pt-2 border-t border-[#E6ECE6]">
-                            <div className="text-xs text-[#718096]">
-                                <div>XP Đã Tích Lũy: <strong className="font-extrabold text-emerald-600">+{plant.xpEarned} XP</strong></div>
-                                <div className="text-[11px] text-gray-400">Tưới gần nhất: {plant.lastWatered}</div>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    disabled={!isSkillGrowing(plant.skillId, userKey)}
-                                    onClick={() => handleWatering(plant.id)}
-                                    className="border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-bold flex items-center gap-1 text-xs"
-                                >
-                                    <Droplets className="w-3.5 h-3.5 text-blue-500" />
-                                    {isSkillGrowing(plant.skillId, userKey) ? 'Tưới Nước (+10 XP)' : 'Mở sau khi hoàn thành quiz'}
-                                </Button>
-
-                                <Button
-                                    variant="indigo"
-                                    size="sm"
-                                    onClick={() => navigate(`/dashboard/learning-path/${plant.skillId}`)}
-                                    className="font-bold flex items-center gap-1 text-xs"
-                                >
-                                    <span>Học Tiếp</span>
-                                    <ChevronRight className="w-3.5 h-3.5" />
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
->>>>>>> b774379 (fix FE)
         </div>
     )
 }
