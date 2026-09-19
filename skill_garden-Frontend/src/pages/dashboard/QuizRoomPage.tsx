@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { Timer, CheckCircle, HelpCircle, Award, Sparkles, ArrowRight } from 'lucide-react'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { Timer, CheckCircle, HelpCircle, Award, Sparkles, ArrowRight, Lock, PlayCircle, FileText } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
+import { getChapterProgress, isChapterUnlocked } from '../../services/learningProgress'
+import { recordQuizCompletion } from '../../services/studentStats'
+import { useAuthStore } from '../../stores/authStore'
 
 export const QuizRoomPage: React.FC = () => {
+    const { id = '1' } = useParams<{ id: string }>()
+    const [searchParams] = useSearchParams()
+    const chapterId = searchParams.get('chapter') || '1'
+    const { user } = useAuthStore()
+    const userKey = user?.email || 'guest'
+    const chapterProgress = getChapterProgress(id, chapterId, userKey)
+    const quizUnlocked = isChapterUnlocked(id, chapterId, userKey) && chapterProgress.videoCompleted && chapterProgress.pdfCompleted
     const [timeLeft, setTimeLeft] = useState(600) // 10 mins
     const [currentQuestion, setCurrentQuestion] = useState(0)
     const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({})
@@ -68,6 +79,61 @@ export const QuizRoomPage: React.FC = () => {
         return correctCount
     }
 
+    const submitQuiz = () => {
+        recordQuizCompletion(id, chapterId, userKey)
+        setIsSubmitted(true)
+    }
+
+    if (!quizUnlocked) {
+        return (
+            <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12">
+                <div className="max-w-2xl mx-auto px-6 pt-12">
+                    <div className="bg-white rounded-2xl p-8 border border-amber-200 shadow-md text-center space-y-5">
+                        <div className="w-16 h-16 bg-amber-50 text-amber-600 rounded-full mx-auto flex items-center justify-center">
+                            <Lock className="w-8 h-8" />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-extrabold">Quiz đang bị khóa</h1>
+                            <p className="text-sm text-[#6B6D7A] mt-2">
+                                Bạn cần hoàn thành video và đọc tài liệu PDF của chương này trước khi làm quiz.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+                            <div className={`rounded-xl border p-4 ${chapterProgress.videoCompleted ? 'border-emerald-200 bg-emerald-50' : 'border-indigo-200 bg-indigo-50'}`}>
+                                <div className="flex items-center gap-2 font-bold text-sm">
+                                    <PlayCircle className="w-4 h-4" />
+                                    Video bài học
+                                </div>
+                                <p className="text-xs mt-1 text-[#6B6D7A]">{chapterProgress.videoCompleted ? 'Đã hoàn thành' : 'Chưa hoàn thành'}</p>
+                            </div>
+                            <div className={`rounded-xl border p-4 ${chapterProgress.pdfCompleted ? 'border-emerald-200 bg-emerald-50' : 'border-indigo-200 bg-indigo-50'}`}>
+                                <div className="flex items-center gap-2 font-bold text-sm">
+                                    <FileText className="w-4 h-4" />
+                                    Tài liệu PDF
+                                </div>
+                                <p className="text-xs mt-1 text-[#6B6D7A]">{chapterProgress.pdfCompleted ? 'Đã đọc xong' : 'Chưa hoàn thành'}</p>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row justify-center gap-3">
+                            {!chapterProgress.videoCompleted && (
+                                <Link to={`/dashboard/video-lesson/${id}?chapter=${chapterId}`}>
+                                    <Button variant="indigo" icon={<PlayCircle className="w-4 h-4" />}>Xem video bài học</Button>
+                                </Link>
+                            )}
+                            {!chapterProgress.pdfCompleted && (
+                                <Link to={`/dashboard/video-lesson/${id}?chapter=${chapterId}`}>
+                                    <Button variant="outline" icon={<FileText className="w-4 h-4" />}>Đọc tài liệu PDF</Button>
+                                </Link>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12">
             {/* Top Bar */}
@@ -82,7 +148,7 @@ export const QuizRoomPage: React.FC = () => {
                         <span>{formatTime(timeLeft)}</span>
                     </div>
                     {!isSubmitted && (
-                        <Button variant="indigo" onClick={() => setIsSubmitted(true)} className="font-bold">
+                        <Button variant="indigo" onClick={submitQuiz} className="font-bold">
                             Nộp bài ngay
                         </Button>
                     )}
@@ -145,7 +211,7 @@ export const QuizRoomPage: React.FC = () => {
                                     Câu tiếp theo
                                 </Button>
                             ) : (
-                                <Button variant="indigo" onClick={() => setIsSubmitted(true)}>
+                                <Button variant="indigo" onClick={submitQuiz}>
                                     Hoàn thành & Nộp bài
                                 </Button>
                             )}
@@ -176,9 +242,11 @@ export const QuizRoomPage: React.FC = () => {
                             </div>
                         </div>
 
-                        <Button variant="indigo" size="lg" className="font-bold">
-                            Về Vườn học tiếp tục
-                        </Button>
+                        <Link to={`/dashboard/learning-path/${id}`}>
+                            <Button variant="indigo" size="lg" className="font-bold">
+                                Về lộ trình học tiếp
+                            </Button>
+                        </Link>
                     </div>
                 )}
             </div>

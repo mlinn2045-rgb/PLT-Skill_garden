@@ -15,6 +15,9 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { Avatar } from '../../components/ui/Avatar'
+import { useAuthStore } from '../../stores/authStore'
+import { getChapterProgress } from '../../services/learningProgress'
+import { getStudentStats } from '../../services/studentStats'
 
 const learningPaths = {
     '1': {
@@ -57,11 +60,51 @@ const learningPaths = {
         activeDescription: 'Nắm chắc cú pháp Python, cấu trúc dữ liệu và quy trình làm sạch dữ liệu cho bài toán phân tích.',
         unlockedChapter: 'Trực quan hóa dữ liệu & Machine Learning Foundation',
     },
+    '5': {
+        title: 'Manual & Automation Testing',
+        subtitle: 'Software Testing Career Path 2026',
+        description: 'Nắm vững quy trình kiểm thử, thiết kế Test Case và tự động hóa với Playwright, Jest.',
+        goal: 'QA Automation Engineer @ PLT Solutions Lab',
+        nextLesson: 'Viết Test Case và chiến lược kiểm thử hiệu quả',
+        activeChapter: 'Manual Testing & Test Design',
+        activeDescription: 'Thực hành phân tích yêu cầu, thiết kế Test Case và xây dựng quy trình kiểm thử có thể đo lường.',
+        unlockedChapter: 'Playwright Automation & CI Testing',
+    },
+    '6': {
+        title: 'Flutter & React Native Mobile',
+        subtitle: 'Cross-platform Mobile Career Path 2026',
+        description: 'Xây dựng ứng dụng mobile đa nền tảng với Flutter, React Native và UI/UX hiện đại.',
+        goal: 'Mobile Engineer @ PLT Solutions Lab',
+        nextLesson: 'Thiết kế màn hình mobile và quản lý state',
+        activeChapter: 'Mobile UI & State Management',
+        activeDescription: 'Tạo giao diện responsive cho iOS và Android, kết nối dữ liệu và quản lý trạng thái ứng dụng.',
+        unlockedChapter: 'Navigation, API Integration & Release',
+    },
 } as const
 
 export const LearningPathPage: React.FC = () => {
     const { id = '1' } = useParams<{ id: string }>()
     const path = learningPaths[id as keyof typeof learningPaths] ?? learningPaths['1']
+    const { user } = useAuthStore()
+    const userKey = user?.email || 'guest'
+    const studentStats = getStudentStats(userKey)
+    const displayName = user?.full_name || user?.email?.split('@')[0] || 'Học viên'
+    const displayLevel = Math.max(user?.level || 0, studentStats.xp > 0 ? Math.floor(studentStats.xp / 100) + 1 : 0)
+    const growthLabel = displayLevel > 0 ? (displayLevel >= 5 ? 'Cây trưởng thành' : 'Mầm Tri Thức') : 'Hạt giống mới gieo'
+    const chapterProgress = getChapterProgress(id, '1', userKey)
+    const chapter2Progress = getChapterProgress(id, '2', userKey)
+    const chapter3Progress = getChapterProgress(id, '3', userKey)
+    const activeChapterId = chapterProgress.quizCompleted ? '2' : '1'
+    const activeChapterProgress = activeChapterId === '2' ? chapter2Progress : chapterProgress
+    const learningProgress = activeChapterProgress.quizCompleted ? 15 : activeChapterProgress.videoCompleted || activeChapterProgress.pdfCompleted ? 5 : 0
+    const chapter2Unlocked = chapterProgress.quizCompleted
+    const chapter3Unlocked = chapter2Progress.quizCompleted
+    const chapterPercent = (progress: typeof chapterProgress) => {
+        if (progress.quizCompleted) return 100
+        if (progress.videoCompleted && progress.pdfCompleted) return 75
+        if (progress.videoCompleted || progress.pdfCompleted) return 50
+        return 0
+    }
     const [activeTab, setActiveTab] = useState<'all' | 'active' | 'locked'>('all')
 
     return (
@@ -86,12 +129,12 @@ export const LearningPathPage: React.FC = () => {
                         </p>
 
                         <div className="flex items-center gap-3 pt-2">
-                            <Avatar name="Anh Khoa" levelBadge="8" size="md" />
+                            <Avatar name={displayName} levelBadge={String(displayLevel)} size="md" />
                             <div>
                                 <div className="text-xs font-bold text-[#1A2E22] flex items-center gap-2">
-                                    <span>Anh Khoa</span>
+                                    <span>{displayName}</span>
                                     <span className="text-[#2D7A4F] font-mono text-[11px] bg-[#E6FFFA] px-2 py-0.5 rounded-full border border-[#68D391]/40">
-                                        Cấp 8 • Mầm Tri Thức
+                                        Cấp {displayLevel} • {growthLabel}
                                     </span>
                                 </div>
                                 <span className="text-[11px] text-[#718096]">Mục tiêu: {path.goal}</span>
@@ -103,7 +146,7 @@ export const LearningPathPage: React.FC = () => {
                     <div className="lg:col-span-4 bg-white/90 backdrop-blur-md rounded-2xl p-5 border border-[#E6ECE6] shadow-md space-y-4">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-bold uppercase tracking-wider text-[#4A5568]">TIẾN ĐỘ SINH TRƯỞNG</span>
-                            <span className="text-xs font-extrabold text-[#3F49C8] bg-indigo-50 px-2 py-0.5 rounded-md">Chặng 2 / 5</span>
+                            <span className="text-xs font-extrabold text-[#3F49C8] bg-indigo-50 px-2 py-0.5 rounded-md">{learningProgress}% hoàn thành</span>
                         </div>
 
                         <div className="flex items-center gap-4">
@@ -118,7 +161,7 @@ export const LearningPathPage: React.FC = () => {
                                     />
                                     <path
                                         className="text-[#3F49C8]"
-                                        strokeDasharray="62, 100"
+                                        strokeDasharray={`${learningProgress}, 100`}
                                         strokeWidth="4"
                                         strokeLinecap="round"
                                         stroke="currentColor"
@@ -126,16 +169,16 @@ export const LearningPathPage: React.FC = () => {
                                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                     />
                                 </svg>
-                                <span className="absolute text-sm font-extrabold font-mono text-[#1A2E22]">62%</span>
+                                <span className="absolute text-sm font-extrabold font-mono text-[#1A2E22]">{learningProgress}%</span>
                             </div>
                             <div>
-                                <div className="text-xs text-[#718096]"><strong>68 / 110</strong> bài học</div>
-                                <div className="text-xs text-[#718096] mt-0.5 font-mono"><strong>1.850 XP</strong> tích lũy</div>
+                                <div className="text-xs text-[#718096]"><strong>{learningProgress ? '1' : '0'} / 110</strong> bài học</div>
+                                <div className="text-xs text-[#718096] mt-0.5 font-mono"><strong>{learningProgress ? '100' : '0'} XP</strong> tích lũy</div>
                             </div>
                         </div>
 
                         <div className="space-y-2 pt-1">
-                            <Link to={`/dashboard/skill/${id}`}>
+                                <Link to={`/dashboard/video-lesson/${id}?chapter=${activeChapterId}`}>
                                 <Button variant="indigo" fullWidth size="md" iconRight={<ArrowRight className="w-4 h-4" />}>
                                     Tiếp tục chặng hiện tại
                                 </Button>
@@ -188,15 +231,15 @@ export const LearningPathPage: React.FC = () => {
 
                         {/* Chapter 01 - Completed */}
                         <div className="relative flex items-start gap-4 group">
-                            <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-lg ring-4 ring-white shadow-md z-10 shrink-0">
-                                <CheckCircle2 className="w-6 h-6" />
+                            <div className={`w-12 h-12 rounded-full ${chapterProgress.quizCompleted ? 'bg-emerald-500' : 'bg-gray-200'} ${chapterProgress.quizCompleted ? 'text-white' : 'text-gray-500'} flex items-center justify-center font-bold text-lg ring-4 ring-white shadow-md z-10 shrink-0`}>
+                                {chapterProgress.quizCompleted ? <CheckCircle2 className="w-6 h-6" /> : '01'}
                             </div>
                             <Card className="flex-1 p-5 border-emerald-200 hover:shadow-md transition-shadow">
                                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200">
-                                        CHẶNG 01 • HOÀN THÀNH XUẤT SẮC
+                                        {chapterProgress.quizCompleted ? 'CHẶNG 01 • HOÀN THÀNH' : 'CHẶNG 01 • CHƯA HOÀN THÀNH'}
                                     </span>
-                                    <span className="text-xs font-mono text-[#718096]">24/24 Bài học • 4 Quiz Labs</span>
+                                    <span className="text-xs font-mono text-[#718096]">{chapterProgress.quizCompleted ? '24/24' : '0/24'} Bài học • 4 Quiz Labs</span>
                                 </div>
                                 <h3 className="text-lg font-bold text-[#1A2E22]">
                                     Nền tảng Web Hiện đại (Modern Semantic HTML5 & CSS3)
@@ -210,22 +253,27 @@ export const LearningPathPage: React.FC = () => {
                                         <Award className="w-4 h-4" />
                                         <span>Chứng chỉ Nền tảng Front-end Level 1 (Đánh giá: 98/100)</span>
                                     </div>
+                                    <Link to={chapterProgress.quizCompleted ? `/dashboard/video-lesson/${id}?chapter=1&lesson=1` : `/dashboard/video-lesson/${id}?chapter=1`}>
+                                        <Button variant={chapterProgress.quizCompleted ? 'outline' : 'indigo'} size="sm" className="font-bold">
+                                            {chapterProgress.quizCompleted ? 'Ôn lại' : 'Bắt đầu học lesson 1'}
+                                        </Button>
+                                    </Link>
                                 </div>
                             </Card>
                         </div>
 
                         {/* Chapter 02 - Active Now (72%) */}
                         <div className="relative flex items-start gap-4 group">
-                            <div className="w-12 h-12 rounded-full bg-[#3F49C8] text-white flex items-center justify-center font-bold text-sm ring-4 ring-indigo-100 shadow-md z-10 shrink-0">
-                                72%
+                            <div className={`w-12 h-12 rounded-full ${chapter2Unlocked && learningProgress > 0 ? 'bg-[#3F49C8] text-white ring-indigo-100' : 'bg-gray-200 text-gray-600 ring-white'} flex items-center justify-center font-bold text-sm ring-4 shadow-md z-10 shrink-0`}>
+                                {chapter2Unlocked ? `${learningProgress}%` : '02'}
                             </div>
                             <Card className="flex-1 p-6 border-2 border-[#3F49C8] shadow-md bg-gradient-to-r from-white to-indigo-50/30">
                                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#3F49C8] bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-200">
-                                        CHẶNG 02 • ĐANG DIỄN RA 🌱
+                                        {chapter2Unlocked ? (chapter2Progress.quizCompleted ? 'CHẶNG 02 • HOÀN THÀNH' : 'CHẶNG 02 • ĐANG HỌC 🌱') : 'CHẶNG 02 • ĐANG KHÓA'}
                                     </span>
                                     <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
-                                        <Sprout className="w-3.5 h-3.5" /> Cây JS đang đâm chồi sum suê
+                                        <Sprout className="w-3.5 h-3.5" /> {chapter2Unlocked ? 'Cây kỹ năng đang đâm chồi' : 'Hoàn thành quiz chặng 1 để mở khóa'}
                                     </span>
                                 </div>
 
@@ -249,13 +297,17 @@ export const LearningPathPage: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    <Link to={`/dashboard/skill/${id}`}>
-                                        <Button variant="indigo" size="sm">Vào học ngay &rsaquo;</Button>
-                                    </Link>
+                                    {chapter2Unlocked ? (
+                                        <Link to={`/dashboard/video-lesson/${id}?chapter=2`}>
+                                            <Button variant="indigo" size="sm">Vào học ngay &rsaquo;</Button>
+                                        </Link>
+                                    ) : (
+                                        <span className="text-[11px] font-bold text-gray-500">🔒 Chưa mở khóa</span>
+                                    )}
                                 </div>
 
                                 <div className="mt-3 text-[11px] text-[#718096] flex items-center gap-1">
-                                    <span>ℹ️</span> Chỉ cần hoàn thành <strong>2 bài học nữa</strong> để mở khóa bài kiểm tra Milestone 02
+                                    <span>ℹ️</span> {learningProgress > 0 ? 'Hoàn thành thêm bài học và quiz để cây tiếp tục sinh trưởng' : 'Bắt đầu từ lesson 1 để gieo hạt giống kỹ năng'}
                                 </div>
                             </Card>
                         </div>
@@ -268,7 +320,7 @@ export const LearningPathPage: React.FC = () => {
                             <Card className="flex-1 p-5 border-[#E6ECE6] hover:border-purple-300 transition-colors">
                                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-200">
-                                        CHẶNG 03 • ĐÃ MỞ KHÓA • BẮT ĐẦU KHÁM PHÁ
+                                        {chapter3Unlocked ? 'CHẶNG 03 • ĐÃ MỞ KHÓA • BẮT ĐẦU KHÁM PHÁ' : 'CHẶNG 03 • ĐANG KHÓA'}
                                     </span>
                                     <span className="text-xs font-mono text-[#718096]">Tiến độ: 3 / 28 bài học (15%)</span>
                                 </div>
@@ -289,9 +341,9 @@ export const LearningPathPage: React.FC = () => {
                                 </div>
 
                                 <div className="mt-4 pt-3 border-t border-[#E6ECE6] flex items-center justify-between">
-                                    <button className="text-xs font-bold text-[#3F49C8] hover:underline flex items-center gap-1">
-                                        Xem chi tiết đề cương &rsaquo;
-                                    </button>
+                                    <span className="text-xs font-bold text-[#3F49C8] flex items-center gap-1">
+                                        {chapter3Unlocked ? 'Xem chi tiết đề cương ›' : 'Hoàn thành quiz chặng 2 để mở khóa'}
+                                    </span>
                                 </div>
                             </Card>
                         </div>
@@ -457,15 +509,15 @@ export const LearningPathPage: React.FC = () => {
                     {/* Mastered Skills List */}
                     <Card className="p-5">
                         <h4 className="text-xs font-bold uppercase tracking-wider text-[#4A5568] mb-3">
-                            🌿 Bộ kỹ năng đã đơm hoa
+                            🌿 Tiến độ bộ kỹ năng
                         </h4>
                         <div className="space-y-3">
                             {[
-                                { name: 'Semantic HTML5 & SEO Standards', pct: 100 },
-                                { name: 'Responsive CSS Grid & Flexbox', pct: 100 },
-                                { name: 'Tailwind Utility-First Architecture', pct: 100 },
-                                { name: 'Event Loop & Async/Await Concurrency', pct: 72 },
-                                { name: 'React 19 Server Actions & SSR', pct: 15 },
+                                { name: 'Semantic HTML5 & SEO Standards', pct: chapterPercent(chapterProgress) },
+                                { name: 'Responsive CSS Grid & Flexbox', pct: chapterPercent(chapterProgress) },
+                                { name: 'Tailwind Utility-First Architecture', pct: chapterPercent(chapterProgress) },
+                                { name: path.activeChapter, pct: chapterPercent(chapter2Progress) },
+                                { name: path.unlockedChapter, pct: chapterPercent(chapter3Progress) },
                             ].map((sk) => (
                                 <div key={sk.name} className="space-y-1">
                                     <div className="flex items-center justify-between text-xs">

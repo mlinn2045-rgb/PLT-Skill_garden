@@ -47,6 +47,31 @@
     color: var(--color-sg-text);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  img,
+  svg,
+  video,
+  iframe {
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  table {
+    min-width: 620px;
+  }
+
+  [class*="overflow-x-auto"] {
+    -webkit-overflow-scrolling: touch;
   }
 }
 

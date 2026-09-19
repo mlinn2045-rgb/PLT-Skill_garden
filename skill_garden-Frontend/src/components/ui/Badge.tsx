@@ -2,7 +2,7 @@ import React from 'react'
 import { clsx } from 'clsx'
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-    variant?: 'skill' | 'streak' | 'xp' | 'level' | 'success' | 'warning' | 'info' | 'neutral'
+    variant?: 'skill' | 'streak' | 'xp' | 'level' | 'success' | 'warning' | 'info' | 'neutral' | 'indigo'
     size?: 'sm' | 'md'
     icon?: React.ReactNode
 }
@@ -23,7 +23,8 @@ export const Badge: React.FC<BadgeProps> = ({
         success: 'bg-[#C6F6D5] text-[#22543D]',
         warning: 'bg-[#FEEBC8] text-[#744210]',
         info: 'bg-[#E0E7FF] text-[#3730A3]',
-        neutral: 'bg-[#EDF2F7] text-[#4A5568]'
+        neutral: 'bg-[#EDF2F7] text-[#4A5568]',
+        indigo: 'bg-indigo-100 text-indigo-700'
     }
 
     const sizes = {

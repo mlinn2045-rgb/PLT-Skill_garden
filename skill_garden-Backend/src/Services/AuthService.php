@@ -152,6 +152,9 @@ class AuthService
                 'avatar_url' => $user['avatar_url'] ?? $user['avatar'] ?? null,
                 'role' => $user['role'],
                 'is_approved' => true,
+                'level' => (int) ($user['level'] ?? 1),
+                'total_xp' => (int) ($user['total_xp'] ?? 0),
+                'streak_days' => (int) ($user['streak_days'] ?? 0),
             ],
             'expires_in' => $jwtConfig['expires_in'],
         ];
@@ -203,6 +206,9 @@ class AuthService
             'avatar_url' => $user['avatar_url'] ?? $user['avatar'] ?? null,
             'role' => $user['role'],
             'is_approved' => (bool) $user['is_approved'],
+            'level' => (int) ($user['level'] ?? 1),
+            'total_xp' => (int) ($user['total_xp'] ?? 0),
+            'streak_days' => (int) ($user['streak_days'] ?? 0),
             'created_at' => $user['created_at'],
         ];
     }

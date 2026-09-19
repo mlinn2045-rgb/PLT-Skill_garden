@@ -28,12 +28,18 @@ import {
 import { Avatar } from '../components/ui/Avatar'
 import { PltLogo } from '../components/ui/PltLogo'
 import { useAuthStore } from '../stores/authStore'
+import { getStudentStats } from '../services/studentStats'
 
 export const DashboardLayout: React.FC = () => {
     const location = useLocation()
     const navigate = useNavigate()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+<<<<<<< HEAD
     const { user, logout, isDarkMode, toggleDarkMode } = useAuthStore()
+=======
+    const { user, logout } = useAuthStore()
+    const studentStats = getStudentStats(user?.email || 'guest')
+>>>>>>> b774379 (fix FE)
 
     const isSuperAdmin = user?.role === 'SUPER_ADMIN'
     const isAdmin = user?.role === 'ADMIN'
@@ -83,7 +89,7 @@ export const DashboardLayout: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FBFDFB] dark:bg-gray-950 flex text-[#1A2E22] dark:text-gray-100 font-sans">
+        <div className="min-h-screen w-full overflow-x-hidden bg-[#FBFDFB] dark:bg-gray-950 flex text-[#1A2E22] dark:text-gray-100 font-sans">
 
             {/* Desktop Sidebar */}
             <aside className="hidden lg:flex w-64 bg-white dark:bg-gray-900 border-r border-[#E6ECE6] dark:border-gray-800 flex-col justify-between p-5 sticky top-0 h-screen z-20 shrink-0">
@@ -165,7 +171,11 @@ export const DashboardLayout: React.FC = () => {
             {/* Mobile Drawer Backdrop & Sidebar */}
             {mobileMenuOpen && (
                 <div className="fixed inset-0 bg-black/40 z-50 lg:hidden backdrop-blur-xs" onClick={() => setMobileMenuOpen(false)}>
+<<<<<<< HEAD
                     <div className="w-72 bg-white dark:bg-gray-900 h-full p-6 flex flex-col justify-between shadow-2xl" onClick={(e) => e.stopPropagation()}>
+=======
+                    <div className="w-[min(18rem,85vw)] bg-white h-full p-4 sm:p-6 flex flex-col justify-between shadow-2xl overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+>>>>>>> b774379 (fix FE)
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
                                 <Link to={isAdmin ? '/dashboard/admin/approvals' : '/dashboard'} className="flex items-center gap-2">
@@ -226,7 +236,11 @@ export const DashboardLayout: React.FC = () => {
             <div className="flex-1 flex flex-col min-w-0">
 
                 {/* Top Header Bar */}
+<<<<<<< HEAD
                 <header className="h-16 bg-white dark:bg-gray-900 border-b border-[#E6ECE6] dark:border-gray-800 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-10">
+=======
+                <header className="min-h-16 bg-white border-b border-[#E6ECE6] px-2.5 sm:px-8 py-2 flex items-center justify-between gap-2 sticky top-0 z-10">
+>>>>>>> b774379 (fix FE)
 
                     <div className="flex items-center gap-3 flex-1 max-w-md">
                         <button
@@ -248,11 +262,16 @@ export const DashboardLayout: React.FC = () => {
                     </div>
 
                     {/* User Stat Badges & Profile */}
-                    <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
 
                         {isAdmin ? (
+<<<<<<< HEAD
                             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 text-xs font-bold">
                                 <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+=======
+                            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-200 text-purple-700 text-xs font-bold">
+                                <ShieldCheck className="w-4 h-4 text-purple-600" />
+>>>>>>> b774379 (fix FE)
                                 <span>Chế độ Quản trị</span>
                             </div>
                         ) : (
@@ -260,14 +279,14 @@ export const DashboardLayout: React.FC = () => {
                                 {/* Streak Badge */}
                                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFF5F5] dark:bg-rose-950/60 border border-[#FEB2B2] dark:border-rose-800 text-[#E53E3E] dark:text-rose-300 text-xs font-bold shadow-2xs">
                                     <Flame className="w-4 h-4 fill-[#E53E3E]" />
-                                    <span className="hidden sm:inline">7 Ngày Streak</span>
-                                    <span className="sm:hidden">7d</span>
+                                    <span className="hidden sm:inline">{studentStats.streakDays} Ngày Streak</span>
+                                    <span className="sm:hidden">{studentStats.streakDays}d</span>
                                 </div>
 
                                 {/* XP Badge */}
                                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-xs font-bold shadow-2xs">
                                     <Zap className="w-4 h-4 fill-amber-500 text-amber-500" />
-                                    <span>1.250 XP</span>
+                                    <span>{studentStats.xp.toLocaleString('vi-VN')} XP</span>
                                 </div>
                             </>
                         )}
@@ -290,7 +309,11 @@ export const DashboardLayout: React.FC = () => {
                         {/* User Profile */}
                         <div
                             onClick={() => navigate('/dashboard/profile')}
+<<<<<<< HEAD
                             className="flex items-center gap-2 pl-2 border-l border-[#E6ECE6] dark:border-gray-800 cursor-pointer hover:opacity-80 transition-opacity"
+=======
+                            className="flex items-center gap-2 pl-1.5 sm:pl-2 border-l border-[#E6ECE6] cursor-pointer hover:opacity-80 transition-opacity shrink-0"
+>>>>>>> b774379 (fix FE)
                         >
                             <Avatar
                                 name={user?.full_name || 'User'}
@@ -309,7 +332,7 @@ export const DashboardLayout: React.FC = () => {
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+                <main className="flex-1 min-w-0 p-3 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto overflow-x-hidden">
                     <Outlet />
                 </main>
             </div>
