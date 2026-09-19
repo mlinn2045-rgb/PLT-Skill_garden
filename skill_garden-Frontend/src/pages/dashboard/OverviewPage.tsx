@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
     Flame,
     Zap,
@@ -13,22 +13,11 @@ import { Card } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { ProgressBar } from '../../components/ui/ProgressBar'
 import { useAuthStore } from '../../stores/authStore'
-<<<<<<< HEAD
 import { gardenService, UserGardenResponse, GardenTree } from '../../services/gardenService'
-=======
-import { getSkillGrowth } from '../../services/learningProgress'
-import { getStudentStats } from '../../services/studentStats'
->>>>>>> b774379 (fix FE)
 
 export const OverviewPage: React.FC = () => {
     const navigate = useNavigate()
     const { user } = useAuthStore()
-<<<<<<< HEAD
-=======
-    const displayName = user?.full_name || user?.email?.split('@')[0] || 'bạn'
-    const userKey = user?.email || 'guest'
-    const studentStats = getStudentStats(userKey)
->>>>>>> b774379 (fix FE)
 
     const [gardenData, setGardenData] = useState<UserGardenResponse | null>(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -45,10 +34,6 @@ export const OverviewPage: React.FC = () => {
                 setIsLoading(false)
             }
         }
-<<<<<<< HEAD
-        fetchGardenData()
-    }, [])
-        }
         fetchGardenData()
     }, [])
 
@@ -56,21 +41,6 @@ export const OverviewPage: React.FC = () => {
     const totalTrees = gardenData?.stats.total_trees || trees.length || 0
     const totalXp = gardenData?.stats.total_xp || 0
     const streakDays = gardenData?.stats.streak_days || 1
-=======
-    ].map(plant => {
-        const growth = getSkillGrowth(String(plant.id), userKey)
-        return {
-            ...plant,
-            stage: growth.stageName,
-            level: growth.stageLevel,
-            progress: growth.progress,
-            xp: growth.xpEarned,
-            status: growth.progress > 0 ? 'Đang phát triển' : 'Chưa bắt đầu',
-        }
-    })
-    const totalXp = plants.reduce((sum, plant) => sum + plant.xp, 0)
-    const completedSkills = plants.filter(plant => plant.progress > 0).length
->>>>>>> b774379 (fix FE)
 
     return (
         <div className="space-y-8 pb-12 text-[#1A2E22] dark:text-gray-100">
@@ -83,13 +53,8 @@ export const OverviewPage: React.FC = () => {
                         <h1 className="text-2xl sm:text-3xl font-black text-[#1A2E22] dark:text-white tracking-tight">
                             Chào mừng trở lại khu vườn, {user?.full_name || user?.email?.split('@')[0] || 'Học Viên'}! 🌱
                         </h1>
-<<<<<<< HEAD
                         <p className="text-xs sm:text-sm text-[#4A5568] dark:text-gray-300 max-w-xl">
                             Hôm nay khí hậu khu vườn rất lý tưởng. Hãy duy trì chuỗi <strong>{streakDays} ngày streak</strong> của bạn bằng cách tưới nước và học bài hôm nay!
-=======
-                        <p className="text-xs sm:text-sm text-[#4A5568] max-w-xl">
-                            Hãy bắt đầu bài học và hoàn thành quiz để tưới dinh dưỡng cho các cây kỹ năng. Chuỗi hiện tại: <strong>{studentStats.streakDays} ngày streak</strong>.
->>>>>>> b774379 (fix FE)
                         </p>
                     </div>
 
@@ -126,13 +91,8 @@ export const OverviewPage: React.FC = () => {
                         <Zap className="w-6 h-6 fill-amber-500 text-amber-500" />
                     </div>
                     <div>
-<<<<<<< HEAD
                         <div className="text-xl font-black text-[#1A2E22] dark:text-white">{totalXp} XP</div>
                         <div className="text-xs text-[#718096] dark:text-gray-400">Tổng tích lũy</div>
-=======
-                        <div className="text-xl font-black text-[#1A2E22]">{studentStats.xp} XP</div>
-                        <div className="text-xs text-[#718096]">Tổng tích lũy</div>
->>>>>>> b774379 (fix FE)
                     </div>
                 </Card>
 
@@ -141,13 +101,8 @@ export const OverviewPage: React.FC = () => {
                         <Flame className="w-6 h-6 fill-red-500 text-red-500" />
                     </div>
                     <div>
-<<<<<<< HEAD
                         <div className="text-xl font-black text-[#1A2E22] dark:text-white">{streakDays} Ngày</div>
                         <div className="text-xs text-[#718096] dark:text-gray-400">Chuỗi Streak liên tục</div>
-=======
-                        <div className="text-xl font-black text-[#1A2E22]">{studentStats.streakDays} Ngày</div>
-                        <div className="text-xs text-[#718096]">Chuỗi Streak liên tục</div>
->>>>>>> b774379 (fix FE)
                     </div>
                 </Card>
 
@@ -156,13 +111,8 @@ export const OverviewPage: React.FC = () => {
                         <Award className="w-6 h-6" />
                     </div>
                     <div>
-<<<<<<< HEAD
                         <div className="text-xl font-black text-[#1A2E22] dark:text-white">3 Huy hiệu</div>
                         <div className="text-xs text-[#718096] dark:text-gray-400">Đã thu hoạch</div>
-=======
-                        <div className="text-xl font-black text-[#1A2E22]">{completedSkills} Huy hiệu</div>
-                        <div className="text-xs text-[#718096]">Đã thu hoạch</div>
->>>>>>> b774379 (fix FE)
                     </div>
                 </Card>
             </div>
