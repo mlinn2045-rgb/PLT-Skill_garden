@@ -55,5 +55,15 @@ export const apiClient = {
             body: isFormData ? body : JSON.stringify(body),
             ...options
         });
-    }
+    },
+
+    patch: <T = any>(endpoint: string, body?: any, options?: RequestInit) =>
+        request<T>(endpoint, {
+            method: 'PATCH',
+            body: JSON.stringify(body),
+            ...options,
+        }),
+
+    delete: <T = any>(endpoint: string, options?: RequestInit) =>
+        request<T>(endpoint, { method: 'DELETE', ...options }),
 };

@@ -65,6 +65,25 @@ try {
         Response::success(['id' => $db->lastInsertId()], "Thêm tài liệu PDF mới thành công.", 201);
     }
 
+    if ($method === 'PATCH' || $method === 'PUT') {
+        $id = (int) ($body['id'] ?? $_GET['id'] ?? 0);
+        $title = trim($body['title'] ?? '');
+        $fileUrl = trim($body['file_url'] ?? '');
+        if ($id <= 0 || empty($title) || empty($fileUrl)) {
+            Response::error("ID, tiêu đề và đường dẫn file là bắt buộc.", 400);
+        }
+
+        $stmt = $db->prepare("UPDATE lesson_materials SET title = :title, file_url = :file_url, file_type = :file_type, file_size_bytes = :size WHERE id = :id");
+        $stmt->execute([
+            'id' => $id,
+            'title' => $title,
+            'file_url' => $fileUrl,
+            'file_type' => trim($body['file_type'] ?? 'pdf'),
+            'size' => (int) ($body['file_size_bytes'] ?? 0),
+        ]);
+        Response::success(['updated' => true], "Cập nhật tài liệu PDF thành công.");
+    }
+
     if ($method === 'DELETE') {
         $id = (int) ($_GET['id'] ?? 0);
         if ($id <= 0) {
