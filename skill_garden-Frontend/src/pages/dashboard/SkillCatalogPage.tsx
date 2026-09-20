@@ -115,10 +115,10 @@ export const SkillCatalogPage: React.FC = () => {
                 await gardenService.plantSeed(Number(skill.id), 1)
                 setSkills(prev => prev.map(s => s.id === skill.id ? { ...s, isEnrolled: true } : s))
             }
-            // Navigate directly to Video Learning Page for this skill
-            navigate(`/dashboard/video-learning?skill_id=${skill.id}`)
+            // Navigate directly to Video Learning Page
+            navigate(`/dashboard/video-learning?skill_id=${skill.id}&chapter=1`)
         } catch {
-            navigate(`/dashboard/video-learning?skill_id=${skill.id}`)
+            navigate(`/dashboard/video-learning?skill_id=${skill.id}&chapter=1`)
         } finally {
             setLoadingSkillId(null)
         }

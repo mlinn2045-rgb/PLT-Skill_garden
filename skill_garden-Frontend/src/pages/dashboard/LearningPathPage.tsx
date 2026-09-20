@@ -178,7 +178,7 @@ export const LearningPathPage: React.FC = () => {
                         </div>
 
                         <div className="space-y-2 pt-1">
-                                <Link to={`/dashboard/video-lesson/${id}?chapter=${activeChapterId}`}>
+                            <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=${activeChapterId}`}>
                                 <Button variant="indigo" fullWidth size="md" iconRight={<ArrowRight className="w-4 h-4" />}>
                                     Tiếp tục chặng hiện tại
                                 </Button>
@@ -253,7 +253,7 @@ export const LearningPathPage: React.FC = () => {
                                         <Award className="w-4 h-4" />
                                         <span>Chứng chỉ Nền tảng Front-end Level 1 (Đánh giá: 98/100)</span>
                                     </div>
-                                    <Link to={chapterProgress.quizCompleted ? `/dashboard/video-lesson/${id}?chapter=1&lesson=1` : `/dashboard/video-lesson/${id}?chapter=1`}>
+                                    <Link to={chapterProgress.quizCompleted ? `/dashboard/video-learning?skill_id=${id}&chapter=1&lesson=1` : `/dashboard/video-learning?skill_id=${id}&chapter=1`}>
                                         <Button variant={chapterProgress.quizCompleted ? 'outline' : 'indigo'} size="sm" className="font-bold">
                                             {chapterProgress.quizCompleted ? 'Ôn lại' : 'Bắt đầu học lesson 1'}
                                         </Button>
@@ -298,7 +298,7 @@ export const LearningPathPage: React.FC = () => {
                                     </div>
 
                                     {chapter2Unlocked ? (
-                                        <Link to={`/dashboard/video-lesson/${id}?chapter=2`}>
+                                        <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=2`}>
                                             <Button variant="indigo" size="sm">Vào học ngay &rsaquo;</Button>
                                         </Link>
                                     ) : (

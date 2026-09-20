@@ -79,6 +79,7 @@ export const App: React.FC = () => {
                         <Route index element={<DashboardRedirect />} />
                         <Route path="learning-path/:id" element={<LearningPathPage />} />
                         <Route path="skill/:id" element={<SkillDetailPage />} />
+                        <Route path="video-learning" element={<VideoLearningPage />} />
                         <Route path="video-lesson/:id" element={<VideoLearningPage />} />
                         <Route path="quiz-room/:id" element={<QuizRoomPage />} />
                         <Route path="goals-badges" element={<GoalsBadgesPage />} />

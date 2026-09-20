@@ -31,19 +31,20 @@ npm run dev
 
 | Vai Trò (Role) | Email / Username | Mật Khẩu | Quyền Hạn Chính |
 | :--- | :--- | :--- | :--- |
-| **Super Admin** | `admin@pltsolutions.com` *(hoặc `admin@skillgarden.com`)* | **`admin123`** | Quản lý tài khoản Admin, Cấp ma trận phân quyền, Xem báo cáo tổng thể, Nhật ký Audit logs, Cấu hình Global |
-| **Admin LMS** | `lms.admin@pltsolutions.com` | **`admin123`** | Phê duyệt học viên, **Upload Bài học Video**, Tạo Bài thi Quiz, Upload Tài liệu PDF, Quản lý Loại cây |
+| **Super Admin** | `admin@pltsolutions.com` *(hoặc `admin@skillgarden.com`)* | **`admin123`** | Quản lý tài khoản Admin, Cấp ma trận phân quyền, Xem báo cáo tổng thể, Nhật ký Audit logs, Toàn quyền tối cao |
+| **Admin LMS** | `lms.admin@pltsolutions.com` *(username: `lms_admin`)* | **`admin123`** | **CHỈ ADMIN LMS** có quyền **Tạo & Upload Bài học Video**, **Upload & Quản lý Tài liệu PDF**, Phê duyệt học viên, Tạo Bài thi Quiz |
+| **Admin Thông Thường** | `baopq@skillgarden.com` *(username: `baopq_admin`)* | **`Admin123@`** | Xem danh sách hệ thống *(🔒 Không có quyền upload Video & PDF bài học)* |
 | **Học Viên (Student)** | `user_khoa@pltsolutions.com` *(hoặc `anhkhoa.user@gmail.com`)* | **`123456`** | Trồng cây kỹ năng, Xem video bài học, Làm bài thi Quiz, Tưới nước (+10 XP), Xem Bảng xếp hạng |
 
-> 💡 **Ghi chú:** Em đã cập nhật lại trực tiếp mật khẩu và kích hoạt trạng thái (`is_approved = 1`, `status = ACTIVE`) cho toàn bộ tài khoản mẫu trên trong CSDL MySQL. Bây giờ anh đăng nhập lại bằng các thông tin trên sẽ **thành công 100%**!
+> 💡 **Ghi chú:** Em đã cập nhật lại trực tiếp mật khẩu và kích hoạt trạng thái (`is_approved = 1`, `status = ACTIVE`) cho toàn bộ tài khoản mẫu trên trong CSDL MySQL.
 
 ---
 
-## ❓ 3. ADMIN NÀO CÓ THỂ UPLOAD VIDEO BÀI HỌC CHO HỌC VIÊN?
+## ❓ 3. AI CÓ QUYỀN UPLOAD VIDEO BÀI HỌC VÀ TÀI LIỆU PDF?
 
-> **TRẢ LỜI:**
-> - Tài khoản có vai trò **Admin LMS** (hoặc **Super Admin**) là người thực hiện nhiệm vụ Upload và quản lý Video bài học cho học viên.
-> - **Điều kiện phân quyền:** Trong Ma trận Phân Quyền (Super Admin Portal), tài khoản Admin đó phải được tích chọn quyền **`ManageCourses`** (Quản lý khóa học) và **`ManageLessons`** (Quản lý bài học).
+> **QUY ĐỊNH PHÂN QUYỀN MỚI NHẤT:**
+> - **Chỉ tài khoản Admin LMS** (`lms.admin@pltsolutions.com` / `lms_admin`) và **Super Admin** mới có quyền Tạo bài học, Upload file Video và Upload file PDF.
+> - Các tài khoản Admin thông thường không thuộc nhóm Quản trị LMS khi vào trang Upload Video/PDF sẽ bị hiển thị rào chắn phân quyền (`🔒 Rào chắn phân quyền Quản trị LMS`) và hệ thống từ chối thao tác upload từ cả Frontend lẫn Backend API.
 
 ---
 
