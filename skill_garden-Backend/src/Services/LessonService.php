@@ -97,16 +97,43 @@ class LessonService
         $moduleId = (int) ($data['module_id'] ?? 0);
 
         if ($moduleId <= 0 && !empty($data['skill_id'])) {
+            $skillId = (int) $data['skill_id'];
+
+            // 1. Ensure Skill exists
+            $skillCheck = $this->db->prepare("SELECT id FROM skills WHERE id = :skill_id");
+            $skillCheck->execute(['skill_id' => $skillId]);
+            if (!$skillCheck->fetchColumn()) {
+                $insertSkill = $this->db->prepare("INSERT INTO skills (id, title, slug, category, status) VALUES (:id, :title, :slug, 'Development', 'ACTIVE')");
+                $insertSkill->execute([
+                    'id' => $skillId,
+                    'title' => "Kỹ năng #" . $skillId,
+                    'slug' => "skill-" . $skillId
+                ]);
+            }
+
+            // 2. Ensure Learning Path exists
+            $lpStmt = $this->db->prepare("SELECT id FROM learning_paths WHERE skill_id = :skill_id ORDER BY id ASC LIMIT 1");
+            $lpStmt->execute(['skill_id' => $skillId]);
+            $lpId = (int) $lpStmt->fetchColumn();
+
+            if ($lpId <= 0) {
+                $insertLp = $this->db->prepare("INSERT INTO learning_paths (skill_id, title) VALUES (:skill_id, 'Lộ trình học chuẩn')");
+                $insertLp->execute(['skill_id' => $skillId]);
+                $lpId = (int) $this->db->lastInsertId();
+            }
+
+            // 3. Ensure Module exists
             $moduleStmt = $this->db->prepare("
-                SELECT m.id
-                FROM modules m
-                JOIN learning_paths lp ON m.learning_path_id = lp.id
-                WHERE lp.skill_id = :skill_id
-                ORDER BY lp.order_index ASC, m.order_index ASC, m.id ASC
-                LIMIT 1
+                SELECT id FROM modules WHERE learning_path_id = :lp_id ORDER BY order_index ASC, id ASC LIMIT 1
             ");
-            $moduleStmt->execute(['skill_id' => (int) $data['skill_id']]);
+            $moduleStmt->execute(['lp_id' => $lpId]);
             $moduleId = (int) $moduleStmt->fetchColumn();
+
+            if ($moduleId <= 0) {
+                $insertMod = $this->db->prepare("INSERT INTO modules (learning_path_id, title) VALUES (:lp_id, 'Chương 1: Kiến thức cơ bản')");
+                $insertMod->execute(['lp_id' => $lpId]);
+                $moduleId = (int) $this->db->lastInsertId();
+            }
         }
 
         if (empty($title) || $moduleId <= 0) {

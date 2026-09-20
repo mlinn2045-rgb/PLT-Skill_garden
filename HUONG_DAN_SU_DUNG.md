@@ -6,45 +6,43 @@ Tài liệu này hướng dẫn chi tiết cách vận hành, khởi chạy và 
 
 ## 🚀 1. HƯỚNG DẪN KHỞI CHẠY HỆ THỐNG (GETTING STARTED)
 
-Để hệ thống hoạt động đầy đủ tính năng với CSDL thời gian thực:
+Hệ thống được đóng gói hoàn chỉnh bằng Docker Compose (Backend PHP 8.3, Frontend React 19, CSDL MySQL 8.0).
 
-### Bước 1: Khởi chạy Backend PHP API
-Mở terminal PowerShell tại thư mục gốc project:
+### Cách Khởi Chạy Nhanh Bằng Docker (Khuyên Dùng)
+Mở terminal PowerShell tại thư mục gốc dự án (`d:\PLT-Skill_garden`):
 ```powershell
-cd d:\skill_garden-\skill_garden-Backend
-php -S localhost:8000
+cd d:\PLT-Skill_garden
+docker compose up -d
 ```
-- API Server sẽ chạy tại: `http://localhost:8000/api`
-- Đảm bảo MySQL Service (`skill_garden` database) đang bật.
-
-### Bước 2: Khởi chạy Frontend React App
-Mở một cửa sổ terminal PowerShell mới:
-```powershell
-cd d:\skill_garden-\skill_garden-Frontend
-npm run dev
-```
-- Truy cập ứng dụng tại: `http://localhost:5173`
+- **Frontend App**: `http://localhost:5173`
+- **Backend API**: `http://localhost:8000/api`
+- **MySQL Database**: `localhost:3307` (Tên DB: `db_skill_garden`, User: `root`, Password: `skillgarden_dev`)
 
 ---
 
-## 🔑 2. DANH SÁCH TÀI KHOẢN MẪU ĐÃ CẬP NHẬT TRONG CSDL (100% ĐĂNG NHẬP THÀNH CÔNG)
+## 🔑 2. DANH SÁCH TÀI KHOẢN ĐÃ ĐỒNG BỘ TRONG CSDL (100% ĐĂNG NHẬP THÀNH CÔNG)
 
-| Vai Trò (Role) | Email / Username | Mật Khẩu | Quyền Hạn Chính |
-| :--- | :--- | :--- | :--- |
-| **Super Admin** | `admin@pltsolutions.com` *(hoặc `admin@skillgarden.com`)* | **`admin123`** | Quản lý tài khoản Admin, Cấp ma trận phân quyền, Xem báo cáo tổng thể, Nhật ký Audit logs, Toàn quyền tối cao |
-| **Admin LMS** | `lms.admin@pltsolutions.com` *(username: `lms_admin`)* | **`admin123`** | **CHỈ ADMIN LMS** có quyền **Tạo & Upload Bài học Video**, **Upload & Quản lý Tài liệu PDF**, Phê duyệt học viên, Tạo Bài thi Quiz |
-| **Admin Thông Thường** | `baopq@skillgarden.com` *(username: `baopq_admin`)* | **`Admin123@`** | Xem danh sách hệ thống *(🔒 Không có quyền upload Video & PDF bài học)* |
-| **Học Viên (Student)** | `user_khoa@pltsolutions.com` *(hoặc `anhkhoa.user@gmail.com`)* | **`123456`** | Trồng cây kỹ năng, Xem video bài học, Làm bài thi Quiz, Tưới nước (+10 XP), Xem Bảng xếp hạng |
+Toàn bộ các tài khoản dưới đây đã được cập nhật trực tiếp trong CSDL MySQL và sẵn sàng đăng nhập ngay lập tức:
 
-> 💡 **Ghi chú:** Em đã cập nhật lại trực tiếp mật khẩu và kích hoạt trạng thái (`is_approved = 1`, `status = ACTIVE`) cho toàn bộ tài khoản mẫu trên trong CSDL MySQL.
+| Vai Trò (Role) | Email | Username | Mật Khẩu | Quyền Hạn & Đặc Điểm |
+| :--- | :--- | :--- | :--- | :--- |
+| **Super Admin** | `admin@pltsolutions.com` | `skillgarden_super_admin` | **`admin123`** | **Toàn quyền tối cao**: Quản lý tài khoản Admin, cấp ma trận phân quyền, xem báo cáo tổng thể, nhật ký Audit Logs. |
+| **Super Admin** | `admin@skillgarden.com` | `skillgarden_admin` | **`admin123`** | Tài khoản Super Admin dự phòng hệ thống. |
+| **Admin LMS** | `lms.admin@pltsolutions.com` | `lms_admin` | **`admin123`** | **Quản trị LMS**: Tạo & Upload Bài học Video, Upload & Quản lý Tài liệu PDF, Phê duyệt học viên, Tạo bài thi Quiz. |
+| **Admin LMS** | `baopq@skillgarden.com` | `baopq_admin` | **`Admin123@`** | Quản trị viên nội dung khóa học & bài tập thực hành. |
+| **Học Viên (Student)** | `user_khoa@pltsolutions.com` | `user_khoa` | **`123456`** | Học viên mẫu: Trồng cây kỹ năng, xem video bài học, làm Quiz, tưới nước (+10 XP), xem Bảng xếp hạng. |
+| **Học Viên (Student)** | `anhkhoa@plt.com` | `anhkhoa` | **`Password123!`** | Tài khoản học viên cá nhân đã kích hoạt. |
+| **Học Viên (Student)** | `anhkhoa.user@gmail.com` | `anhkhoa_dev` | **`123456`** | Học viên cá nhân đã kích hoạt. |
+| **Học Viên (Pending)** | `maitran@gmail.com` | `maitran99` | **`Password123!`** | Học viên mới đăng ký *(Chờ Admin phê duyệt tài khoản)*. |
+| **Học Viên (Pending)** | `tuanvm.pending@gmail.com` | `tuanvm` | **`Password123!`** | Học viên mới đăng ký *(Chờ Admin phê duyệt tài khoản)*. |
 
 ---
 
 ## ❓ 3. AI CÓ QUYỀN UPLOAD VIDEO BÀI HỌC VÀ TÀI LIỆU PDF?
 
-> **QUY ĐỊNH PHÂN QUYỀN MỚI NHẤT:**
-> - **Chỉ tài khoản Admin LMS** (`lms.admin@pltsolutions.com` / `lms_admin`) và **Super Admin** mới có quyền Tạo bài học, Upload file Video và Upload file PDF.
-> - Các tài khoản Admin thông thường không thuộc nhóm Quản trị LMS khi vào trang Upload Video/PDF sẽ bị hiển thị rào chắn phân quyền (`🔒 Rào chắn phân quyền Quản trị LMS`) và hệ thống từ chối thao tác upload từ cả Frontend lẫn Backend API.
+> **QUY ĐỊNH PHÂN QUYỀN:**
+> - **Chỉ tài khoản Admin LMS** (`lms.admin@pltsolutions.com` / `baopq@skillgarden.com`) và **Super Admin** (`admin@pltsolutions.com` / `admin@skillgarden.com`) mới có quyền Tạo bài học, Upload file Video và Upload file PDF.
+> - Các tài khoản Admin thông thường không có quyền LMS khi truy cập trang Upload Video/PDF sẽ bị rào chắn phân quyền (`🔒 Rào chắn phân quyền Quản trị LMS`) và hệ thống từ chối thao tác.
 
 ---
 
@@ -53,11 +51,11 @@ npm run dev
 ### 📍 Quy trình Upload Bài Học Video (3 bước):
 
 1. **Đăng nhập với tài khoản Admin LMS:**
-   - Đăng nhập email: `lms.admin@pltsolutions.com` (hoặc `admin@pltsolutions.com`) / Mật khẩu: **`admin123`**.
+   - Đăng nhập email: `lms.admin@pltsolutions.com` / Mật khẩu: **`admin123`**.
    - Sau khi đăng nhập, hệ thống sẽ tự động chuyển đến **Giao diện Admin Dashboard**.
 
 2. **Truy cập Quản lý Khóa học & Bài học:**
-   - Trên thanh Sidebar bên trái, chọn **Quản Lý Khóa Học LMS** (hoặc truy cập `/admin/courses`).
+   - Trên thanh Sidebar bên trái, chọn **Quản Lý Khóa Học LMS** (truy cập `/admin/courses`).
    - Chọn Khóa học/Kỹ năng cần thêm bài học (Ví dụ: *Frontend React 19 Mastery*).
    - Nhấp nút **+ Thêm Bài Học Mới**.
 
@@ -86,7 +84,7 @@ npm run dev
 ## 👤 5. HƯỚNG DẪN DÀNH CHO HỌC VIÊN (STUDENT FLOW)
 
 1. **Đăng Ký / Đăng Nhập:**
-   - Sử dụng tài khoản: `user_khoa@pltsolutions.com` / Mật khẩu: **`123456`**.
+   - Sử dụng tài khoản: `user_khoa@pltsolutions.com` / Mật khẩu: **`123456`** (hoặc `anhkhoa@plt.com` / **`Password123!`**).
 
 2. **Khám Phá Vườn Kỹ Năng & Chọn Cây Trồng:**
    - Vào mục **Khu Vườn Của Tôi** (`/dashboard/my-garden`) hoặc **Danh Mục Kỹ Năng** (`/dashboard/skill-catalog`).
