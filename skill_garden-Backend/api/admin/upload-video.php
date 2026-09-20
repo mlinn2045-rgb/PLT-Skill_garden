@@ -81,10 +81,10 @@ $newFileName = 'vid_' . time() . '_' . md5(uniqid()) . '.' . $fileExtension;
 $destPath = $uploadDir . $newFileName;
 
 if (move_uploaded_file($fileTmpPath, $destPath)) {
-// Generate public accessible URL
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-$host = $_SERVER['HTTP_HOST'] ?? 'localhost:8000';
-$publicUrl = "{$protocol}://{$host}/uploads/videos/{$newFileName}";
+    // Generate public accessible URL
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost:8000';
+    $publicUrl = "{$protocol}://{$host}/public/uploads/videos/{$newFileName}";
 
 echo json_encode([
 'success' => true,

@@ -55,10 +55,38 @@ class LessonService
         return $lesson;
     }
 
+    public function getPublishedLessonsBySkillId(int $skillId): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT l.*
+            FROM lessons l
+            JOIN modules m ON l.module_id = m.id
+            JOIN learning_paths lp ON m.learning_path_id = lp.id
+            WHERE lp.skill_id = :skill_id AND l.is_published = 1
+            ORDER BY m.order_index ASC, l.order_index ASC, l.id ASC
+        ");
+        $stmt->execute(['skill_id' => $skillId]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function createLesson(array $data): array
     {
         $title = trim($data['title'] ?? '');
         $moduleId = (int) ($data['module_id'] ?? 0);
+
+        if ($moduleId <= 0 && !empty($data['skill_id'])) {
+            $moduleStmt = $this->db->prepare("
+                SELECT m.id
+                FROM modules m
+                JOIN learning_paths lp ON m.learning_path_id = lp.id
+                WHERE lp.skill_id = :skill_id
+                ORDER BY lp.order_index ASC, m.order_index ASC, m.id ASC
+                LIMIT 1
+            ");
+            $moduleStmt->execute(['skill_id' => (int) $data['skill_id']]);
+            $moduleId = (int) $moduleStmt->fetchColumn();
+        }
 
         if (empty($title) || $moduleId <= 0) {
             throw new Exception("Tên bài học và ID module là bắt buộc.", 400);

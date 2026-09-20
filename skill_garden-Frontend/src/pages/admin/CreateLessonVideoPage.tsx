@@ -3,8 +3,34 @@ import { Video, Save, Upload, Link as LinkIcon, Sparkles, Sprout, CheckCircle2, 
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { apiClient } from '../../services/apiClient'
+import { courseService, SkillItem } from '../../services/courseService'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
+
+const normalizeYouTubeUrl = (rawUrl: string): string => {
+    const url = rawUrl.trim()
+    if (!url) return url
+
+    if (url.includes('youtube.com/watch?v=')) {
+        const videoIdMatch = url.match(/[?&]v=([^&]+)/i)
+        if (videoIdMatch?.[1]) {
+            return `https://www.youtube.com/embed/${videoIdMatch[1]}`
+        }
+    }
+
+    if (url.includes('youtu.be/')) {
+        const videoIdMatch = url.match(/youtu\.be\/([^?]+)/i)
+        if (videoIdMatch?.[1]) {
+            return `https://www.youtube.com/embed/${videoIdMatch[1]}`
+        }
+    }
+
+    if (url.includes('/uploads/videos/')) {
+        return url.includes('/public/uploads/videos/') ? url : url.replace('/uploads/videos/', '/public/uploads/videos/')
+    }
+
+    return url
+}
 
 export const CreateLessonVideoPage: React.FC = () => {
     const navigate = useNavigate()
@@ -32,7 +58,7 @@ export const CreateLessonVideoPage: React.FC = () => {
     // Admin Created Lessons list state
     const [adminLessons, setAdminLessons] = useState<any[]>([])
 
-    const skillOptions = [
+    const fallbackSkillOptions = [
         { id: '1', title: 'Frontend React 19 Mastery (Cây Hoa Anh Đào 🌸)' },
         { id: '2', title: 'Backend NestJS & Node.js System (Cây Cổ Thụ 🌳)' },
         { id: '3', title: 'Database SQL & Architect (Cây Tre Trăm Đốt 🎋)' },
@@ -40,6 +66,7 @@ export const CreateLessonVideoPage: React.FC = () => {
         { id: '5', title: 'Software Testing (Cây Hướng Dương 🌻)' },
         { id: '6', title: 'Flutter & React Native Mobile (Cây Dừa 🌴)' },
     ]
+    const [skillOptions, setSkillOptions] = useState(fallbackSkillOptions)
 
     const loadCustomLessons = () => {
         try {
@@ -52,6 +79,18 @@ export const CreateLessonVideoPage: React.FC = () => {
 
     useEffect(() => {
         loadCustomLessons()
+        courseService.getSkills()
+            .then((skills: SkillItem[]) => {
+                if (skills.length > 0) {
+                    setSkillOptions(skills.map((skill) => ({
+                        id: String(skill.id),
+                        title: skill.title,
+                    })))
+                }
+            })
+            .catch(() => {
+                // Keep the fallback list when the skills API is unavailable.
+            })
     }, [])
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +119,8 @@ export const CreateLessonVideoPage: React.FC = () => {
 
             setUploadProgress(100)
             if (res.success && res.url) {
-                setVideoUrl(res.url)
+                const normalizedUrl = normalizeYouTubeUrl(res.url)
+                setVideoUrl(normalizedUrl)
                 setUploadSuccess(true)
                 alert('Tải file video lên máy chủ thành công!')
             } else {
@@ -108,12 +148,14 @@ export const CreateLessonVideoPage: React.FC = () => {
             return
         }
 
+        const normalizedVideoUrl = normalizeYouTubeUrl(videoUrl.trim())
+
         const newLesson = {
             id: 'custom_' + Date.now(),
             skillId: selectedSkillId,
             title: title.trim(),
             sourceType: sourceType,
-            videoUrl: videoUrl.trim(),
+            videoUrl: normalizedVideoUrl,
             description: description.trim() || 'Nội dung bài học mới do Admin cập nhật.',
             duration: '15:00',
             xpReward: Number(xpReward) || 50,
@@ -132,17 +174,18 @@ export const CreateLessonVideoPage: React.FC = () => {
             // Fallback
         }
 
-        // 2. Try API call to backend
+        // Save to the shared backend before confirming the lesson to all users.
         try {
             await apiClient.post('/admin/lessons.php', {
                 skill_id: selectedSkillId,
                 title: title.trim(),
-                video_url: videoUrl.trim(),
+                video_url: normalizedVideoUrl,
                 description: description.trim(),
                 xp_reward: Number(xpReward) || 50
             })
-        } catch {
-            // Silently handle if backend API is offline
+        } catch (err: any) {
+            alert(err.message || 'Không thể lưu bài học lên máy chủ. Vui lòng thử lại.')
+            return
         }
 
         setSuccessAlert(`🎉 Đã tạo bài học "${title.trim()}" thành công! Bài học đã được kết nối và cập nhật tự động cho tất cả Học Viên.`)

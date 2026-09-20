@@ -3,17 +3,17 @@ version: '3.8'
 services:
   # 1. MySQL Database Container
   db:
-    image: mysql:8.0
+    image: mysql:8.4
     container_name: skillgarden_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: skill_garden
+      MYSQL_ROOT_PASSWORD: skillgarden_dev
+      MYSQL_DATABASE: db_skill_garden
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./skill_garden-Backend/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
 
   # 2. PHP 8.3 Backend API Container
   backend:
@@ -26,9 +26,9 @@ services:
       - "8000:80"
     environment:
       DB_HOST: db
-      DB_NAME: skill_garden
-      DB_USER: root
-      DB_PASS: root
+      DB_DATABASE: db_skill_garden
+      DB_USERNAME: root
+      DB_PASSWORD: skillgarden_dev
     depends_on:
       - db
     volumes:
@@ -48,3 +48,5 @@ services:
 
 volumes:
   mysql_data:
+    external: true
+    name: plt-skill_garden_skill-garden-db-data

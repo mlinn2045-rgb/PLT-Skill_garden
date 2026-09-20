@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Play, CheckCircle2, FileText, Download, ChevronRight, Lock, Video, HardDrive, Trash2, HelpCircle, Sparkles } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { useSearchParams, useNavigate, Link } from 'react-router-dom'
-import { getChapterProgress, updateChapterProgress } from '../../services/learningProgress'
+import { getChapterProgress, isChapterUnlocked, updateChapterProgress } from '../../services/learningProgress'
 import { useAuthStore } from '../../stores/authStore'
+import { apiClient } from '../../services/apiClient'
 
 interface NoteItem {
     id: number
@@ -11,28 +12,75 @@ interface NoteItem {
     content: string
 }
 
+declare global {
+    interface Window {
+        YT?: any
+        onYouTubeIframeAPIReady?: () => void
+    }
+}
+
+const normalizeVideoSourceUrl = (rawUrl?: string): string => {
+    const url = (rawUrl || '').trim()
+    if (!url) return url
+
+    if (url.includes('youtube.com/watch?v=')) {
+        const videoIdMatch = url.match(/[?&]v=([^&]+)/i)
+        if (videoIdMatch?.[1]) {
+            return `https://www.youtube-nocookie.com/embed/${videoIdMatch[1]}?rel=0`
+        }
+    }
+
+    if (url.includes('youtu.be/')) {
+        const videoIdMatch = url.match(/youtu\.be\/([^?]+)/i)
+        if (videoIdMatch?.[1]) {
+            return `https://www.youtube-nocookie.com/embed/${videoIdMatch[1]}?rel=0`
+        }
+    }
+
+    if (url.includes('/uploads/videos/')) {
+        return url.includes('/public/uploads/videos/') ? url : url.replace('/uploads/videos/', '/public/uploads/videos/')
+    }
+
+    return url
+}
+
+const getYouTubeVideoId = (url: string): string => {
+    const match = url.match(/\/embed\/([^?]+)/i)
+    return match?.[1] || ''
+}
+
 export const VideoLearningPage: React.FC = () => {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
     const skillId = searchParams.get('skill_id') || '1'
-    const chapterId = searchParams.get('chapter') || '1'
+    const initialChapterId = searchParams.get('chapter') || '1'
     const { user } = useAuthStore()
     const userKey = user?.email || 'guest'
 
     const [activeTab, setActiveTab] = useState<'notes' | 'materials'>('notes')
     const [noteText, setNoteText] = useState('')
     const [currentVideoTime, setCurrentVideoTime] = useState(0)
+    const [maxWatchedTime, setMaxWatchedTime] = useState(0)
+    const [videoFinished, setVideoFinished] = useState(false)
+    const [replayMode, setReplayMode] = useState(false)
+    const [volume, setVolume] = useState(100)
     const [toastMsg, setToastMsg] = useState('')
+    const videoRef = useRef<HTMLVideoElement>(null)
+    const youtubeContainerRef = useRef<HTMLDivElement>(null)
+    const youtubePlayerRef = useRef<any>(null)
+    const currentVideoTimeRef = useRef(0)
 
     // Current active lesson state
-    const [currentLessonId, setCurrentLessonId] = useState<number>(2)
-    const [currentVideoUrl, setCurrentVideoUrl] = useState('http://localhost:8000/uploads/videos/sample.mp4')
-    const [currentLessonTitle, setCurrentLessonTitle] = useState('Bài 2: React Components & Props cơ bản')
+    const [currentLessonId, setCurrentLessonId] = useState<number>(1)
+    const [currentVideoUrl, setCurrentVideoUrl] = useState('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0')
+    const [currentLessonTitle, setCurrentLessonTitle] = useState('1. Giới thiệu tổng quan React 19 & JSX Syntax')
     const [currentDescription, setCurrentDescription] = useState(
         'Trong bài học này, chúng ta sẽ cùng tìm hiểu cách thiết kế các Component độc lập, tái sử dụng và cách truyền nhận dữ liệu thông qua Props trong React 19.'
     )
 
-    const [chapterProgress, setChapterProgress] = useState(() => getChapterProgress(skillId, chapterId, userKey))
+    const firstAvailableChapterId = isChapterUnlocked(skillId, initialChapterId, userKey) ? initialChapterId : '1'
+    const [activeChapterId, setActiveChapterId] = useState(firstAvailableChapterId)
+    const [chapterProgress, setChapterProgress] = useState(() => getChapterProgress(skillId, firstAvailableChapterId, userKey))
 
     // Admin created custom lessons list for this skill
     const [customLessons, setCustomLessons] = useState<any[]>([])
@@ -50,18 +98,42 @@ export const VideoLearningPage: React.FC = () => {
         ]
     })
 
-    // Sync admin lessons from localStorage
+    // Load published lessons from the backend so every user sees admin updates.
     useEffect(() => {
-        try {
-            const saved = localStorage.getItem('skillgarden_custom_lessons') || '[]'
-            const parsed = JSON.parse(saved)
-            if (Array.isArray(parsed)) {
-                const filtered = parsed.filter((item: any) => String(item.skillId) === String(skillId))
-                setCustomLessons(filtered)
+        let isMounted = true
+
+        const loadLessons = async () => {
+            try {
+                const response = await apiClient.get<any[]>(`/lessons.php?skill_id=${encodeURIComponent(skillId)}`)
+                if (isMounted && Array.isArray(response.data)) {
+                    setCustomLessons(response.data.map((item) => ({
+                        id: Number(item.id),
+                        title: item.title,
+                        duration: item.video_duration_seconds
+                            ? `${Math.floor(Number(item.video_duration_seconds) / 60).toString().padStart(2, '0')}:${(Number(item.video_duration_seconds) % 60).toString().padStart(2, '0')}`
+                            : '15:00',
+                        videoUrl: normalizeVideoSourceUrl(item.video_url),
+                        description: item.description,
+                    })))
+                    return
+                }
+            } catch {
+                // Use local data while the backend is unavailable.
             }
-        } catch {
-            setCustomLessons([])
+
+            try {
+                const saved = localStorage.getItem('skillgarden_custom_lessons') || '[]'
+                const parsed = JSON.parse(saved)
+                if (isMounted && Array.isArray(parsed)) {
+                    setCustomLessons(parsed.filter((item: any) => String(item.skillId) === String(skillId)))
+                }
+            } catch {
+                if (isMounted) setCustomLessons([])
+            }
         }
+
+        void loadLessons()
+        return () => { isMounted = false }
     }, [skillId])
 
     useEffect(() => {
@@ -82,7 +154,8 @@ export const VideoLearningPage: React.FC = () => {
 
     const handleAddNote = () => {
         if (!noteText.trim()) return
-        const newNote = { id: Date.now(), time: formatVideoTime(currentVideoTime), content: noteText.trim() }
+        const noteTime = currentVideoTimeRef.current
+        const newNote = { id: Date.now(), time: formatVideoTime(noteTime), content: noteText.trim() }
         const updated = [newNote, ...notesList]
         setNotesList(updated)
         localStorage.setItem(storageKey, JSON.stringify(updated))
@@ -96,14 +169,62 @@ export const VideoLearningPage: React.FC = () => {
     }
 
     const handleCompleteVideo = () => {
-        const updated = updateChapterProgress(skillId, { videoCompleted: true }, chapterId, userKey)
+        if (!videoFinished) {
+            setToastMsg('Bạn cần xem xong video')
+            setTimeout(() => setToastMsg(''), 4000)
+            return
+        }
+        const updated = updateChapterProgress(skillId, { videoCompleted: true }, activeChapterId, userKey)
         setChapterProgress(updated)
+        setVideoFinished(true)
         setToastMsg('🎉 Đã xem xong video! Bài Quiz của bài học này đã được MỞ KHÓA!')
         setTimeout(() => setToastMsg(''), 5000)
     }
 
+    const handleVideoEnded = () => {
+        setVideoFinished(true)
+        setToastMsg('Bạn đã xem xong video. Hãy bấm Đánh Dấu Đã Xem Xong Video để tiếp tục.')
+        setTimeout(() => setToastMsg(''), 5000)
+    }
+
+    const handleReplayVideo = () => {
+        setReplayMode(true)
+        setCurrentVideoTime(0)
+        currentVideoTimeRef.current = 0
+    }
+
+    const handleVideoTimeUpdate = (event: React.SyntheticEvent<HTMLVideoElement>) => {
+        const video = event.currentTarget
+        const currentTime = video.currentTime
+        if (!replayMode && currentTime > maxWatchedTime + 1) {
+            video.currentTime = maxWatchedTime
+            return
+        }
+
+        const nextTime = Math.floor(currentTime)
+        setCurrentVideoTime(nextTime)
+        currentVideoTimeRef.current = nextTime
+        setMaxWatchedTime((watchedTime) => Math.max(watchedTime, currentTime))
+    }
+
+    const handleVideoSeeking = (event: React.SyntheticEvent<HTMLVideoElement>) => {
+        const video = event.currentTarget
+        if (!replayMode && video.currentTime > maxWatchedTime) {
+            video.currentTime = maxWatchedTime
+        }
+    }
+
+    const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const nextVolume = Number(event.target.value)
+        setVolume(nextVolume)
+        if (videoRef.current) {
+            videoRef.current.volume = nextVolume / 100
+        }
+        youtubePlayerRef.current?.setVolume?.(nextVolume)
+    }
+
     const handleCompletePdf = () => {
-        const updated = updateChapterProgress(skillId, { pdfCompleted: true }, chapterId, userKey)
+        const updated = updateChapterProgress(skillId, { pdfCompleted: true }, activeChapterId, userKey)
         setChapterProgress(updated)
     }
 
@@ -156,11 +277,11 @@ startxref
         URL.revokeObjectURL(downloadUrl)
     }
 
-    const defaultLessons: { id: number; title: string; duration: string; status: string; videoUrl: string; description?: string }[] = [
-        { id: 1, title: '1. Giới thiệu tổng quan React 19 & JSX Syntax', duration: '12:45', status: 'completed', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
-        { id: 2, title: '2. React Components & Props cơ bản (File Tải lên)', duration: '18:20', status: 'active', videoUrl: 'http://localhost:8000/uploads/videos/sample.mp4' },
-        { id: 3, title: '3. State Management với useState & useReducer', duration: '25:15', status: 'locked', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
-        { id: 4, title: '4. Side Effects & Lifecycle với useEffect Hook', duration: '20:00', status: 'locked', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
+    const defaultLessons = [
+        { id: 1, title: '1. Giới thiệu tổng quan React 19 & JSX Syntax', duration: '12:45', status: 'completed', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', description: '' },
+        { id: 2, title: '2. React Components & Props cơ bản (File Tải lên)', duration: '18:20', status: 'active', videoUrl: 'http://localhost:8000/uploads/videos/sample.mp4', description: '' },
+        { id: 3, title: '3. State Management với useState & useReducer', duration: '25:15', status: 'locked', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', description: '' },
+        { id: 4, title: '4. Side Effects & Lifecycle với useEffect Hook', duration: '20:00', status: 'locked', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', description: '' }
     ]
 
     const formattedCustomLessons = customLessons.map((item, idx) => ({
@@ -168,16 +289,90 @@ startxref
         title: `${defaultLessons.length + idx + 1}. ${item.title} (Admin Thêm 🚀)`,
         duration: item.duration || '15:00',
         status: 'active',
-        videoUrl: item.videoUrl,
+        videoUrl: normalizeVideoSourceUrl(item.videoUrl),
         description: item.description,
         isAdminAdded: true
     }))
 
-    const lessons = [...defaultLessons, ...formattedCustomLessons]
+    const lessons = skillId === '1'
+        ? [...defaultLessons, ...formattedCustomLessons]
+        : formattedCustomLessons
+
+    const lessonItems = lessons.map((item, index) => {
+        const lessonChapterId = String(index + 1)
+        const progress = getChapterProgress(skillId, lessonChapterId, userKey)
+        const unlocked = isChapterUnlocked(skillId, lessonChapterId, userKey)
+        return {
+            ...item,
+            chapterId: lessonChapterId,
+            progress,
+            status: progress.quizCompleted ? 'completed' : unlocked ? 'active' : 'locked',
+        }
+    })
 
     const isYouTubeUrl = (url: string) => {
-        return url.includes('youtube.com') || url.includes('youtu.be')
+        return url.includes('youtube.com') || url.includes('youtube-nocookie.com') || url.includes('youtu.be')
     }
+
+    useEffect(() => {
+        if (!isYouTubeUrl(currentVideoUrl)) return
+
+        const createPlayer = () => {
+            const videoId = getYouTubeVideoId(currentVideoUrl)
+            if (!videoId || !youtubeContainerRef.current || !window.YT?.Player) return
+
+            youtubePlayerRef.current?.destroy?.()
+            youtubePlayerRef.current = new window.YT.Player(youtubeContainerRef.current, {
+                videoId,
+                playerVars: {
+                    controls: replayMode ? 1 : 0,
+                    disablekb: replayMode ? 0 : 1,
+                    rel: 0,
+                },
+                events: {
+                    onReady: (event: any) => event.target.setVolume(volume),
+                    onStateChange: (event: any) => {
+                        if (event.data === 0) setVideoFinished(true)
+                    },
+                },
+            })
+
+            const syncYouTubeTime = window.setInterval(() => {
+                const player = youtubePlayerRef.current
+                if (!player?.getCurrentTime) return
+                const nextTime = Math.floor(player.getCurrentTime())
+                if (nextTime !== currentVideoTimeRef.current) {
+                    currentVideoTimeRef.current = nextTime
+                    setCurrentVideoTime(nextTime)
+                }
+            }, 250)
+
+            return () => window.clearInterval(syncYouTubeTime)
+        }
+
+        let cleanupPlayerTime: (() => void) | undefined
+        if (window.YT?.Player) {
+            cleanupPlayerTime = createPlayer()
+        } else {
+            const previousReady = window.onYouTubeIframeAPIReady
+            window.onYouTubeIframeAPIReady = () => {
+                previousReady?.()
+                cleanupPlayerTime = createPlayer()
+            }
+            const script = document.querySelector('script[src="https://www.youtube.com/iframe_api"]')
+            if (!script) {
+                const youtubeScript = document.createElement('script')
+                youtubeScript.src = 'https://www.youtube.com/iframe_api'
+                document.body.appendChild(youtubeScript)
+            }
+        }
+
+        return () => {
+            cleanupPlayerTime?.()
+            youtubePlayerRef.current?.destroy?.()
+            youtubePlayerRef.current = null
+        }
+    }, [currentVideoUrl, replayMode])
 
     return (
         <div className="min-h-screen bg-[#FAFAF7] dark:bg-gray-900 text-[#20223A] dark:text-gray-100 pb-12">
@@ -190,7 +385,7 @@ startxref
                         size="sm"
                         variant="primary"
                         className="bg-white text-emerald-800 hover:bg-emerald-50 text-xs font-black ml-3"
-                        onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${chapterId}`)}
+                        onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${activeChapterId}`)}
                     >
                         Làm Bài Quiz Ngay 📝
                     </Button>
@@ -208,7 +403,7 @@ startxref
                 </div>
 
                 <div className="flex items-center gap-3">
-                    {chapterProgress.videoCompleted ? (
+                    {chapterProgress.videoCompleted && chapterProgress.pdfCompleted ? (
                         <div className="flex items-center gap-2">
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-black rounded-full border border-emerald-300">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Đã Xem Xong Video
@@ -218,7 +413,7 @@ startxref
                                 variant="indigo"
                                 size="sm"
                                 className="font-black text-xs flex items-center gap-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md animate-pulse cursor-pointer"
-                                onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${chapterId}`)}
+                                onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${activeChapterId}`)}
                             >
                                 <HelpCircle className="w-4 h-4 text-yellow-300" />
                                 <span>Làm Quiz Ngay (+100 XP)</span>
@@ -250,21 +445,21 @@ startxref
                     {/* Dynamic Video Player Box */}
                     <div className="bg-black rounded-2xl aspect-video overflow-hidden relative shadow-xl flex items-center justify-center border border-[#E2E4EB] dark:border-gray-700">
                         {isYouTubeUrl(currentVideoUrl) ? (
-                            <iframe
+                            <div
+                                ref={youtubeContainerRef}
                                 className="w-full h-full"
-                                src={currentVideoUrl}
-                                title={currentLessonTitle}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
+                                aria-label={currentLessonTitle}
+                            />
                         ) : (
                             <video
+                                ref={videoRef}
                                 controls
                                 controlsList="nodownload"
                                 className="w-full h-full object-contain"
                                 src={currentVideoUrl}
-                                onTimeUpdate={(e) => setCurrentVideoTime(Math.floor(e.currentTarget.currentTime))}
-                                onEnded={handleCompleteVideo}
+                                onTimeUpdate={handleVideoTimeUpdate}
+                                onSeeking={handleVideoSeeking}
+                                onEnded={handleVideoEnded}
                             >
                                 Trình duyệt của bạn không hỗ trợ phát file video này.
                             </video>
@@ -287,8 +482,33 @@ startxref
                             {currentDescription}
                         </p>
 
+                        <label className="flex items-center gap-3 text-xs font-bold text-[#6B6D7A] dark:text-gray-300">
+                            <span>Âm lượng</span>
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={volume}
+                                onChange={handleVolumeChange}
+                                className="w-40 accent-[#3C4097] cursor-pointer"
+                                aria-label="Điều chỉnh âm lượng video"
+                            />
+                            <span className="w-9 text-right">{volume}%</span>
+                        </label>
+
+                        {videoFinished && !replayMode && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="font-bold cursor-pointer"
+                                onClick={handleReplayVideo}
+                            >
+                                <Play className="w-4 h-4" /> Ôn lại video và bật tua
+                            </Button>
+                        )}
+
                         {/* Direct Quiz Call to Action Banner when Unlocked */}
-                        {chapterProgress.videoCompleted && (
+                        {chapterProgress.videoCompleted && chapterProgress.pdfCompleted && (
                             <div className="p-4 bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-purple-500/10 border-2 border-emerald-400 dark:border-emerald-600 rounded-2xl flex items-center justify-between gap-4">
                                 <div className="space-y-0.5">
                                     <h3 className="text-sm font-black text-emerald-900 dark:text-emerald-200 flex items-center gap-1.5">
@@ -301,7 +521,7 @@ startxref
                                 <Button
                                     variant="indigo"
                                     className="font-extrabold text-xs shrink-0 cursor-pointer shadow-md bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-                                    onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${chapterId}`)}
+                                    onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${activeChapterId}`)}
                                 >
                                     Vào Làm Quiz Ngay 📝
                                 </Button>
@@ -385,7 +605,7 @@ startxref
                                         <Button type="button" variant="outline" size="sm" className="flex items-center gap-1 cursor-pointer" onClick={handleDownloadMaterial}>
                                             <Download className="w-3.5 h-3.5" /> Tải về
                                         </Button>
-                                        <Button type="button" variant={chapterProgress.pdfCompleted ? 'success' : 'indigo'} size="sm" className="cursor-pointer" onClick={handleCompletePdf}>
+                                        <Button type="button" variant={chapterProgress.pdfCompleted ? 'success' : 'indigo'} size="sm" className="cursor-pointer" onClick={handleCompletePdf} disabled={!chapterProgress.videoCompleted}>
                                             {chapterProgress.pdfCompleted ? 'Đã đọc xong' : 'Đã đọc xong tài liệu'}
                                         </Button>
                                     </div>
@@ -405,13 +625,25 @@ startxref
                     </div>
 
                     <div className="space-y-2">
-                        {lessons.map((item) => (
+                        {lessonItems.map((item) => (
                             <div
                                 key={item.id}
                                 onClick={() => {
+                                    if (item.status === 'locked') {
+                                        setToastMsg('Bạn cần hoàn thành video, PDF và Quiz của bài trước để mở bài này.')
+                                        setTimeout(() => setToastMsg(''), 4000)
+                                        return
+                                    }
+                                    setActiveChapterId(item.chapterId)
+                                    setChapterProgress(item.progress)
                                     setCurrentLessonId(item.id)
-                                    setCurrentVideoUrl(item.videoUrl)
+                                    setCurrentVideoUrl(normalizeVideoSourceUrl(item.videoUrl))
                                     setCurrentLessonTitle(item.title)
+                                    setCurrentVideoTime(0)
+                                    currentVideoTimeRef.current = 0
+                                    setMaxWatchedTime(0)
+                                    setVideoFinished(false)
+                                    setReplayMode(false)
                                     if (item.description) {
                                         setCurrentDescription(item.description)
                                     }

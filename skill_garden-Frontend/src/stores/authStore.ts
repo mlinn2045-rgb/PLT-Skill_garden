@@ -3,6 +3,15 @@
 import { create } from 'zustand';
 import { authService, UserProfile } from '../services/authService';
 
+const savedTheme = localStorage.getItem('skillgarden_theme');
+const initialDarkMode = savedTheme === 'dark';
+
+if (initialDarkMode) {
+    document.documentElement.classList.add('dark');
+} else {
+    document.documentElement.classList.remove('dark');
+}
+
 interface AuthState {
     user: UserProfile | null;
     isAuthenticated: boolean;
@@ -26,7 +35,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     isLoading: false,
     isInitialized: false,
     error: null,
-    isDarkMode: localStorage.getItem('skillgarden_theme') === 'dark',
+    isDarkMode: initialDarkMode,
 
     checkAuth: async () => {
         set({ isLoading: true });
