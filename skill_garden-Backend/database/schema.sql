@@ -5,6 +5,7 @@
 -- Charset: utf8mb4_unicode_ci
 -- ===================================================================
 
+SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- 1. USERS TABLE
