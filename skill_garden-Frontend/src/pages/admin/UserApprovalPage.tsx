@@ -34,8 +34,10 @@ export const UserApprovalPage: React.FC = () => {
         try {
             const res = await fetch(`${API_BASE_URL}/admin/users.php`)
             const json = await res.json()
-            if (json.success && Array.isArray(json.data)) {
-                setUsersList(json.data)
+            const users = Array.isArray(json?.data) ? json.data : Array.isArray(json?.data?.users) ? json.data.users : []
+
+            if (json.success && users.length >= 0) {
+                setUsersList(users)
             } else {
                 setErrorMsg(json.message || 'Không thể lấy dữ liệu người dùng từ máy chủ.')
             }

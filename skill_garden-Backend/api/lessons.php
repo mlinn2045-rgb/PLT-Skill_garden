@@ -25,6 +25,19 @@ if ($token) {
 try {
     if ($method === 'GET') {
         $lessonId = (int) ($_GET['id'] ?? 0);
+
+        if ($lessonId <= 0 && isset($_GET['skill_id'])) {
+            $skillId = (int) $_GET['skill_id'];
+            if ($skillId <= 0) {
+                Response::error("ID kỹ năng không hợp lệ.", 400);
+            }
+
+            Response::success(
+                $lessonService->getPublishedLessonsBySkillId($skillId),
+                "Lấy danh sách bài học thành công."
+            );
+        }
+
         if ($lessonId <= 0) {
             Response::error("ID bài học không hợp lệ.", 400);
         }

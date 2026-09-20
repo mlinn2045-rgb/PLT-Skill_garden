@@ -13,7 +13,7 @@ WORKDIR /var/www/html
 COPY . /var/www/html
 
 # Configure Apache DocumentRoot to point to Backend directory
-ENV APACHE_DOCUMENT_ROOT /var/www/html
+ENV APACHE_DOCUMENT_ROOT=/var/www/html
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/conf-available/*.conf
 

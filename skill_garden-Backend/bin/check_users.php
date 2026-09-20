@@ -3,9 +3,7 @@ require_once __DIR__ . '/../config/bootstrap.php';
 
 $db = Database::getConnection();
 
-// Unlock and activate all existing users
-$db->query("UPDATE users SET failed_login_attempts = 0, locked_until = NULL, status = 'ACTIVE', is_approved = 1");
-
+$jsonFile = __DIR__ . '/../database/users.json';
 $accountsToEnsure = [
     [
         'email' => 'admin@pltsolutions.com',
@@ -49,7 +47,37 @@ $accountsToEnsure = [
     ]
 ];
 
+if (file_exists($jsonFile)) {
+    $jsonData = json_decode(file_get_contents($jsonFile), true);
+    if (is_array($jsonData)) {
+        foreach ($jsonData as $item) {
+            $email = strtolower(trim($item['email'] ?? ''));
+            if ($email === '') {
+                continue;
+            }
+
+            $accountsToEnsure[] = [
+                'email' => $email,
+                'username' => $item['username'] ?? explode('@', $email)[0],
+                'full_name' => $item['fullName'] ?? ($item['full_name'] ?? 'N/A'),
+                'password' => $item['password'] ?? 'Password123!',
+                'role' => strtoupper($item['role'] ?? 'USER'),
+                'is_approved' => !empty($item['isApproved']) ? 1 : 0,
+            ];
+        }
+    }
+}
+
+$merged = [];
 foreach ($accountsToEnsure as $acc) {
+    $key = strtolower(trim($acc['email'] ?? ''));
+    if ($key === '') {
+        continue;
+    }
+    $merged[$key] = $acc;
+}
+
+foreach ($merged as $acc) {
     $hash = password_hash($acc['password'], PASSWORD_BCRYPT, ['cost' => 10]);
     $stmtCheck = $db->prepare("SELECT id FROM users WHERE email = :email LIMIT 1");
     $stmtCheck->execute(['email' => $acc['email']]);
@@ -59,16 +87,18 @@ foreach ($accountsToEnsure as $acc) {
         $stmtUp = $db->prepare("
             UPDATE users SET 
                 full_name = :full_name,
+                username = :username,
                 password_hash = :hash,
                 role = :role,
                 is_approved = :is_approved,
-                status = 'ACTIVE',
+                status = CASE WHEN :is_approved = 1 THEN 'ACTIVE' ELSE 'INACTIVE' END,
                 failed_login_attempts = 0,
                 locked_until = NULL
             WHERE email = :email
         ");
         $stmtUp->execute([
             'full_name' => $acc['full_name'],
+            'username' => $acc['username'],
             'hash' => $hash,
             'role' => $acc['role'],
             'is_approved' => $acc['is_approved'],
@@ -88,7 +118,7 @@ foreach ($accountsToEnsure as $acc) {
         );
         $stmtIns = $db->prepare("
             INSERT INTO users (uuid, email, full_name, username, tag_id, password_hash, role, status, is_approved)
-            VALUES (:uuid, :email, :full_name, :username, :tag_id, :hash, :role, 'ACTIVE', :is_approved)
+            VALUES (:uuid, :email, :full_name, :username, :tag_id, :hash, :role, :status, :is_approved)
         ");
         $stmtIns->execute([
             'uuid' => $uuid,
@@ -98,13 +128,14 @@ foreach ($accountsToEnsure as $acc) {
             'tag_id' => $acc['username'] . '#' . rand(1000, 9999),
             'hash' => $hash,
             'role' => $acc['role'],
+            'status' => $acc['is_approved'] ? 'ACTIVE' : 'INACTIVE',
             'is_approved' => $acc['is_approved']
         ]);
     }
 }
 
 echo "=== TẤT CẢ TÀI KHOẢN TRONG SYSTEM CSDL HIỆN TẠI ===\n";
-$usersAfter = $db->query("SELECT id, email, username, role, is_approved, status FROM users")->fetchAll(PDO::FETCH_ASSOC);
+$usersAfter = $db->query("SELECT id, email, username, role, is_approved, status FROM users ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
 foreach ($usersAfter as $u) {
     echo "ID: {$u['id']} | Email: {$u['email']} | Role: {$u['role']} | Approved: {$u['is_approved']} | Status: {$u['status']}\n";
 }

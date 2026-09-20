@@ -46,7 +46,10 @@ export const courseService = {
 
     async getLeaderboard(): Promise<LeaderboardUser[]> {
         const response = await request<LeaderboardUser[]>('/leaderboard.php');
-        return response.data || [];
+        const leaderboardData = response.data as LeaderboardUser[] | { rankings?: LeaderboardUser[] } | undefined;
+        return Array.isArray(leaderboardData)
+            ? leaderboardData
+            : leaderboardData?.rankings || [];
     },
 
     async getAchievements(): Promise<AchievementItem[]> {

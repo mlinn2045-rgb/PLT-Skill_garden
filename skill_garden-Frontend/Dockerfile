@@ -2,9 +2,10 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --include=dev --production=false
 COPY . .
-RUN npm run build
+RUN npm install --global typescript@5.7.2 vite@6.4.3
+RUN tsc -b && vite build
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine

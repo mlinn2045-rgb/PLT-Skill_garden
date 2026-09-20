@@ -344,6 +344,11 @@ export const LearningPathPage: React.FC = () => {
                                     <span className="text-xs font-bold text-[#3F49C8] flex items-center gap-1">
                                         {chapter3Unlocked ? 'Xem chi tiết đề cương ›' : 'Hoàn thành quiz chặng 2 để mở khóa'}
                                     </span>
+                                    {chapter3Unlocked && (
+                                        <Link to={`/dashboard/video-lesson/${id}?chapter=3`}>
+                                            <Button variant="indigo" size="sm">Vào học ngay &rsaquo;</Button>
+                                        </Link>
+                                    )}
                                 </div>
                             </Card>
                         </div>
