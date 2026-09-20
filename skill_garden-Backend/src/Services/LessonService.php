@@ -70,6 +70,27 @@ class LessonService
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAdminLessonsBySkillId(int $skillId = 0): array
+    {
+        $sql = "
+            SELECT l.*, m.title AS module_title, lp.skill_id, s.title AS skill_title
+            FROM lessons l
+            JOIN modules m ON l.module_id = m.id
+            JOIN learning_paths lp ON m.learning_path_id = lp.id
+            JOIN skills s ON lp.skill_id = s.id
+        ";
+        $params = [];
+        if ($skillId > 0) {
+            $sql .= " WHERE lp.skill_id = :skill_id";
+            $params['skill_id'] = $skillId;
+        }
+        $sql .= " ORDER BY lp.skill_id ASC, m.order_index ASC, l.order_index ASC, l.id ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function createLesson(array $data): array
     {
         $title = trim($data['title'] ?? '');
