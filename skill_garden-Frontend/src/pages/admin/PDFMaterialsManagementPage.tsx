@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { FileText, Upload, Trash2, RefreshCw } from 'lucide-react'
+import { FileText, Upload, Trash2, RefreshCw, Edit } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { adminService, PdfMaterial } from '../../services/adminService'
 import { useAuthStore } from '../../stores/authStore'
@@ -17,6 +17,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
     const [toastMsg, setToastMsg] = useState('')
 
     const [showModal, setShowModal] = useState(false)
+    const [editingMaterial, setEditingMaterial] = useState<PdfMaterial | null>(null)
     const [title, setTitle] = useState('')
     const [fileUrl, setFileUrl] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -50,22 +51,31 @@ export const PDFMaterialsManagementPage: React.FC = () => {
         }
         setIsSubmitting(true)
         try {
-            await adminService.createMaterial({
-                title,
-                file_url: fileUrl,
-                file_type: 'pdf',
-                file_size_bytes: 2500000,
-            })
-            showToast('Đã thêm tài liệu PDF mới thành công!')
+            const payload = { title, file_url: fileUrl, file_type: 'pdf', file_size_bytes: 2500000 }
+            if (editingMaterial) {
+                await adminService.updateMaterial(editingMaterial.id, payload)
+                showToast('Đã cập nhật tài liệu PDF thành công!')
+            } else {
+                await adminService.createMaterial(payload)
+                showToast('Đã thêm tài liệu PDF mới thành công!')
+            }
             setShowModal(false)
             setTitle('')
             setFileUrl('')
+            setEditingMaterial(null)
             fetchMaterials()
         } catch (err: any) {
             alert(err.message || 'Thêm tài liệu thất bại.')
         } finally {
             setIsSubmitting(false)
         }
+    }
+
+    const handleEdit = (material: PdfMaterial) => {
+        setEditingMaterial(material)
+        setTitle(material.title)
+        setFileUrl(material.file_url)
+        setShowModal(true)
     }
 
     const handleDelete = async (id: number) => {
@@ -166,6 +176,14 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                                         <Button
                                             variant="outline"
                                             size="sm"
+                                            onClick={() => handleEdit(m)}
+                                            className="text-[#3C4097] border-indigo-200 hover:bg-indigo-50 font-bold mr-2"
+                                        >
+                                            <Edit className="w-3.5 h-3.5" />
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
                                             onClick={() => handleDelete(m.id)}
                                             className="text-red-600 border-red-200 hover:bg-red-50 font-bold"
                                         >
@@ -184,7 +202,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] max-w-md w-full space-y-4 shadow-2xl">
                         <h3 className="text-lg font-bold flex items-center gap-2">
-                            <Upload className="w-5 h-5 text-[#3C4097]" /> Upload Tài Liệu PDF Mới
+                            <Upload className="w-5 h-5 text-[#3C4097]" /> {editingMaterial ? 'Sửa Tài Liệu PDF' : 'Upload Tài Liệu PDF Mới'}
                         </h3>
 
                         <div className="space-y-3 text-xs">
@@ -211,9 +229,9 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                         </div>
 
                         <div className="flex justify-end gap-2 pt-2">
-                            <Button variant="outline" disabled={isSubmitting} onClick={() => setShowModal(false)}>Hủy</Button>
+                            <Button variant="outline" disabled={isSubmitting} onClick={() => { setShowModal(false); setEditingMaterial(null) }}>Hủy</Button>
                             <Button variant="indigo" disabled={isSubmitting} onClick={handleCreateMaterial} className="font-bold">
-                                {isSubmitting ? 'Đang lưu...' : 'Thêm tài liệu'}
+                                {isSubmitting ? 'Đang lưu...' : editingMaterial ? 'Lưu thay đổi' : 'Thêm tài liệu'}
                             </Button>
                         </div>
                     </div>

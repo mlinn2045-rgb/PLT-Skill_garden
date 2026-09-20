@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Video, Save, Upload, Link as LinkIcon, Sparkles, Sprout, CheckCircle2, FileVideo, HardDrive, RefreshCw, Trash2, Eye } from 'lucide-react'
+import { Video, Save, Upload, Link as LinkIcon, Sparkles, Sprout, CheckCircle2, FileVideo, HardDrive, RefreshCw, Trash2, Eye, Edit } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { apiClient } from '../../services/apiClient'
@@ -57,6 +57,7 @@ export const CreateLessonVideoPage: React.FC = () => {
 
     // Admin Created Lessons list state
     const [adminLessons, setAdminLessons] = useState<any[]>([])
+    const [editingLesson, setEditingLesson] = useState<any | null>(null)
 
     const fallbackSkillOptions = [
         { id: '1', title: 'Frontend React 19 Mastery (Cây Hoa Anh Đào 🌸)' },
@@ -150,7 +151,7 @@ export const CreateLessonVideoPage: React.FC = () => {
 
         const normalizedVideoUrl = normalizeYouTubeUrl(videoUrl.trim())
 
-        const newLesson = {
+        const lessonPayload = {
             id: 'custom_' + Date.now(),
             skillId: selectedSkillId,
             title: title.trim(),
@@ -163,29 +164,38 @@ export const CreateLessonVideoPage: React.FC = () => {
             createdAt: new Date().toISOString()
         }
 
-        // 1. Save to LocalStorage for instant reactive sync to user
-        try {
-            const existingStr = localStorage.getItem('skillgarden_custom_lessons') || '[]'
-            const existing = JSON.parse(existingStr)
-            const updated = [newLesson, ...existing]
-            localStorage.setItem('skillgarden_custom_lessons', JSON.stringify(updated))
-            setAdminLessons(updated)
-        } catch {
-            // Fallback
-        }
+        let savedLesson: any = lessonPayload
 
-        // Save to the shared backend before confirming the lesson to all users.
+        // Save to the shared backend before updating the local admin list.
         try {
-            await apiClient.post('/admin/lessons.php', {
+            const payload = {
                 skill_id: selectedSkillId,
                 title: title.trim(),
                 video_url: normalizedVideoUrl,
                 description: description.trim(),
-                xp_reward: Number(xpReward) || 50
-            })
+                xp_reward: Number(xpReward) || 50,
+            }
+            if (editingLesson?.backendId) {
+                await apiClient.patch('/admin/lessons.php', { id: editingLesson.backendId, ...payload })
+                savedLesson = { ...editingLesson, ...lessonPayload, backendId: editingLesson.backendId }
+            } else {
+                const response = await apiClient.post<any>('/admin/lessons.php', payload)
+                savedLesson = { ...lessonPayload, backendId: response.data?.id || response.data?.lesson?.id }
+            }
         } catch (err: any) {
             alert(err.message || 'Không thể lưu bài học lên máy chủ. Vui lòng thử lại.')
             return
+        }
+
+        try {
+            const existing = JSON.parse(localStorage.getItem('skillgarden_custom_lessons') || '[]')
+            const updated = editingLesson
+                ? existing.map((item: any) => item.id === editingLesson.id ? savedLesson : item)
+                : [savedLesson, ...existing]
+            localStorage.setItem('skillgarden_custom_lessons', JSON.stringify(updated))
+            setAdminLessons(updated)
+        } catch {
+            loadCustomLessons()
         }
 
         setSuccessAlert(`🎉 Đã tạo bài học "${title.trim()}" thành công! Bài học đã được kết nối và cập nhật tự động cho tất cả Học Viên.`)
@@ -194,10 +204,33 @@ export const CreateLessonVideoPage: React.FC = () => {
         setDescription('')
         setSelectedFile(null)
         setUploadSuccess(false)
+        setEditingLesson(null)
         setTimeout(() => setSuccessAlert(''), 6000)
     }
 
-    const handleDeleteCustomLesson = (id: string) => {
+    const handleEditCustomLesson = (lesson: any) => {
+        setEditingLesson(lesson)
+        setSelectedSkillId(String(lesson.skillId || '1'))
+        setTitle(lesson.title || '')
+        setVideoUrl(lesson.videoUrl || '')
+        setDescription(lesson.description || '')
+        setXpReward(String(lesson.xpReward || 50))
+        setGrowthImpact(String(lesson.growthImpact || 5))
+        setSourceType(lesson.sourceType || 'YOUTUBE')
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    const handleDeleteCustomLesson = async (id: string) => {
+        const lesson = adminLessons.find(item => item.id === id)
+        if (!confirm('Bạn có chắc chắn muốn xóa bài học video này?')) return
+        try {
+            if (lesson?.backendId) {
+                await apiClient.delete(`/admin/lessons.php?id=${lesson.backendId}`)
+            }
+        } catch (err: any) {
+            alert(err.message || 'Không thể xóa bài học trên máy chủ.')
+            return
+        }
         const updated = adminLessons.filter(item => item.id !== id)
         localStorage.setItem('skillgarden_custom_lessons', JSON.stringify(updated))
         setAdminLessons(updated)
@@ -432,7 +465,7 @@ export const CreateLessonVideoPage: React.FC = () => {
                         </div>
 
                         <Button type="submit" variant="indigo" fullWidth className="font-bold flex items-center justify-center gap-2 bg-purple-700 hover:bg-purple-800 border-none cursor-pointer">
-                            <Save className="w-4 h-4" /> Xuất Bản Bài Học Đến Học Viên
+                            <Save className="w-4 h-4" /> {editingLesson ? 'Lưu thay đổi bài học' : 'Xuất Bản Bài Học Đến Học Viên'}
                         </Button>
                     </div>
 
@@ -450,6 +483,14 @@ export const CreateLessonVideoPage: React.FC = () => {
                                     <div key={item.id} className="p-3 bg-gray-50 border border-gray-200 rounded-xl text-xs space-y-1">
                                         <div className="flex items-center justify-between font-bold">
                                             <span className="text-[#3C4097] truncate max-w-[180px]">{item.title}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleEditCustomLesson(item)}
+                                                className="text-gray-400 hover:text-indigo-600 p-1 cursor-pointer"
+                                                title="Sửa bài học này"
+                                            >
+                                                <Edit className="w-3.5 h-3.5" />
+                                            </button>
                                             <button
                                                 type="button"
                                                 onClick={() => handleDeleteCustomLesson(item.id)}

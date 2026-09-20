@@ -129,6 +129,13 @@ export const adminService = {
         });
     },
 
+    async updateMaterial(id: number, data: { title: string; file_url: string; file_type?: string; file_size_bytes?: number }): Promise<ApiResponse> {
+        return request(`/admin/pdf-materials.php?id=${id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ id, ...data }),
+        });
+    },
+
     async deleteMaterial(id: number): Promise<ApiResponse> {
         return request(`/admin/pdf-materials.php?id=${id}`, {
             method: 'DELETE',
