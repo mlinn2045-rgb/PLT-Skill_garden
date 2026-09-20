@@ -10,7 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     Response::error("Method not allowed", 405);
 }
 
-$input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+$rawInput = file_get_contents('php://input');
+$rawInput = preg_replace('/^[\xEF\xBB\xBF]/', '', $rawInput);
+$input = json_decode($rawInput, true) ?? $_POST;
 
 $email = $input['email'] ?? '';
 $password = $input['password'] ?? '';

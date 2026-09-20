@@ -29,7 +29,9 @@ try {
     }
 
     if ($method === 'POST') {
-        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        $rawInput = file_get_contents('php://input');
+        $rawInput = preg_replace('/^[\xEF\xBB\xBF]/', '', $rawInput);
+        $data = json_decode($rawInput, true) ?? [];
         $lesson = $lessonService->createLesson($data);
         Response::success($lesson, "Tạo bài học mới thành công!", 201);
     }
