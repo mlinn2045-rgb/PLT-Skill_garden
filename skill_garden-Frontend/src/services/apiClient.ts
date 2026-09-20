@@ -11,6 +11,31 @@ export interface ApiResponse<T = any> {
     filename?: string;
 }
 
+export async function parseApiResponse<T = any>(
+    response: Response,
+    fallbackMessage = 'Thao tac khong thanh cong.'
+): Promise<ApiResponse<T>> {
+    const contentType = response.headers.get('content-type') || '';
+
+    if (contentType.includes('application/json')) {
+        return await response.json();
+    }
+
+    const text = await response.text();
+    const trimmedText = text.trimStart();
+    const isHtml = trimmedText.startsWith('<!DOCTYPE') || trimmedText.startsWith('<html');
+
+    if (isHtml) {
+        throw new Error(
+            response.status === 404
+                ? 'Khong tim thay API Backend. Vui long kiem tra cau hinh proxy hoac VITE_API_URL.'
+                : 'Backend tra ve HTML thay vi JSON. Vui long kiem tra Backend/proxy dang chay dung chua.'
+        );
+    }
+
+    throw new Error(text || fallbackMessage);
+}
+
 export async function request<T = any>(
     endpoint: string,
     options: RequestInit = {}
@@ -32,7 +57,7 @@ export async function request<T = any>(
 
     try {
         const response = await fetch(url, config);
-        const data: ApiResponse<T> = await response.json();
+        const data = await parseApiResponse<T>(response);
 
         if (!response.ok || !data.success) {
             throw new Error(data.message || 'Thao tác không thành công.');

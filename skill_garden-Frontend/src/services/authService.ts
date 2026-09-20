@@ -1,5 +1,7 @@
 // skill_garden-Frontend/src/services/authService.ts
 
+import { parseApiResponse } from './apiClient';
+
 export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 export interface UserProfile {
@@ -32,7 +34,7 @@ export const authService = {
             credentials: 'include',
             body: JSON.stringify({ fullName, email, password }),
         });
-        const data = await response.json();
+        const data = await parseApiResponse<UserProfile>(response, 'Dang ky that bai.');
         if (!response.ok || !data.success) {
             throw new Error(data.message || 'Đăng ký thất bại.');
         }
@@ -48,7 +50,7 @@ export const authService = {
             credentials: 'include',
             body: JSON.stringify({ email, password }),
         });
-        const data = await response.json();
+        const data = await parseApiResponse<{ user: UserProfile }>(response, 'Dang nhap that bai.');
         if (!response.ok || !data.success) {
             const error = new Error(data.message || 'Đăng nhập thất bại.') as any;
             error.status = response.status;
@@ -65,7 +67,7 @@ export const authService = {
             },
             credentials: 'include',
         });
-        const data = await response.json();
+        const data = await parseApiResponse(response);
         return data;
     },
 
@@ -81,7 +83,7 @@ export const authService = {
             if (!response.ok) {
                 return null;
             }
-            const data: ApiResponse<UserProfile> = await response.json();
+            const data = await parseApiResponse<UserProfile>(response);
             return data.data || null;
         } catch {
             return null;
@@ -97,7 +99,7 @@ export const authService = {
             credentials: 'include',
             body: JSON.stringify({ email }),
         });
-        const data = await response.json();
+        const data = await parseApiResponse(response, 'Gui yeu cau khoi phuc that bai.');
         if (!response.ok || !data.success) {
             throw new Error(data.message || 'Gửi yêu cầu khôi phục thất bại.');
         }
@@ -117,7 +119,7 @@ export const authService = {
             credentials: 'include',
             body: JSON.stringify(payload),
         });
-        const data = await response.json();
+        const data = await parseApiResponse(response, 'Phe duyet tai khoan that bai.');
         if (!response.ok || !data.success) {
             throw new Error(data.message || 'Phê duyệt tài khoản thất bại.');
         }
