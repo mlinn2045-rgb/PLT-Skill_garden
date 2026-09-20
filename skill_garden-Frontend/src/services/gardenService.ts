@@ -30,10 +30,31 @@ export interface UserGardenResponse {
     trees: GardenTree[];
 }
 
+const repairMojibake = (value?: string): string | undefined => {
+    if (!value || !/[ÃÂÄ]/.test(value)) return value
+
+    try {
+        const bytes = Uint8Array.from(Array.from(value), (character) => character.charCodeAt(0))
+        return new TextDecoder('utf-8').decode(bytes)
+    } catch {
+        return value
+    }
+}
+
+const normalizeGardenResponse = (data: UserGardenResponse): UserGardenResponse => ({
+    ...data,
+    trees: (data.trees || []).map((tree) => ({
+        ...tree,
+        plant_name: repairMojibake(tree.plant_name),
+        skill_name: repairMojibake(tree.skill_name),
+        stage_name: repairMojibake(tree.stage_name),
+    })),
+})
+
 export const gardenService = {
     async getUserGarden(): Promise<UserGardenResponse> {
         const response = await request<UserGardenResponse>('/user/garden.php');
-        return response.data || {
+        return response.data ? normalizeGardenResponse(response.data) : {
             stats: { level: 1, total_xp: 0, streak_days: 0, total_trees: 0, mature_trees: 0 },
             trees: []
         };
