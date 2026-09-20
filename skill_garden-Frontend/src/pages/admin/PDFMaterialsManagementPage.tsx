@@ -2,8 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { FileText, Upload, Trash2, RefreshCw } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { adminService, PdfMaterial } from '../../services/adminService'
+import { useAuthStore } from '../../stores/authStore'
 
 export const PDFMaterialsManagementPage: React.FC = () => {
+    const { user } = useAuthStore()
+    const isLmsAdmin = user?.role === 'SUPER_ADMIN' || (user?.role === 'ADMIN' && (
+        (user.email || '').toLowerCase().includes('lms') ||
+        (user.full_name || '').toLowerCase().includes('lms')
+    ))
+
     const [materials, setMaterials] = useState<PdfMaterial[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [errorMsg, setErrorMsg] = useState('')
@@ -85,11 +92,32 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                     <Button variant="outline" size="sm" onClick={fetchMaterials} disabled={isLoading} className="font-bold flex items-center gap-1">
                         <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
                     </Button>
-                    <Button variant="indigo" onClick={() => setShowModal(true)} className="font-bold flex items-center gap-2">
-                        <Upload className="w-4 h-4" /> Upload Tài liệu PDF mới
+                    <Button
+                        variant="indigo"
+                        onClick={() => {
+                            if (!isLmsAdmin) {
+                                alert('Chỉ tài khoản Admin LMS mới có quyền upload tài liệu PDF!')
+                                return
+                            }
+                            setShowModal(true)
+                        }}
+                        disabled={!isLmsAdmin}
+                        className={`font-bold flex items-center gap-2 ${!isLmsAdmin ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                        <Upload className="w-4 h-4" /> {isLmsAdmin ? 'Upload Tài liệu PDF mới' : '🔒 Cần quyền Admin LMS'}
                     </Button>
                 </div>
             </div>
+
+            {!isLmsAdmin && (
+                <div className="p-4 bg-amber-50 border border-amber-300 text-amber-900 rounded-2xl text-xs font-bold flex items-center gap-3 shadow-xs">
+                    <span className="text-lg">🔒</span>
+                    <div>
+                        <div className="font-extrabold text-amber-950 text-sm">Giới hạn phân quyền Admin LMS</div>
+                        <p className="mt-0.5 text-amber-800">Chỉ tài khoản Quản trị LMS (LMS Content Admin) mới có quyền Upload và Xóa tài liệu PDF trong hệ thống.</p>
+                    </div>
+                </div>
+            )}
 
             {toastMsg && (
                 <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold shadow-sm">

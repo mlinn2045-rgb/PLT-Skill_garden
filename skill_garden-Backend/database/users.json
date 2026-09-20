@@ -51,7 +51,7 @@
         "fullName": "SkillGarden LMS Admin",
         "email": "lms.admin@pltsolutions.com",
         "username": "lms_admin",
-        "password": "admin123cd",
+        "password": "admin123",
         "role": "ADMIN",
         "isApproved": true,
         "level": 1,

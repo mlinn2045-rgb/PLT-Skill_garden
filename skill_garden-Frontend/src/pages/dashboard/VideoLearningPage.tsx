@@ -156,7 +156,7 @@ startxref
         URL.revokeObjectURL(downloadUrl)
     }
 
-    const defaultLessons = [
+    const defaultLessons: { id: number; title: string; duration: string; status: string; videoUrl: string; description?: string }[] = [
         { id: 1, title: '1. Giới thiệu tổng quan React 19 & JSX Syntax', duration: '12:45', status: 'completed', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
         { id: 2, title: '2. React Components & Props cơ bản (File Tải lên)', duration: '18:20', status: 'active', videoUrl: 'http://localhost:8000/uploads/videos/sample.mp4' },
         { id: 3, title: '3. State Management với useState & useReducer', duration: '25:15', status: 'locked', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },

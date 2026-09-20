@@ -4,9 +4,16 @@ import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { apiClient } from '../../services/apiClient'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../../stores/authStore'
 
 export const CreateLessonVideoPage: React.FC = () => {
     const navigate = useNavigate()
+    const { user } = useAuthStore()
+
+    const isLmsAdmin = user?.role === 'SUPER_ADMIN' || (user?.role === 'ADMIN' && (
+        (user.email || '').toLowerCase().includes('lms') ||
+        (user.full_name || '').toLowerCase().includes('lms')
+    ))
     const [selectedSkillId, setSelectedSkillId] = useState('1')
     const [title, setTitle] = useState('')
     const [sourceType, setSourceType] = useState<'YOUTUBE' | 'FILE'>('YOUTUBE')
@@ -56,6 +63,10 @@ export const CreateLessonVideoPage: React.FC = () => {
     }
 
     const handleUploadLocalVideo = async () => {
+        if (!isLmsAdmin) {
+            alert('Chỉ tài khoản Admin LMS mới có quyền tải file video lên máy chủ!')
+            return
+        }
         if (!selectedFile) return
         setIsUploading(true)
         setUploadProgress(20)
@@ -84,6 +95,10 @@ export const CreateLessonVideoPage: React.FC = () => {
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (!isLmsAdmin) {
+            alert('Chỉ tài khoản Admin LMS mới có quyền tạo và xuất bản bài học!')
+            return
+        }
         if (!title.trim()) {
             alert('Vui lòng nhập tiêu đề bài học!')
             return
@@ -164,6 +179,16 @@ export const CreateLessonVideoPage: React.FC = () => {
                 </Button>
             </div>
 
+            {!isLmsAdmin && (
+                <div className="p-4 bg-amber-50 border border-amber-300 text-amber-900 rounded-2xl text-xs font-bold flex items-center gap-3 shadow-xs">
+                    <span className="text-lg">🔒</span>
+                    <div>
+                        <div className="font-extrabold text-amber-950 text-sm">Rào chắn phân quyền Quản trị LMS</div>
+                        <p className="mt-0.5 text-amber-800">Tài khoản hiện tại của bạn không phải là <strong>Admin LMS (LMS Content Admin)</strong>. Quyền hạn tạo, upload và xuất bản bài học Video bị giới hạn chỉ dành cho Quản trị viên LMS.</p>
+                    </div>
+                </div>
+            )}
+
             {successAlert && (
                 <div className="p-4 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-2xl text-xs font-bold flex items-center justify-between shadow-sm animate-fade-in">
                     <span>{successAlert}</span>
@@ -181,7 +206,7 @@ export const CreateLessonVideoPage: React.FC = () => {
             <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Left 2 cols: Content Info */}
                 <div className="md:col-span-2 bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-6">
-                    
+
                     {/* Skill / Course Selector */}
                     <div className="space-y-2">
                         <label className="text-xs font-extrabold uppercase tracking-wider text-[#4A5568] block">

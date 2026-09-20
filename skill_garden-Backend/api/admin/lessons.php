@@ -6,8 +6,18 @@ require_once __DIR__ . '/../../config/bootstrap.php';
 use App\Helpers\Response;
 use App\Middleware\AuthMiddleware;
 use App\Services\LessonService;
+$user = AuthMiddleware::authenticate();
+$isLmsAdmin = ($user['role'] === 'SUPER_ADMIN')
+    || ($user['role'] === 'ADMIN' && (
+        str_contains(strtolower($user['email'] ?? ''), 'lms')
+        || str_contains(strtolower($user['username'] ?? ''), 'lms')
+        || str_contains(strtolower($user['full_name'] ?? ''), 'lms')
+        || in_array('MANAGE_LESSONS', $user['permissions'] ?? [])
+    ));
 
-AuthMiddleware::requirePermission('MANAGE_LESSONS');
+if (!$isLmsAdmin) {
+    Response::error("Chỉ tài khoản Admin LMS mới có quyền tạo và quản lý bài học Video.", 403);
+}
 
 $lessonService = new LessonService();
 $method = $_SERVER['REQUEST_METHOD'];
