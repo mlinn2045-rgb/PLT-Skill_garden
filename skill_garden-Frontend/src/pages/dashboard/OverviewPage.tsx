@@ -14,6 +14,7 @@ import { Badge } from '../../components/ui/Badge'
 import { ProgressBar } from '../../components/ui/ProgressBar'
 import { useAuthStore } from '../../stores/authStore'
 import { gardenService, UserGardenResponse, GardenTree } from '../../services/gardenService'
+import { getSkillGrowth } from '../../services/learningProgress'
 
 export const OverviewPage: React.FC = () => {
     const navigate = useNavigate()
@@ -146,7 +147,9 @@ export const OverviewPage: React.FC = () => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {trees.map((tree) => {
-                            const progressPercent = Math.min(100, Math.round((tree.xp_accumulated / 200) * 100))
+                            const userKey = user?.email || 'guest'
+                            const growth = getSkillGrowth(String(tree.skill_id || 1), userKey)
+                            const progressPercent = growth.progress
                             return (
                                 <Card key={tree.id} hoverEffect className="p-6 space-y-4 dark:bg-gray-800 dark:border-gray-700">
                                     <div className="flex items-start justify-between">
@@ -157,9 +160,9 @@ export const OverviewPage: React.FC = () => {
                                             <div>
                                                 <h3 className="text-base font-extrabold text-[#1A2E22] dark:text-white">{tree.plant_name || tree.skill_name || 'Cây kỹ năng'}</h3>
                                                 <div className="flex items-center gap-2 text-xs text-[#718096] dark:text-gray-400 mt-0.5">
-                                                    <span>{tree.stage_name || 'Đang sinh trưởng'}</span>
+                                                    <span>{growth.stageName}</span>
                                                     <span>•</span>
-                                                    <span className="font-bold text-[#2D7A4F] dark:text-emerald-400">Cấp {tree.level}</span>
+                                                    <span className="font-bold text-[#2D7A4F] dark:text-emerald-400">Cấp {growth.stageLevel}</span>
                                                 </div>
                                             </div>
                                         </div>

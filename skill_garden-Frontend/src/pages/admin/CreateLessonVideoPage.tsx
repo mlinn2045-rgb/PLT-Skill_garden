@@ -7,22 +7,33 @@ import { courseService, SkillItem } from '../../services/courseService'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 
+const getYouTubeVideoId = (url: string): string => {
+    if (!url) return ''
+    const watchMatch = url.match(/[?&]v=([^&]+)/i)
+    if (watchMatch?.[1]) return watchMatch[1]
+
+    const embedMatch = url.match(/\/embed\/([^?&]+)/i)
+    if (embedMatch?.[1]) return embedMatch[1]
+
+    const shortMatch = url.match(/youtu\.be\/([^?&]+)/i)
+    if (shortMatch?.[1]) return shortMatch[1]
+
+    const shortsMatch = url.match(/\/shorts\/([^?&]+)/i)
+    if (shortsMatch?.[1]) return shortsMatch[1]
+
+    const liveMatch = url.match(/\/live\/([^?&]+)/i)
+    if (liveMatch?.[1]) return liveMatch[1]
+
+    return ''
+}
+
 const normalizeYouTubeUrl = (rawUrl: string): string => {
     const url = rawUrl.trim()
-    if (!url) return url
+    if (!url) return ''
 
-    if (url.includes('youtube.com/watch?v=')) {
-        const videoIdMatch = url.match(/[?&]v=([^&]+)/i)
-        if (videoIdMatch?.[1]) {
-            return `https://www.youtube.com/embed/${videoIdMatch[1]}`
-        }
-    }
-
-    if (url.includes('youtu.be/')) {
-        const videoIdMatch = url.match(/youtu\.be\/([^?]+)/i)
-        if (videoIdMatch?.[1]) {
-            return `https://www.youtube.com/embed/${videoIdMatch[1]}`
-        }
+    const videoId = getYouTubeVideoId(url)
+    if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`
     }
 
     if (url.includes('/uploads/videos/')) {
@@ -188,15 +199,13 @@ export const CreateLessonVideoPage: React.FC = () => {
         }
 
         try {
-            const existing = JSON.parse(localStorage.getItem('skillgarden_custom_lessons') || '[]')
-            const updated = editingLesson
-                ? existing.map((item: any) => item.id === editingLesson.id ? savedLesson : item)
-                : [savedLesson, ...existing]
-            localStorage.setItem('skillgarden_custom_lessons', JSON.stringify(updated))
-            setAdminLessons(updated)
+            localStorage.removeItem('skillgarden_custom_lessons')
+            localStorage.removeItem('skillgarden_default_lesson_overrides')
         } catch {
-            loadCustomLessons()
+            // ignore
         }
+
+        window.dispatchEvent(new Event('skillgarden_lessons_updated'))
 
         setSuccessAlert(`🎉 Đã tạo bài học "${title.trim()}" thành công! Bài học đã được kết nối và cập nhật tự động cho tất cả Học Viên.`)
         setTitle('')

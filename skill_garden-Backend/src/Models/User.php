@@ -42,8 +42,8 @@ class User
     public function create(array $data): array
     {
         $stmt = $this->db->prepare("
-            INSERT INTO users (uuid, email, full_name, password_hash, role, is_approved)
-            VALUES (:uuid, :email, :full_name, :password_hash, :role, :is_approved)
+            INSERT INTO users (uuid, email, full_name, password_hash, role, is_approved, total_xp)
+            VALUES (:uuid, :email, :full_name, :password_hash, :role, :is_approved, :total_xp)
         ");
         $stmt->execute([
             'uuid' => $data['uuid'],
@@ -52,6 +52,7 @@ class User
             'password_hash' => $data['password_hash'],
             'role' => $data['role'] ?? 'USER',
             'is_approved' => $data['is_approved'] ?? 0,
+            'total_xp' => $data['total_xp'] ?? 100,
         ]);
 
         $id = (int) $this->db->lastInsertId();

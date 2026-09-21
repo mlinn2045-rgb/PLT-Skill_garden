@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { FileText, Upload, Trash2, RefreshCw, Edit } from 'lucide-react'
+import { FileText, Upload, Trash2, RefreshCw, Edit, Link as LinkIcon, HardDrive, FileUp, CheckCircle2 } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { adminService, PdfMaterial } from '../../services/adminService'
+import { apiClient } from '../../services/apiClient'
 import { useAuthStore } from '../../stores/authStore'
 
 export const PDFMaterialsManagementPage: React.FC = () => {
@@ -20,6 +21,12 @@ export const PDFMaterialsManagementPage: React.FC = () => {
     const [editingMaterial, setEditingMaterial] = useState<PdfMaterial | null>(null)
     const [title, setTitle] = useState('')
     const [fileUrl, setFileUrl] = useState('')
+    const [uploadType, setUploadType] = useState<'URL' | 'FILE'>('URL')
+    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [isUploading, setIsUploading] = useState(false)
+    const [uploadProgress, setUploadProgress] = useState(0)
+    const [uploadSuccess, setUploadSuccess] = useState(false)
+    const [fileSizeBytes, setFileSizeBytes] = useState<number>(2500000)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const fetchMaterials = async () => {
@@ -44,14 +51,77 @@ export const PDFMaterialsManagementPage: React.FC = () => {
         setTimeout(() => setToastMsg(''), 4000)
     }
 
+    const resetModalState = () => {
+        setShowModal(false)
+        setTitle('')
+        setFileUrl('')
+        setEditingMaterial(null)
+        setUploadType('URL')
+        setSelectedFile(null)
+        setUploadSuccess(false)
+        setIsUploading(false)
+        setUploadProgress(0)
+        setFileSizeBytes(2500000)
+    }
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0]
+            setSelectedFile(file)
+            setUploadSuccess(false)
+            if (!title) {
+                setTitle(file.name)
+            }
+        }
+    }
+
+    const handleUploadLocalPdf = async () => {
+        if (!isLmsAdmin) {
+            alert('Chỉ tài khoản Admin LMS mới có quyền tải file PDF lên máy chủ!')
+            return
+        }
+        if (!selectedFile) return
+        setIsUploading(true)
+        setUploadProgress(20)
+
+        try {
+            const formData = new FormData()
+            formData.append('pdf_file', selectedFile)
+
+            setUploadProgress(50)
+            const res: any = await apiClient.post('/admin/upload-pdf.php', formData)
+
+            setUploadProgress(100)
+            if (res && res.success && (res.url || res.data?.url)) {
+                const pdfUrl = res.url || res.data?.url
+                const pdfName = res.original_name || res.data?.original_name || selectedFile.name
+                const pdfSize = res.size_bytes || res.data?.size_bytes || selectedFile.size
+
+                setFileUrl(pdfUrl)
+                setFileSizeBytes(pdfSize)
+                if (!title) {
+                    setTitle(pdfName)
+                }
+                setUploadSuccess(true)
+                showToast('Tải file PDF lên máy chủ thành công!')
+            } else {
+                alert(res?.message || 'Tải file PDF thất bại.')
+            }
+        } catch (err: any) {
+            alert(err.message || 'Lỗi kết nối khi tải file PDF từ máy.')
+        } finally {
+            setIsUploading(false)
+        }
+    }
+
     const handleCreateMaterial = async () => {
-        if (!title || !fileUrl) {
-            alert('Vui lòng điền đầy đủ Tiêu đề và URL file.')
+        if (!title.trim() || !fileUrl.trim()) {
+            alert('Vui lòng điền đầy đủ Tiêu đề và URL file (hoặc upload file từ máy).')
             return
         }
         setIsSubmitting(true)
         try {
-            const payload = { title, file_url: fileUrl, file_type: 'pdf', file_size_bytes: 2500000 }
+            const payload = { title: title.trim(), file_url: fileUrl.trim(), file_type: 'pdf', file_size_bytes: fileSizeBytes }
             if (editingMaterial) {
                 await adminService.updateMaterial(editingMaterial.id, payload)
                 showToast('Đã cập nhật tài liệu PDF thành công!')
@@ -59,10 +129,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                 await adminService.createMaterial(payload)
                 showToast('Đã thêm tài liệu PDF mới thành công!')
             }
-            setShowModal(false)
-            setTitle('')
-            setFileUrl('')
-            setEditingMaterial(null)
+            resetModalState()
             fetchMaterials()
         } catch (err: any) {
             alert(err.message || 'Thêm tài liệu thất bại.')
@@ -75,6 +142,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
         setEditingMaterial(material)
         setTitle(material.title)
         setFileUrl(material.file_url)
+        setUploadType('URL')
         setShowModal(true)
     }
 
@@ -96,7 +164,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                     <h1 className="text-2xl font-extrabold flex items-center gap-2">
                         <FileText className="w-6 h-6 text-[#3C4097]" /> Quản Lý Tài Liệu PDF & Tài Nguyên (API Thật)
                     </h1>
-                    <p className="text-xs text-[#6B6D7A] mt-1">Upload và quản lý các tài liệu tham khảo, Slide đính kèm từ CSDL MySQL.</p>
+                    <p className="text-xs text-[#6B6D7A] mt-1">Upload từ máy tính hoặc nhập đường dẫn URL để quản lý tài liệu tham khảo, Slide từ CSDL MySQL.</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" onClick={fetchMaterials} disabled={isLoading} className="font-bold flex items-center gap-1">
@@ -109,6 +177,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                                 alert('Chỉ tài khoản Admin LMS mới có quyền upload tài liệu PDF!')
                                 return
                             }
+                            resetModalState()
                             setShowModal(true)
                         }}
                         disabled={!isLmsAdmin}
@@ -197,17 +266,42 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                 )}
             </div>
 
-            {/* Create Modal */}
+            {/* Upload / Edit Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] max-w-md w-full space-y-4 shadow-2xl">
-                        <h3 className="text-lg font-bold flex items-center gap-2">
+                    <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] max-w-lg w-full space-y-4 shadow-2xl">
+                        <h3 className="text-lg font-bold flex items-center gap-2 text-[#20223A]">
                             <Upload className="w-5 h-5 text-[#3C4097]" /> {editingMaterial ? 'Sửa Tài Liệu PDF' : 'Upload Tài Liệu PDF Mới'}
                         </h3>
 
-                        <div className="space-y-3 text-xs">
+                        {/* Source Type Selector */}
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                            <button
+                                type="button"
+                                onClick={() => setUploadType('URL')}
+                                className={`p-3 rounded-xl border-2 font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${uploadType === 'URL'
+                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-900 shadow-xs'
+                                    : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                                    }`}
+                            >
+                                <LinkIcon className="w-4 h-4 text-indigo-600" /> Nhập Đường Dẫn URL
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setUploadType('FILE')}
+                                className={`p-3 rounded-xl border-2 font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${uploadType === 'FILE'
+                                    ? 'border-emerald-600 bg-emerald-50 text-emerald-900 shadow-xs'
+                                    : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                                    }`}
+                            >
+                                <HardDrive className="w-4 h-4 text-emerald-600" /> Tải File Từ Máy Tính
+                            </button>
+                        </div>
+
+                        <div className="space-y-4 text-xs">
                             <div>
-                                <label className="font-bold block mb-1">Tiêu đề tài liệu *</label>
+                                <label className="font-bold block mb-1 text-[#4A5568]">Tiêu đề tài liệu *</label>
                                 <input
                                     type="text"
                                     value={title}
@@ -216,21 +310,74 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                                     className="w-full p-2.5 border border-[#E2E4EB] rounded-xl focus:ring-2 focus:ring-[#3C4097] outline-none"
                                 />
                             </div>
-                            <div>
-                                <label className="font-bold block mb-1">Đường dẫn File (URL) *</label>
-                                <input
-                                    type="text"
-                                    value={fileUrl}
-                                    onChange={(e) => setFileUrl(e.target.value)}
-                                    placeholder="https://example.com/materials/react-slide.pdf"
-                                    className="w-full p-2.5 border border-[#E2E4EB] rounded-xl focus:ring-2 focus:ring-[#3C4097] outline-none font-mono"
-                                />
-                            </div>
+
+                            {uploadType === 'URL' ? (
+                                <div>
+                                    <label className="font-bold block mb-1 text-[#4A5568]">Đường dẫn File (URL) *</label>
+                                    <input
+                                        type="text"
+                                        value={fileUrl}
+                                        onChange={(e) => setFileUrl(e.target.value)}
+                                        placeholder="https://example.com/materials/react-slide.pdf"
+                                        className="w-full p-2.5 border border-[#E2E4EB] rounded-xl focus:ring-2 focus:ring-[#3C4097] outline-none font-mono"
+                                    />
+                                </div>
+                            ) : (
+                                <div className="space-y-3 bg-emerald-50/50 p-4 rounded-xl border border-emerald-200">
+                                    <div className="border-2 border-dashed border-emerald-300 rounded-xl p-5 text-center bg-white space-y-2">
+                                        <FileUp className="w-8 h-8 mx-auto text-emerald-600" />
+                                        <div>
+                                            <p className="font-bold text-[#20223A]">Bấm để chọn file PDF từ máy tính</p>
+                                            <p className="text-[11px] text-gray-500 mt-0.5">Hỗ trợ các file .pdf, .doc, .docx, .ppt (Tối đa 100MB)</p>
+                                        </div>
+
+                                        <input
+                                            type="file"
+                                            accept=".pdf,.doc,.docx,.ppt,.pptx,.txt"
+                                            onChange={handleFileSelect}
+                                            className="hidden"
+                                            id="local-pdf-input"
+                                        />
+                                        <label
+                                            htmlFor="local-pdf-input"
+                                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-600 text-white font-bold text-xs rounded-lg cursor-pointer hover:bg-emerald-700 transition-colors shadow-xs"
+                                        >
+                                            <Upload className="w-3.5 h-3.5" /> Chọn File PDF
+                                        </label>
+
+                                        {selectedFile && (
+                                            <div className="pt-1 text-xs font-bold text-emerald-800">
+                                                <span>Đã chọn: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {selectedFile && !uploadSuccess && (
+                                        <Button
+                                            type="button"
+                                            variant="indigo"
+                                            onClick={handleUploadLocalPdf}
+                                            disabled={isUploading}
+                                            className="w-full font-bold flex items-center justify-center gap-2 bg-emerald-700 hover:bg-emerald-800 border-none cursor-pointer"
+                                        >
+                                            {isUploading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                                            {isUploading ? `Đang Tải Lên Server (${uploadProgress}%)...` : 'Tải File PDF Lên Máy Chủ'}
+                                        </Button>
+                                    )}
+
+                                    {uploadSuccess && (
+                                        <div className="p-2.5 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-lg text-xs font-extrabold flex items-center gap-2">
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                                            <span className="truncate">Đã upload lên Server: {fileUrl}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
-                        <div className="flex justify-end gap-2 pt-2">
-                            <Button variant="outline" disabled={isSubmitting} onClick={() => { setShowModal(false); setEditingMaterial(null) }}>Hủy</Button>
-                            <Button variant="indigo" disabled={isSubmitting} onClick={handleCreateMaterial} className="font-bold">
+                        <div className="flex justify-end gap-2 pt-2 border-t border-[#E2E4EB]">
+                            <Button variant="outline" disabled={isSubmitting} onClick={resetModalState}>Hủy</Button>
+                            <Button variant="indigo" disabled={Boolean(isSubmitting || (uploadType === 'FILE' && selectedFile !== null && !uploadSuccess && !fileUrl))} onClick={handleCreateMaterial} className="font-bold">
                                 {isSubmitting ? 'Đang lưu...' : editingMaterial ? 'Lưu thay đổi' : 'Thêm tài liệu'}
                             </Button>
                         </div>

@@ -341,21 +341,13 @@ CREATE TABLE IF NOT EXISTS `system_configs` (
 -- INITIAL SEED DATA (SUPER ADMIN & SAMPLE PLANTS)
 -- ===================================================================
 
--- 1. Default Super Admin (Pass: Admin@123!)
+-- 1. Default Accounts (Passwords: admin123 & 123456)
 INSERT INTO `users` (`uuid`, `email`, `full_name`, `username`, `tag_id`, `password_hash`, `role`, `status`, `is_approved`, `level`, `total_xp`)
-VALUES (
-  '11111111-1111-1111-1111-111111111111',
-  'admin@skillgarden.com',
-  'Super Admin PLT',
-  'superadmin',
-  'SuperAdmin#0001',
-  '$2y$10$vO8f8rIeZcIqYV1N0Z7XUuK1J7Z0Y8Z9X0Y1Z2X3Y4Z5X6Y7Z8X9W', -- bcrypt
-  'SUPER_ADMIN',
-  'ACTIVE',
-  1,
-  99,
-  99999
-) ON DUPLICATE KEY UPDATE `id` = `id`;
+VALUES 
+  ('11111111-1111-1111-1111-111111111111', 'admin@pltsolutions.com', 'SkillGarden Super Admin', 'skillgarden_super_admin', 'SuperAdmin#0001', '$2y$10$a8Bp10rIzct6mia3Q3PoD.5SS8SYidJA.LhKo4Uh6BBRfGZ9OVn6iq', 'SUPER_ADMIN', 'ACTIVE', 1, 99, 99999),
+  ('22222222-2222-2222-2222-222222222222', 'lms.admin@pltsolutions.com', 'SkillGarden LMS Admin', 'lms_admin', 'LMSAdmin#0002', '$2y$10$a8Bp10rIzct6mia3Q3PoD.5SS8SYidJA.LhKo4Uh6BBRfGZ9OVn6iq', 'ADMIN', 'ACTIVE', 1, 10, 5000),
+  ('33333333-3333-3333-3333-333333333333', 'user_khoa@pltsolutions.com', 'Nguyễn Anh Khoa', 'user_khoa', 'UserKhoa#0003', '$2y$10$a8Bp10rIzct6mia3Q3PoD.5SS8SYidJA.LhKo4Uh6BBRfGZ9OVn6iq', 'USER', 'ACTIVE', 1, 5, 1250)
+ON DUPLICATE KEY UPDATE `password_hash` = VALUES(`password_hash`), `is_approved` = 1;
 
 -- 2. Seed Sample Plants
 INSERT INTO `plants` (`name`, `code`, `description`) VALUES
@@ -376,4 +368,44 @@ INSERT INTO `plant_stages` (`plant_id`, `stage_level`, `stage_name`, `required_p
 (1, 5, 'Nở hoa rực rỡ', 100)
 ON DUPLICATE KEY UPDATE `id` = `id`;
 
+-- 4. Seed Default Skills
+INSERT INTO `skills` (`id`, `title`, `slug`, `category`, `status`) VALUES
+(1, 'Frontend React 19 Mastery', 'frontend-react-19', 'Frontend', 'ACTIVE'),
+(2, 'Backend Node.js & NestJS', 'backend-nodejs-nestjs', 'Backend', 'ACTIVE'),
+(3, 'Python & Data Science', 'python-data-science', 'Data', 'ACTIVE'),
+(4, 'SQL & Relational Database', 'sql-database', 'Database', 'ACTIVE'),
+(5, 'DevOps & Cloud Infrastructure', 'devops-cloud', 'DevOps', 'ACTIVE'),
+(6, 'Software Testing & QA Mastery', 'software-testing-qa', 'QA', 'ACTIVE')
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
+
+-- 5. Seed Default Learning Paths
+INSERT INTO `learning_paths` (`id`, `skill_id`, `title`, `description`) VALUES
+(1, 1, 'Lộ trình Lập trình Frontend React 19 từ Zero đến Hero', 'Nắm vững kiến thức React 19, Components, Hooks và State Management.'),
+(2, 2, 'Lộ trình Lập trình Backend Node.js & NestJS', 'Xây dựng RESTful API chuẩn doanh nghiệp.'),
+(3, 3, 'Lộ trình Python & Data Science Thực Chiến', 'Phân tích dữ liệu và lập trình Python ứng dụng.'),
+(4, 4, 'Lộ trình Quản trị Cơ sở Dữ liệu SQL', 'Thiết kế CSDL và truy vấn dữ liệu tối ưu.'),
+(5, 5, 'Lộ trình DevOps & Docker/CI-CD', 'Quản trị hạ tầng và tự động hóa quy trình.'),
+(6, 6, 'Lộ trình Kiểm thử Phần mềm Chuyên nghiệp QA', 'Unit testing, Integration testing và E2E testing.')
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
+
+-- 6. Seed Default Modules
+INSERT INTO `modules` (`id`, `learning_path_id`, `title`, `description`, `order_index`) VALUES
+(1, 1, 'Chương 1: Kiến thức cơ bản & React 19 Core', 'Các khái niệm nền tảng quan trọng của React 19.', 1),
+(2, 1, 'Chương 2: Advanced Hooks & State Management', 'Quản lý state phức tạp và tối ưu render.', 2),
+(3, 2, 'Chương 1: Kiến thức nền tảng Backend', 'Tổng quan về server và kiến trúc API.', 1),
+(4, 3, 'Chương 1: Lập trình Python cơ bản', 'Cú pháp Python và cấu trúc dữ liệu.', 1),
+(5, 4, 'Chương 1: SQL Fundamentals', 'Thiết kế bảng và truy vấn SELECT.', 1),
+(6, 5, 'Chương 1: DevOps Basics', 'Khái niệm DevOps và Containerization.', 1),
+(7, 6, 'Chương 1: QA Fundamentals', 'Quy trình kiểm thử phần mềm.', 1)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
+
+-- 7. Seed Default Lessons
+INSERT INTO `lessons` (`id`, `module_id`, `title`, `slug`, `description`, `content_type`, `video_url`, `video_duration_seconds`, `xp_reward`, `order_index`, `is_published`) VALUES
+(1, 1, '1. Giới thiệu tổng quan React 19 & Architecture', 'gioi-thieu-react-19', 'Bài học tổng quan về React 19, Virtual DOM và kiến trúc ứng dụng mới.', 'VIDEO', 'https://www.youtube.com/watch?v=s2skans2dP4', 900, 50, 1, 1),
+(2, 1, '2. React Components, JSX & Props Deep Dive', 'react-components-props', 'Hướng dẫn xây dựng Functional Component, JSX syntax và giao tiếp dữ liệu qua Props.', 'VIDEO', 'https://www.youtube.com/watch?v=bMknfKXIFA8', 1200, 50, 2, 1),
+(3, 1, '3. State Management với useState & useReducer', 'state-management-usestate', 'Quản lý trạng thái giao diện UI mượt mà với useState và useReducer hook.', 'VIDEO', 'https://www.youtube.com/watch?v=0ZJgOiR4LUs', 1500, 50, 3, 1),
+(4, 2, '4. Side Effects & Lifecycle với useEffect', 'side-effects-useeffect', 'Xử lý bất đồng bộ, call API và giải phóng bộ nhớ với useEffect hook.', 'VIDEO', 'https://www.youtube.com/watch?v=0ZJgOiR4LUs', 1800, 100, 1, 1)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `video_url` = VALUES(`video_url`);
+
 SET FOREIGN_KEY_CHECKS = 1;
+

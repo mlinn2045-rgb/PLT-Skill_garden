@@ -8,10 +8,29 @@ import { useAuthStore } from '../../stores/authStore'
 
 export const QuizRoomPage: React.FC = () => {
     const { id = '1' } = useParams<{ id: string }>()
-    const [searchParams] = useSearchParams()
+    const [searchParams, setSearchParams] = useSearchParams()
     const chapterId = searchParams.get('chapter') || '1'
     const { user } = useAuthStore()
     const userKey = user?.email || 'guest'
+
+    // Auto-advance to next uncompleted chapter quiz when navigating to Quiz Room without explicit chapter
+    useEffect(() => {
+        if (!searchParams.get('chapter')) {
+            let targetChapter = '1'
+            for (let c = 1; c <= 5; c++) {
+                const progress = getChapterProgress(id, String(c), userKey)
+                if (!progress.quizCompleted) {
+                    targetChapter = String(c)
+                    break
+                }
+                targetChapter = String(c + 1)
+            }
+            if (targetChapter !== '1') {
+                setSearchParams({ chapter: targetChapter }, { replace: true })
+            }
+        }
+    }, [id, userKey, searchParams, setSearchParams])
+
     const chapterProgress = getChapterProgress(id, chapterId, userKey)
     const quizUnlocked = isChapterUnlocked(id, chapterId, userKey) && chapterProgress.videoCompleted && chapterProgress.pdfCompleted
     const [timeLeft, setTimeLeft] = useState(600) // 10 mins
@@ -86,33 +105,33 @@ export const QuizRoomPage: React.FC = () => {
 
     if (!quizUnlocked) {
         return (
-            <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12">
+            <div className="min-h-screen bg-[#FAFAF7] dark:bg-gray-950 text-[#20223A] dark:text-gray-100 pb-12">
                 <div className="max-w-2xl mx-auto px-6 pt-12">
-                    <div className="bg-white rounded-2xl p-8 border border-amber-200 shadow-md text-center space-y-5">
-                        <div className="w-16 h-16 bg-amber-50 text-amber-600 rounded-full mx-auto flex items-center justify-center">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-amber-200 dark:border-amber-800/80 shadow-md text-center space-y-5">
+                        <div className="w-16 h-16 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 rounded-full mx-auto flex items-center justify-center">
                             <Lock className="w-8 h-8" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-extrabold">Quiz đang bị khóa</h1>
-                            <p className="text-sm text-[#6B6D7A] mt-2">
+                            <h1 className="text-2xl font-extrabold text-[#20223A] dark:text-white">Quiz đang bị khóa</h1>
+                            <p className="text-sm text-[#6B6D7A] dark:text-gray-300 mt-2">
                                 Bạn cần hoàn thành video và đọc tài liệu PDF của chương này trước khi làm quiz.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
-                            <div className={`rounded-xl border p-4 ${chapterProgress.videoCompleted ? 'border-emerald-200 bg-emerald-50' : 'border-indigo-200 bg-indigo-50'}`}>
+                            <div className={`rounded-xl border p-4 ${chapterProgress.videoCompleted ? 'border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200' : 'border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-200'}`}>
                                 <div className="flex items-center gap-2 font-bold text-sm">
                                     <PlayCircle className="w-4 h-4" />
                                     Video bài học
                                 </div>
-                                <p className="text-xs mt-1 text-[#6B6D7A]">{chapterProgress.videoCompleted ? 'Đã hoàn thành' : 'Chưa hoàn thành'}</p>
+                                <p className="text-xs mt-1 opacity-80">{chapterProgress.videoCompleted ? 'Đã hoàn thành' : 'Chưa hoàn thành'}</p>
                             </div>
-                            <div className={`rounded-xl border p-4 ${chapterProgress.pdfCompleted ? 'border-emerald-200 bg-emerald-50' : 'border-indigo-200 bg-indigo-50'}`}>
+                            <div className={`rounded-xl border p-4 ${chapterProgress.pdfCompleted ? 'border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200' : 'border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-200'}`}>
                                 <div className="flex items-center gap-2 font-bold text-sm">
                                     <FileText className="w-4 h-4" />
                                     Tài liệu PDF
                                 </div>
-                                <p className="text-xs mt-1 text-[#6B6D7A]">{chapterProgress.pdfCompleted ? 'Đã đọc xong' : 'Chưa hoàn thành'}</p>
+                                <p className="text-xs mt-1 opacity-80">{chapterProgress.pdfCompleted ? 'Đã đọc xong' : 'Chưa hoàn thành'}</p>
                             </div>
                         </div>
 
@@ -135,15 +154,15 @@ export const QuizRoomPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12">
+        <div className="min-h-screen bg-[#FAFAF7] dark:bg-gray-950 text-[#20223A] dark:text-gray-100 pb-12">
             {/* Top Bar */}
-            <div className="bg-white border-b border-[#E2E4EB] px-6 py-4 flex items-center justify-between shadow-sm">
+            <div className="bg-white dark:bg-gray-900 border-b border-[#E2E4EB] dark:border-gray-800 px-6 py-4 flex items-center justify-between shadow-sm">
                 <div>
-                    <h1 className="text-lg font-bold text-[#20223A]">Quiz Đánh Giá Năng Lực React Core</h1>
-                    <p className="text-xs text-[#6B6D7A]">Thời gian làm bài: 10 phút | Thưởng: 100 XP + Tăng trưởng mầm cây</p>
+                    <h1 className="text-lg font-bold text-[#20223A] dark:text-white">Quiz Đánh Giá Năng Lực React Core</h1>
+                    <p className="text-xs text-[#6B6D7A] dark:text-gray-400">Thời gian làm bài: 10 phút | Thưởng: 100 XP + Tăng trưởng mầm cây</p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 bg-[#FFFBEB] text-[#D97706] px-4 py-1.5 rounded-full font-mono text-sm font-bold border border-[#FEF3C7]">
+                    <div className="flex items-center gap-2 bg-[#FFFBEB] dark:bg-amber-950/80 text-[#D97706] dark:text-amber-300 px-4 py-1.5 rounded-full font-mono text-sm font-bold border border-[#FEF3C7] dark:border-amber-800">
                         <Timer className="w-4 h-4" />
                         <span>{formatTime(timeLeft)}</span>
                     </div>
@@ -157,15 +176,15 @@ export const QuizRoomPage: React.FC = () => {
 
             <div className="max-w-4xl mx-auto px-6 pt-8 space-y-6">
                 {!isSubmitted ? (
-                    <div className="bg-white rounded-2xl p-8 border border-[#E2E4EB] shadow-md space-y-6">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-[#E2E4EB] dark:border-gray-800 shadow-md space-y-6">
                         {/* Question progress */}
-                        <div className="flex items-center justify-between text-xs font-bold text-[#6B6D7A]">
+                        <div className="flex items-center justify-between text-xs font-bold text-[#6B6D7A] dark:text-gray-400">
                             <span>Câu hỏi {currentQuestion + 1} trên {questions.length}</span>
                             <span>{Math.round(((currentQuestion + 1) / questions.length) * 100)}% hoàn thành</span>
                         </div>
 
                         {/* Progress Bar */}
-                        <div className="w-full bg-[#E2E4EB] h-2 rounded-full overflow-hidden">
+                        <div className="w-full bg-[#E2E4EB] dark:bg-gray-800 h-2 rounded-full overflow-hidden">
                             <div
                                 className="bg-[#6FAF7B] h-full transition-all duration-300"
                                 style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
@@ -173,7 +192,7 @@ export const QuizRoomPage: React.FC = () => {
                         </div>
 
                         {/* Question text */}
-                        <h2 className="text-xl font-bold text-[#20223A] leading-snug">
+                        <h2 className="text-xl font-bold text-[#20223A] dark:text-white leading-snug">
                             {questions[currentQuestion].question}
                         </h2>
 
@@ -184,20 +203,20 @@ export const QuizRoomPage: React.FC = () => {
                                     key={idx}
                                     onClick={() => handleSelectOption(idx)}
                                     className={`w-full p-4 rounded-xl border text-left text-sm font-medium transition-all flex items-center justify-between ${selectedAnswers[currentQuestion] === idx
-                                            ? 'border-[#3C4097] bg-[#F4F5FF] text-[#3C4097] shadow-sm'
-                                            : 'border-[#E2E4EB] hover:bg-gray-50 text-[#20223A]'
+                                        ? 'border-[#3C4097] dark:border-indigo-500 bg-[#F4F5FF] dark:bg-indigo-950/80 text-[#3C4097] dark:text-indigo-300 shadow-sm'
+                                        : 'border-[#E2E4EB] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-[#20223A] dark:text-gray-200 bg-white dark:bg-gray-800/80'
                                         }`}
                                 >
                                     <span>{String.fromCharCode(65 + idx)}. {opt}</span>
                                     {selectedAnswers[currentQuestion] === idx && (
-                                        <CheckCircle className="w-5 h-5 text-[#3C4097]" />
+                                        <CheckCircle className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" />
                                     )}
                                 </button>
                             ))}
                         </div>
 
                         {/* Question Nav */}
-                        <div className="flex justify-between pt-4 border-t border-[#E2E4EB]">
+                        <div className="flex justify-between pt-4 border-t border-[#E2E4EB] dark:border-gray-800">
                             <Button
                                 variant="outline"
                                 disabled={currentQuestion === 0}
@@ -219,34 +238,45 @@ export const QuizRoomPage: React.FC = () => {
                     </div>
                 ) : (
                     /* Results Card */
-                    <div className="bg-white rounded-2xl p-8 border border-[#E2E4EB] shadow-xl text-center space-y-6">
-                        <div className="w-20 h-20 bg-[#DCEFE1] text-[#2C6A3D] rounded-full mx-auto flex items-center justify-center shadow-lg animate-bounce">
-                            <Sparkles className="w-10 h-10" />
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-[#E2E4EB] dark:border-gray-800 shadow-xl text-center space-y-6">
+                        <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 rounded-full mx-auto flex items-center justify-center shadow-lg animate-bounce">
+                            <Sparkles className="w-10 h-10 text-yellow-500" />
                         </div>
 
-                        <div>
-                            <h2 className="text-2xl font-extrabold text-[#20223A]">Xuất sắc! Bạn đã hoàn thành Quiz</h2>
-                            <p className="text-sm text-[#6B6D7A] mt-1">
-                                Kết quả: <span className="font-bold text-[#3C4097]">{calculateScore()} / {questions.length} câu đúng</span>
+                        <div className="space-y-2">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-black rounded-full border border-emerald-300 dark:border-emerald-800">
+                                🔓 CHẶNG BÀI HỌC #{Number(chapterId) + 1} ĐÃ ĐƯỢC MỞ KHÓA!
+                            </span>
+                            <h2 className="text-2xl font-extrabold text-[#20223A] dark:text-white">Xuất sắc! Bạn đã vượt qua bài Quiz</h2>
+                            <p className="text-sm text-[#6B6D7A] dark:text-gray-300">
+                                Kết quả: <span className="font-bold text-[#3C4097] dark:text-indigo-400">{calculateScore()} / {questions.length} câu đúng</span>
                             </p>
                         </div>
 
-                        <div className="bg-[#FAFAF7] border border-[#E2E4EB] rounded-2xl p-6 grid grid-cols-2 gap-4 max-w-md mx-auto">
+                        <div className="bg-[#FAFAF7] dark:bg-gray-800/80 border border-[#E2E4EB] dark:border-gray-700 rounded-2xl p-6 grid grid-cols-2 gap-4 max-w-md mx-auto">
                             <div className="text-center">
-                                <p className="text-xs text-[#6B6D7A]">XP Tích lũy</p>
-                                <p className="text-2xl font-extrabold text-[#3C4097]">+100 XP</p>
+                                <p className="text-xs text-[#6B6D7A] dark:text-gray-400">XP Tích lũy</p>
+                                <p className="text-2xl font-extrabold text-[#3C4097] dark:text-indigo-400">+100 XP</p>
                             </div>
                             <div className="text-center">
-                                <p className="text-xs text-[#6B6D7A]">Tăng trưởng Cây</p>
-                                <p className="text-2xl font-extrabold text-[#6FAF7B]">+15% Mầm</p>
+                                <p className="text-xs text-[#6B6D7A] dark:text-gray-400">Tăng trưởng Cây</p>
+                                <p className="text-2xl font-extrabold text-[#6FAF7B] dark:text-emerald-400">+15% Mầm</p>
                             </div>
                         </div>
 
-                        <Link to={`/dashboard/learning-path/${id}`}>
-                            <Button variant="indigo" size="lg" className="font-bold">
-                                Về lộ trình học tiếp
-                            </Button>
-                        </Link>
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+                            <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=${Number(chapterId) + 1}`}>
+                                <Button variant="indigo" size="lg" className="font-black flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 shadow-lg cursor-pointer">
+                                    <PlayCircle className="w-5 h-5 text-yellow-300" />
+                                    <span>Học Video Chặng #{Number(chapterId) + 1} Mới 🎬</span>
+                                </Button>
+                            </Link>
+                            <Link to={`/dashboard/learning-path/${id}`}>
+                                <Button variant="outline" size="lg" className="font-bold cursor-pointer">
+                                    Xem Cây Kỹ Năng & Lộ Trình 🌱
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 )}
             </div>

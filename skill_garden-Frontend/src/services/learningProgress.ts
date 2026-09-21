@@ -46,22 +46,34 @@ export const isSkillGrowing = (skillId: string, userKey = 'guest') => {
 
 export const getSkillGrowth = (skillId: string, userKey = 'guest') => {
     const chapters = ['1', '2', '3'].map(chapterId => getChapterProgress(skillId, chapterId, userKey))
-    const completedChapters = chapters.filter(chapter => chapter.quizCompleted).length
 
-    if (completedChapters >= 3) {
-        return { stageName: 'Đơm hoa' as const, stageLevel: 4, progress: 75, xpEarned: 300 }
+    let totalScore = 0
+    chapters.forEach(ch => {
+        if (ch.quizCompleted) {
+            totalScore += 100
+        } else if (ch.videoCompleted && ch.pdfCompleted) {
+            totalScore += 75
+        } else if (ch.videoCompleted || ch.pdfCompleted) {
+            totalScore += 50
+        }
+    })
+
+    const progress = Math.min(100, Math.round((totalScore / 300) * 100))
+
+    if (progress >= 100) {
+        return { stageName: 'Đơm hoa 🌸' as const, stageLevel: 4, progress: 100, xpEarned: 300 }
     }
-    if (completedChapters === 2) {
-        return { stageName: 'Cây xòe lá' as const, stageLevel: 3, progress: 40, xpEarned: 200 }
+    if (progress >= 50) {
+        return { stageName: 'Cây xòe lá 🌿' as const, stageLevel: 3, progress, xpEarned: 200 }
     }
-    if (completedChapters === 1) {
-        return { stageName: 'Mầm xanh' as const, stageLevel: 2, progress: 15, xpEarned: 100 }
+    if (progress > 0) {
+        return { stageName: 'Mầm xanh 🌱' as const, stageLevel: 2, progress, xpEarned: 100 }
     }
-    return { stageName: 'Hạt giống' as const, stageLevel: 1, progress: 0, xpEarned: 0 }
+    return { stageName: 'Hạt giống 🌰' as const, stageLevel: 1, progress: 0, xpEarned: 0 }
 }
 
 export const isSkillCompleted = (skillId: string, userKey = 'guest') =>
-    getSkillGrowth(skillId, userKey).stageName === 'Đơm hoa'
+    getSkillGrowth(skillId, userKey).progress >= 100
 
 export const isChapterUnlocked = (skillId: string, chapterId: string, userKey = 'guest') => {
     const chapterNumber = Number(chapterId)

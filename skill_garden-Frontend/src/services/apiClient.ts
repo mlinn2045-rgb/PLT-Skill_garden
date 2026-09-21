@@ -43,9 +43,11 @@ export async function request<T = any>(
     const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
 
     const isFormData = options.body instanceof FormData;
+    const token = localStorage.getItem('skill_garden_token') || localStorage.getItem('token');
 
     const headers: Record<string, string> = {
         ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         ...(options.headers as Record<string, string> || {}),
     };
 

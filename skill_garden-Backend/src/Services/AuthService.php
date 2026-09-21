@@ -145,6 +145,7 @@ class AuthService
         $this->setAuthCookie($token);
 
         return [
+            'token' => $token,
             'user' => [
                 'uuid' => $user['uuid'],
                 'email' => $user['email'],
