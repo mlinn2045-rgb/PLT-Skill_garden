@@ -117,7 +117,9 @@ export const DashboardLayout: React.FC = () => {
                     {/* Navigation links */}
                     <nav className="space-y-1">
                         {currentNavItems.map((item) => {
-                            const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/')
+                            const isActive = item.path === '/dashboard'
+                                ? location.pathname === '/dashboard'
+                                : location.pathname === item.path || location.pathname.startsWith(item.path + '/')
                             return (
                                 <NavLink
                                     key={item.path}
@@ -300,9 +302,8 @@ export const DashboardLayout: React.FC = () => {
                                 size="sm"
                             />
                             <div className="hidden md:block text-left">
-                                <div className="text-xs font-bold text-[#1A2E22] dark:text-white flex items-center gap-1">
+                                <div className="text-xs font-bold text-[#1A2E22] dark:text-white">
                                     <span>{user?.full_name || 'User'}</span>
-                                    <ChevronDown className="w-3.5 h-3.5 text-[#718096] dark:text-gray-400" />
                                 </div>
                             </div>
                         </div>

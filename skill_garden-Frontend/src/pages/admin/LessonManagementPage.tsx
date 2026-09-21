@@ -1,19 +1,46 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Layers, Plus, Video, FileText, HelpCircle, Edit, Trash2, RefreshCw } from 'lucide-react'
+import { Layers, Plus, Video, FileText, HelpCircle, Edit, Trash2, RefreshCw, X, Save, Link as LinkIcon, Sparkles, ExternalLink, CheckCircle2 } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
+import { Input } from '../../components/ui/Input'
 import { courseService, SkillItem } from '../../services/courseService'
 import { apiClient } from '../../services/apiClient'
 import { useNavigate } from 'react-router-dom'
 
 interface AdminLesson {
-    id: number
+    id: string | number
     title: string
+    video_url?: string
+    videoUrl?: string
+    description?: string
     content_type: string
     xp_reward: number
     module_title?: string
-    skill_id: number
+    skill_id: number | string
     skill_title: string
     is_published: number
+    is_default?: boolean
+    is_custom?: boolean
+    backendId?: number
+}
+
+const DEFAULT_SKILL_LESSONS: Record<string, Array<{ id: number; title: string; videoUrl: string; description: string }>> = {}
+
+const DEFAULT_SKILL_NAMES_MAP: Record<string, string> = {
+    '1': 'Frontend React 19 Mastery (Cây Hoa Anh Đào 🌸)',
+    '2': 'Backend NestJS & Node.js System (Cây Cổ Thụ 🌳)',
+    '3': 'Database SQL & Architect (Cây Tre Trăm Đốt 🎋)',
+    '4': 'Python & Machine Learning (Cây Xương Rồng 🌵)',
+    '5': 'Software Testing (Cây Hướng Dương 🌻)',
+    '6': 'Flutter & React Native Mobile (Cây Dừa 🌴)',
+}
+
+const getSkillDisplayName = (skillId: string | number, apiSkills: SkillItem[] = []): string => {
+    const sIdStr = String(skillId)
+    const foundApi = apiSkills.find(s => String(s.id) === sIdStr)
+    if (foundApi && foundApi.title && !foundApi.title.toLowerCase().startsWith('skill #')) {
+        return foundApi.title
+    }
+    return DEFAULT_SKILL_NAMES_MAP[sIdStr] || `Kỹ Năng Kỹ Thuật #${sIdStr}`
 }
 
 export const LessonManagementPage: React.FC = () => {
@@ -23,14 +50,71 @@ export const LessonManagementPage: React.FC = () => {
     const [lessons, setLessons] = useState<AdminLesson[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [errorMsg, setErrorMsg] = useState('')
+    const [successMsg, setSuccessMsg] = useState('')
 
-    const loadLessons = async (skillId = selectedSkillId) => {
+    // Edit Modal State
+    const [editingLesson, setEditingLesson] = useState<AdminLesson | null>(null)
+    const [editTitle, setEditTitle] = useState('')
+    const [editVideoUrl, setEditVideoUrl] = useState('')
+    const [editDescription, setEditDescription] = useState('')
+    const [editXpReward, setEditXpReward] = useState('50')
+    const [isSavingEdit, setIsSavingEdit] = useState(false)
+
+    const cleanLegacyMockData = () => {
+        try {
+            localStorage.removeItem('skillgarden_custom_lessons')
+            localStorage.removeItem('skillgarden_default_lesson_overrides')
+        } catch {
+            // ignore
+        }
+    }
+
+    const handleClearMockData = () => {
+        if (!confirm('Bạn có chắc chắn muốn xóa toàn bộ dữ liệu bài học mẫu để bắt đầu tự thêm bài học mới?')) return
+        cleanLegacyMockData()
+        window.dispatchEvent(new Event('skillgarden_lessons_updated'))
+        void loadAllLessons()
+        setSuccessMsg('🧹 Đã xóa toàn bộ dữ liệu bài học mẫu thành công! Bạn có thể bắt đầu tự thêm bài học mới.')
+        setTimeout(() => setSuccessMsg(''), 5000)
+    }
+
+    const loadAllLessons = async (skillId = selectedSkillId, activeSkills = skills) => {
+        cleanLegacyMockData()
         setIsLoading(true)
         setErrorMsg('')
         try {
-            const query = skillId ? `?skill_id=${encodeURIComponent(skillId)}` : ''
-            const response = await apiClient.get<AdminLesson[]>(`/admin/lessons.php${query}`)
-            setLessons(response.data || [])
+            // 1. Fetch from backend
+            let backendLessons: any[] = []
+            try {
+                const query = skillId ? `?skill_id=${encodeURIComponent(skillId)}` : ''
+                const response = await apiClient.get<any[]>(`/admin/lessons.php${query}`)
+                if (Array.isArray(response.data)) {
+                    backendLessons = response.data
+                }
+            } catch {
+                // Ignore backend fetch errors to fallback cleanly
+            }
+
+            const combined: AdminLesson[] = backendLessons.map((item) => {
+                return {
+                    id: item.id,
+                    backendId: Number(item.id),
+                    title: item.title,
+                    video_url: item.video_url || item.videoUrl,
+                    videoUrl: item.video_url || item.videoUrl,
+                    description: item.description,
+                    content_type: item.content_type || 'VIDEO',
+                    xp_reward: Number(item.xp_reward) || 50,
+                    module_title: item.module_title || 'Chương chính',
+                    skill_id: item.skill_id,
+                    skill_title: item.skill_title && !item.skill_title.toLowerCase().startsWith('skill #')
+                        ? item.skill_title
+                        : getSkillDisplayName(item.skill_id, activeSkills),
+                    is_published: item.is_published ?? 1
+                }
+            })
+
+            setLessons(combined)
         } catch (error: any) {
             setErrorMsg(error.message || 'Không thể tải danh sách bài học.')
         } finally {
@@ -39,24 +123,113 @@ export const LessonManagementPage: React.FC = () => {
     }
 
     useEffect(() => {
-        courseService.getSkills().then(setSkills).catch(() => setSkills([]))
-        void loadLessons('')
+        courseService.getSkills().then(res => {
+            setSkills(res)
+            void loadAllLessons(selectedSkillId, res)
+        }).catch(() => {
+            setSkills([])
+            void loadAllLessons(selectedSkillId, [])
+        })
     }, [])
 
+    useEffect(() => {
+        void loadAllLessons(selectedSkillId, skills)
+    }, [selectedSkillId])
+
+    const availableSkills = useMemo(() => {
+        const mergedMap = new Map<string, string>()
+
+        Object.entries(DEFAULT_SKILL_NAMES_MAP).forEach(([id, name]) => {
+            mergedMap.set(id, name)
+        })
+
+        skills.forEach(s => {
+            if (s.title && !s.title.toLowerCase().startsWith('skill #')) {
+                mergedMap.set(String(s.id), s.title)
+            }
+        })
+
+        return Array.from(mergedMap.entries()).map(([id, title]) => ({ id, title }))
+    }, [skills])
+
     const groupedLessons = useMemo(() => lessons.reduce<Record<string, AdminLesson[]>>((groups, lesson) => {
-        const key = lesson.skill_title || `Skill #${lesson.skill_id}`
+        const key = lesson.skill_title || getSkillDisplayName(lesson.skill_id, skills)
         groups[key] = groups[key] || []
         groups[key].push(lesson)
         return groups
-    }, {}), [lessons])
+    }, {}), [lessons, skills])
 
     const handleDelete = async (lesson: AdminLesson) => {
-        if (!confirm(`Bạn có chắc chắn muốn xóa bài "${lesson.title}"?`)) return
+        if (!confirm(`Bạn có chắc chắn muốn xóa bài học "${lesson.title}"?`)) return
         try {
-            await apiClient.delete(`/admin/lessons.php?id=${lesson.id}`)
-            await loadLessons()
+            if (lesson.backendId) {
+                await apiClient.delete(`/admin/lessons.php?id=${lesson.backendId}`)
+            }
+            window.dispatchEvent(new Event('skillgarden_lessons_updated'))
+            await loadAllLessons()
+            setSuccessMsg(`🎉 Đã xóa bài học "${lesson.title}" thành công!`)
+            setTimeout(() => setSuccessMsg(''), 4000)
         } catch (error: any) {
             alert(error.message || 'Không thể xóa bài học.')
+        }
+    }
+
+    const handleOpenEdit = (lesson: AdminLesson) => {
+        setEditingLesson(lesson)
+        setEditTitle(lesson.title || '')
+        setEditVideoUrl(lesson.video_url || lesson.videoUrl || '')
+        setEditDescription(lesson.description || '')
+        setEditXpReward(String(lesson.xp_reward || 50))
+    }
+
+    const handleSaveEdit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!editingLesson) return
+        if (!editTitle.trim()) {
+            alert('Vui lòng nhập tên bài học!')
+            return
+        }
+        if (!editVideoUrl.trim()) {
+            alert('Vui lòng nhập đường dẫn video!')
+            return
+        }
+
+        setIsSavingEdit(true)
+        try {
+            const updatedTitle = editTitle.trim()
+            let updatedVideoUrl = editVideoUrl.trim()
+            const updatedDesc = editDescription.trim()
+            const updatedXp = Number(editXpReward) || 50
+
+            // Extract YouTube ID if it is a YouTube link (watch, youtu.be, shorts, embed, live)
+            const watchMatch = updatedVideoUrl.match(/[?&]v=([^&]+)/i) || updatedVideoUrl.match(/youtu\.be\/([^?&]+)/i) || updatedVideoUrl.match(/\/shorts\/([^?&]+)/i) || updatedVideoUrl.match(/\/embed\/([^?&]+)/i)
+            if (watchMatch?.[1]) {
+                updatedVideoUrl = `https://www.youtube.com/embed/${watchMatch[1]}`
+            }
+
+            // Update lesson via backend API (MySQL is the single source of truth)
+            if (editingLesson.backendId) {
+                await apiClient.patch('/admin/lessons.php', {
+                    id: editingLesson.backendId,
+                    title: updatedTitle,
+                    video_url: updatedVideoUrl,
+                    description: updatedDesc,
+                    xp_reward: updatedXp
+                })
+            }
+
+            // Clean any legacy localStorage data
+            cleanLegacyMockData()
+
+            window.dispatchEvent(new Event('skillgarden_lessons_updated'))
+            setEditingLesson(null)
+            await loadAllLessons()
+            setSuccessMsg(`🎉 Đã cập nhật bài học "${updatedTitle}" thành công! Dữ liệu đã đồng bộ sang học viên.`)
+            setTimeout(() => setSuccessMsg(''), 5000)
+        } catch (err: any) {
+            alert(err.message || 'Không thể lưu thay đổi bài học.')
+        } finally {
+            setIsSavingEdit(false)
         }
     }
 
@@ -68,35 +241,258 @@ export const LessonManagementPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-6">
+            {/* Header */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-sm">
                 <div>
                     <h1 className="text-2xl font-extrabold flex items-center gap-2">
-                        <Layers className="w-6 h-6 text-[#3C4097]" /> Quản Lý Bài Học Theo Skill
+                        <Layers className="w-6 h-6 text-[#3C4097]" /> Quản Lý Bài Học Theo Skill & Chỉnh Sửa Video
                     </h1>
-                    <p className="text-xs text-[#6B6D7A] mt-1">Chọn skill để xem, sửa hoặc xóa bài học thuộc đúng lộ trình.</p>
+                    <p className="text-xs text-[#6B6D7A] mt-1">
+                        Xem danh sách bài học thuộc từng Skill, chỉnh sửa Tên bài học và Link Video trực tiếp để cập nhật sang học viên.
+                    </p>
                 </div>
-                <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => void loadLessons()} disabled={isLoading} className="font-bold flex items-center gap-1.5"><RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại</Button>
-                    <Button variant="indigo" onClick={() => navigate('/dashboard/admin/create-video-lesson')} className="font-bold flex items-center gap-1.5"><Plus className="w-4 h-4" /> Tạo Bài Học Mới</Button>
+                <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" onClick={handleClearMockData} className="font-bold text-rose-600 border-rose-200 hover:bg-rose-50 flex items-center gap-1.5 cursor-pointer" title="Xóa bỏ toàn bộ bài học mẫu cũ trong bộ nhớ">
+                        <Trash2 className="w-4 h-4 text-rose-500" /> Xóa Dữ Liệu Mẫu
+                    </Button>
+                    <Button variant="outline" onClick={() => void loadAllLessons()} disabled={isLoading} className="font-bold flex items-center gap-1.5 cursor-pointer">
+                        <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
+                    </Button>
+                    <Button variant="indigo" onClick={() => navigate('/dashboard/admin/create-video-lesson')} className="font-bold flex items-center gap-1.5 cursor-pointer">
+                        <Plus className="w-4 h-4" /> Tạo Bài Học Mới
+                    </Button>
                 </div>
             </div>
 
-            <div className="bg-white p-4 rounded-2xl border border-[#E2E4EB] shadow-sm flex flex-col sm:flex-row sm:items-center gap-3">
-                <label htmlFor="lesson-skill-filter" className="text-xs font-extrabold text-[#4A5568]">LỌC THEO SKILL</label>
-                <select id="lesson-skill-filter" value={selectedSkillId} onChange={(event) => { setSelectedSkillId(event.target.value); void loadLessons(event.target.value) }} className="w-full sm:max-w-md px-3 py-2 rounded-xl border border-[#E2E4EB] bg-[#FAFAF7] text-sm font-bold outline-none focus:ring-2 focus:ring-[#3C4097]">
-                    <option value="">Tất cả skill</option>
-                    {skills.map((skill) => <option key={skill.id} value={skill.id}>{skill.title}</option>)}
-                </select>
-                <span className="text-xs text-[#718096]">{lessons.length} bài học</span>
+            {/* Filter by Skill */}
+            <div className="bg-white p-4 rounded-2xl border border-[#E2E4EB] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 w-full sm:max-w-md">
+                    <label htmlFor="lesson-skill-filter" className="text-xs font-extrabold text-[#4A5568] shrink-0">LỌC THEO SKILL</label>
+                    <select
+                        id="lesson-skill-filter"
+                        value={selectedSkillId}
+                        onChange={(event) => setSelectedSkillId(event.target.value)}
+                        className="w-full px-3 py-2 rounded-xl border border-[#E2E4EB] bg-[#FAFAF7] text-sm font-bold outline-none focus:ring-2 focus:ring-[#3C4097]"
+                    >
+                        <option value="">🎯 Tất cả Kỹ Năng ({availableSkills.length} Kỹ Năng)</option>
+                        {availableSkills.map((skill) => (
+                            <option key={skill.id} value={skill.id}>{skill.title}</option>
+                        ))}
+                    </select>
+                </div>
+                <span className="text-xs font-extrabold text-[#3C4097] bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
+                    Tổng số: {lessons.length} bài học
+                </span>
             </div>
 
-            {errorMsg && <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-bold">{errorMsg}</div>}
-            {isLoading ? <div className="p-12 text-center bg-white rounded-2xl border border-[#E2E4EB] text-xs font-bold text-[#6B6D7A]">Đang tải bài học...</div> : Object.keys(groupedLessons).length === 0 ? <div className="p-12 text-center bg-white rounded-2xl border border-[#E2E4EB] text-xs text-[#6B6D7A]">Skill này chưa có bài học.</div> : <div className="space-y-6">
-                {Object.entries(groupedLessons).map(([skillTitle, skillLessons]) => <section key={skillTitle} className="bg-white rounded-2xl border border-[#E2E4EB] p-6 shadow-sm space-y-4">
-                    <div className="flex items-center justify-between border-b border-[#E2E4EB] pb-3"><h2 className="text-base font-extrabold">{skillTitle}</h2><span className="text-xs font-bold text-[#6B6D7A]">{skillLessons.length} bài học</span></div>
-                    <div className="space-y-2">{skillLessons.map((lesson) => <div key={lesson.id} className="p-3 bg-[#FAFAF7] border border-[#E2E4EB] rounded-xl flex items-center justify-between gap-3"><div className="flex items-center gap-3 min-w-0">{typeIcon(lesson.content_type)}<div className="min-w-0"><p className="text-xs font-bold truncate">{lesson.title}</p><p className="text-[11px] text-[#718096]">{lesson.module_title || 'Chưa phân chương'} • {lesson.is_published ? 'Đã xuất bản' : 'Bản nháp'}</p></div></div><div className="flex items-center gap-2 shrink-0"><span className="px-2 py-0.5 bg-indigo-50 text-[#3C4097] rounded text-xs font-bold">+{lesson.xp_reward} XP</span><Button variant="ghost" size="sm" onClick={() => navigate(`/dashboard/admin/create-video-lesson?edit=${lesson.id}`)} title="Sửa bài học"><Edit className="w-3.5 h-3.5" /></Button><Button variant="ghost" size="sm" onClick={() => void handleDelete(lesson)} className="text-red-600" title="Xóa bài học"><Trash2 className="w-3.5 h-3.5" /></Button></div></div>)}</div>
-                </section>)}
-            </div>}
+            {/* Notifications */}
+            {successMsg && (
+                <div className="p-4 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-2xl text-xs font-black flex items-center gap-2 animate-fade-in shadow-xs">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{successMsg}</span>
+                </div>
+            )}
+            {errorMsg && (
+                <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-xs font-bold">
+                    {errorMsg}
+                </div>
+            )}
+
+            {/* Content List */}
+            {isLoading ? (
+                <div className="p-12 text-center bg-white rounded-2xl border border-[#E2E4EB] text-xs font-bold text-[#6B6D7A]">
+                    Đang tải danh sách bài học...
+                </div>
+            ) : Object.keys(groupedLessons).length === 0 ? (
+                <div className="p-12 text-center bg-white rounded-2xl border border-[#E2E4EB] text-xs text-[#6B6D7A]">
+                    Chưa có bài học nào thuộc skill này.
+                </div>
+            ) : (
+                <div className="space-y-6">
+                    {Object.entries(groupedLessons).map(([skillTitle, skillLessons]) => (
+                        <section key={skillTitle} className="bg-white rounded-2xl border border-[#E2E4EB] p-6 shadow-sm space-y-4">
+                            <div className="flex items-center justify-between border-b border-[#E2E4EB] pb-3">
+                                <h2 className="text-base font-extrabold text-[#20223A] flex items-center gap-2">
+                                    <Sparkles className="w-4 h-4 text-indigo-600" /> {skillTitle}
+                                </h2>
+                                <span className="text-xs font-bold text-[#6B6D7A] bg-gray-100 px-2.5 py-0.5 rounded-md">
+                                    {skillLessons.length} bài học
+                                </span>
+                            </div>
+
+                            <div className="space-y-3">
+                                {skillLessons.map((lesson) => {
+                                    const vUrl = lesson.video_url || lesson.videoUrl || ''
+                                    return (
+                                        <div
+                                            key={lesson.id}
+                                            className="p-4 bg-[#FAFAF7] hover:bg-white border border-[#E2E4EB] hover:border-indigo-200 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all shadow-2xs"
+                                        >
+                                            <div className="flex items-start gap-3 min-w-0 flex-1">
+                                                <div className="p-2 bg-indigo-50 rounded-lg shrink-0 mt-0.5">
+                                                    {typeIcon(lesson.content_type)}
+                                                </div>
+                                                <div className="min-w-0 space-y-1">
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        <p className="text-sm font-extrabold text-[#20223A] truncate">
+                                                            {lesson.title}
+                                                        </p>
+                                                        {lesson.is_default && (
+                                                            <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-blue-100 text-blue-800 rounded">
+                                                                Bài học mặc định
+                                                            </span>
+                                                        )}
+                                                        {lesson.is_custom && (
+                                                            <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded">
+                                                                Admin Đã Thêm
+                                                            </span>
+                                                        )}
+                                                    </div>
+
+                                                    <p className="text-xs text-[#6B6D7A] line-clamp-1">
+                                                        {lesson.description || 'Chưa có mô tả chi tiết cho bài học này.'}
+                                                    </p>
+
+                                                    {vUrl && (
+                                                        <div className="flex items-center gap-1.5 text-xs text-indigo-600 font-medium">
+                                                            <LinkIcon className="w-3.5 h-3.5 shrink-0" />
+                                                            <a
+                                                                href={vUrl}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="hover:underline truncate max-w-md inline-flex items-center gap-1"
+                                                            >
+                                                                <span>{vUrl}</span>
+                                                                <ExternalLink className="w-3 h-3 shrink-0" />
+                                                            </a>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center justify-between md:justify-end gap-3 shrink-0 border-t md:border-t-0 pt-2 md:pt-0 border-gray-200">
+                                                <span className="px-2.5 py-1 bg-indigo-50 text-[#3C4097] rounded-lg text-xs font-black border border-indigo-100">
+                                                    +{lesson.xp_reward} XP
+                                                </span>
+
+                                                <div className="flex items-center gap-1">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => handleOpenEdit(lesson)}
+                                                        className="font-extrabold text-xs flex items-center gap-1.5 border-indigo-300 text-indigo-700 hover:bg-indigo-50 cursor-pointer"
+                                                        title="Sửa Tên & Link Video"
+                                                    >
+                                                        <Edit className="w-3.5 h-3.5" /> Sửa bài học
+                                                    </Button>
+
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onClick={() => void handleDelete(lesson)}
+                                                        className="text-red-600 hover:bg-red-50 p-2 cursor-pointer"
+                                                        title="Xóa bài học"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </section>
+                    ))}
+                </div>
+            )}
+
+            {/* EDIT LESSON MODAL */}
+            {editingLesson && (
+                <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+                    <div className="bg-white rounded-3xl max-w-lg w-full p-6 border border-[#E2E4EB] shadow-2xl space-y-6">
+                        <div className="flex items-center justify-between border-b border-[#E2E4EB] pb-4">
+                            <h2 className="text-lg font-black text-[#20223A] flex items-center gap-2">
+                                <Edit className="w-5 h-5 text-indigo-600" /> Chỉnh Sửa Tên & Link Video Bài Học
+                            </h2>
+                            <button
+                                type="button"
+                                onClick={() => setEditingLesson(null)}
+                                className="text-gray-400 hover:text-gray-600 p-1 rounded-lg cursor-pointer"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSaveEdit} className="space-y-4">
+                            <div className="bg-indigo-50 border border-indigo-200 p-3 rounded-xl flex items-center justify-between text-xs font-extrabold text-indigo-950">
+                                <span className="flex items-center gap-1.5">
+                                    <Sparkles className="w-4 h-4 text-indigo-600" /> Kỹ năng thuộc bài học:
+                                </span>
+                                <span className="bg-white px-2.5 py-1 rounded-lg border border-indigo-200 text-indigo-700 font-black shadow-2xs">
+                                    {editingLesson.skill_title}
+                                </span>
+                            </div>
+
+                            <Input
+                                label="TÊN BÀI HỌC"
+                                value={editTitle}
+                                onChange={(e) => setEditTitle(e.target.value)}
+                                placeholder="Nhập tên bài học..."
+                                required
+                            />
+
+                            <Input
+                                label="ĐƯỜNG DẪN VIDEO / LINK YOUTUBE (URL)"
+                                value={editVideoUrl}
+                                onChange={(e) => setEditVideoUrl(e.target.value)}
+                                placeholder="https://www.youtube.com/embed/... hoặc link local video"
+                                iconRight={<LinkIcon className="w-4 h-4 text-indigo-500" />}
+                                required
+                            />
+
+                            <div>
+                                <label className="text-xs font-semibold uppercase tracking-wider text-[#4A5568] block mb-1">
+                                    MÔ TẢ BÀI HỌC
+                                </label>
+                                <textarea
+                                    value={editDescription}
+                                    onChange={(e) => setEditDescription(e.target.value)}
+                                    rows={3}
+                                    placeholder="Mô tả nội dung bài học..."
+                                    className="w-full p-3 border border-[#E2E4EB] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#3C4097]"
+                                />
+                            </div>
+
+                            <Input
+                                label="XP THƯỞNG KHI HOÀN THÀNH"
+                                type="number"
+                                value={editXpReward}
+                                onChange={(e) => setEditXpReward(e.target.value)}
+                            />
+
+                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E2E4EB]">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setEditingLesson(null)}
+                                    className="font-bold cursor-pointer"
+                                >
+                                    Hủy
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="indigo"
+                                    disabled={isSavingEdit}
+                                    className="font-bold flex items-center gap-2 bg-indigo-700 hover:bg-indigo-800 cursor-pointer"
+                                >
+                                    {isSavingEdit ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                    <span>Lưu Thay Đổi</span>
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { User, Mail, Key, Save, Camera, Sparkles, X, Upload, Image as ImageIcon, Check } from 'lucide-react'
+import { User, Mail, Key, Save, Camera, Sparkles, X, Upload, Image as ImageIcon, Check, Eye, EyeOff } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { useAuthStore } from '../../stores/authStore'
@@ -11,6 +11,8 @@ export const UserProfilePage: React.FC = () => {
     const [bio, setBio] = useState('Lập trình viên React & Node.js đam mê học hỏi và nuôi dưỡng khu vườn kỹ năng PLT Solutions.')
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
+    const [showOldPassword, setShowOldPassword] = useState(false)
+    const [showNewPassword, setShowNewPassword] = useState(false)
     const [successMsg, setSuccessMsg] = useState('')
 
     // Avatar state & ref
@@ -216,18 +218,36 @@ export const UserProfilePage: React.FC = () => {
 
                     <Input
                         label="MẬT KHẨU HIỆN TẠI"
-                        type="password"
+                        type={showOldPassword ? 'text' : 'password'}
                         value={oldPassword}
                         onChange={(e) => setOldPassword(e.target.value)}
                         placeholder="••••••••••••"
+                        iconRight={
+                            <button
+                                type="button"
+                                onClick={() => setShowOldPassword(!showOldPassword)}
+                                className="text-[#718096] dark:text-gray-400 hover:text-[#1A2E22] dark:hover:text-white cursor-pointer"
+                            >
+                                {showOldPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                        }
                     />
 
                     <Input
                         label="MẬT KHẨU MỚI"
-                        type="password"
+                        type={showNewPassword ? 'text' : 'password'}
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         placeholder="••••••••••••"
+                        iconRight={
+                            <button
+                                type="button"
+                                onClick={() => setShowNewPassword(!showNewPassword)}
+                                className="text-[#718096] dark:text-gray-400 hover:text-[#1A2E22] dark:hover:text-white cursor-pointer"
+                            >
+                                {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                        }
                     />
 
                     <div className="p-3 bg-[#FAFAF7] dark:bg-gray-900 rounded-xl text-[11px] text-[#6B6D7A] dark:text-gray-400 space-y-1 border border-[#E2E4EB] dark:border-gray-700">

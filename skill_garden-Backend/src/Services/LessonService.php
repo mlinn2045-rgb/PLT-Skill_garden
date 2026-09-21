@@ -58,10 +58,11 @@ class LessonService
     public function getPublishedLessonsBySkillId(int $skillId): array
     {
         $stmt = $this->db->prepare("
-            SELECT l.*
+            SELECT l.*, m.title AS module_title, lp.skill_id, s.title AS skill_title
             FROM lessons l
             JOIN modules m ON l.module_id = m.id
             JOIN learning_paths lp ON m.learning_path_id = lp.id
+            JOIN skills s ON lp.skill_id = s.id
             WHERE lp.skill_id = :skill_id AND l.is_published = 1
             ORDER BY m.order_index ASC, l.order_index ASC, l.id ASC
         ");

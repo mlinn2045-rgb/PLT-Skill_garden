@@ -62,6 +62,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             const res = await authService.login(email, password);
             if (res.data?.user) {
                 const user = res.data.user;
+                if ((res.data as any)?.token) {
+                    localStorage.setItem('skill_garden_token', (res.data as any).token);
+                }
                 const localAvatar = localStorage.getItem('skillgarden_avatar_' + user.email);
                 if (localAvatar) {
                     user.avatar_url = localAvatar;

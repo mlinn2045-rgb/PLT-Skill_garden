@@ -32,14 +32,14 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
     return (
         <div className={clsx('w-full flex items-center gap-3', className)}>
-            <div className={clsx('w-full bg-[#E2E8F0] rounded-full overflow-hidden', heights[size])}>
+            <div className={clsx('w-full bg-[#E2E8F0] dark:bg-gray-700 rounded-full overflow-hidden', heights[size])}>
                 <div
                     className={clsx('h-full rounded-full transition-all duration-500 ease-out', colors[color])}
                     style={{ width: `${clampedProgress}%` }}
                 />
             </div>
             {showLabel && (
-                <span className="text-xs font-semibold text-[#4A5568] shrink-0 font-mono">
+                <span className="text-xs font-semibold text-[#4A5568] dark:text-gray-300 shrink-0 font-mono">
                     {clampedProgress}%
                 </span>
             )}

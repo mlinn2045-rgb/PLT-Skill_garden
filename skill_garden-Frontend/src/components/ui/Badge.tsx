@@ -16,15 +16,15 @@ export const Badge: React.FC<BadgeProps> = ({
     ...props
 }) => {
     const variants = {
-        skill: 'bg-[#E6FFFA] text-[#2D7A4F] border border-[#68D391]/30 font-mono',
-        streak: 'bg-[#FFF5F5] text-[#E53E3E] border border-[#FEB2B2]',
-        xp: 'bg-[#FEFCBF] text-[#B7791F] border border-[#F6E05E]',
-        level: 'bg-[#EBF8FF] text-[#2B6CB0] border border-[#90CDF4]',
-        success: 'bg-[#C6F6D5] text-[#22543D]',
-        warning: 'bg-[#FEEBC8] text-[#744210]',
-        info: 'bg-[#E0E7FF] text-[#3730A3]',
-        neutral: 'bg-[#EDF2F7] text-[#4A5568]',
-        indigo: 'bg-indigo-100 text-indigo-700'
+        skill: 'bg-[#E6FFFA] dark:bg-emerald-950/80 text-[#2D7A4F] dark:text-emerald-300 border border-[#68D391]/30 dark:border-emerald-800/80 font-mono',
+        streak: 'bg-[#FFF5F5] dark:bg-rose-950/80 text-[#E53E3E] dark:text-rose-300 border border-[#FEB2B2] dark:border-rose-800/80',
+        xp: 'bg-[#FEFCBF] dark:bg-amber-950/80 text-[#B7791F] dark:text-amber-300 border border-[#F6E05E] dark:border-amber-800/80',
+        level: 'bg-[#EBF8FF] dark:bg-sky-950/80 text-[#2B6CB0] dark:text-sky-300 border border-[#90CDF4] dark:border-sky-800/80',
+        success: 'bg-[#C6F6D5] dark:bg-emerald-950/80 text-[#22543D] dark:text-emerald-300 border border-transparent dark:border-emerald-800/80',
+        warning: 'bg-[#FEEBC8] dark:bg-amber-950/80 text-[#744210] dark:text-amber-300 border border-transparent dark:border-amber-800/80',
+        info: 'bg-[#E0E7FF] dark:bg-indigo-950/80 text-[#3730A3] dark:text-indigo-300 border border-transparent dark:border-indigo-800/80',
+        neutral: 'bg-[#EDF2F7] dark:bg-gray-800 text-[#4A5568] dark:text-gray-300 border border-transparent dark:border-gray-700',
+        indigo: 'bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border border-transparent dark:border-indigo-800/80'
     }
 
     const sizes = {

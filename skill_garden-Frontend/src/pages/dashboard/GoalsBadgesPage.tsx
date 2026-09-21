@@ -150,7 +150,7 @@ export const GoalsBadgesPage: React.FC = () => {
                             <p className="text-[11px] text-[#6B6D7A] dark:text-gray-400 leading-tight">{b.desc}</p>
                             <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${b.unlocked ? 'bg-[#DCEFE1] dark:bg-emerald-950 text-[#2C6A3D] dark:text-emerald-300' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                                 }`}>
-                                {b.unlocked ? 'Đã Mở Khóa' : 'Chưa Khóa'}
+                                {b.unlocked ? 'Đã Mở Khóa' : 'Đang Khóa'}
                             </span>
                         </div>
                     ))}

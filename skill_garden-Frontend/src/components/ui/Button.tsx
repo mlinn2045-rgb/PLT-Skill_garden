@@ -24,10 +24,10 @@ export const Button: React.FC<ButtonProps> = ({
 
     const variants = {
         primary: 'bg-[#2D7A4F] text-white hover:bg-[#38A169] shadow-sm hover:shadow-md hover:-translate-y-0.5',
-        indigo: 'bg-[#3F49C8] text-white hover:bg-[#323AA3] shadow-sm hover:shadow-md hover:-translate-y-0.5',
-        secondary: 'bg-[#E6FFFA] text-[#2D7A4F] hover:bg-[#9AE6B4]/30 border border-[#68D391]',
-        outline: 'bg-white text-[#1A2E22] hover:bg-[#F7FAF7] border border-[#E6ECE6] shadow-xs',
-        ghost: 'bg-transparent text-[#4A5568] hover:bg-[#F3F6F3] hover:text-[#1A2E22]',
+        indigo: 'bg-[#3F49C8] dark:bg-indigo-600 text-white hover:bg-[#323AA3] dark:hover:bg-indigo-700 shadow-sm hover:shadow-md hover:-translate-y-0.5',
+        secondary: 'bg-[#E6FFFA] dark:bg-emerald-950/80 text-[#2D7A4F] dark:text-emerald-300 hover:bg-[#9AE6B4]/30 border border-[#68D391] dark:border-emerald-800',
+        outline: 'bg-white dark:bg-gray-800 text-[#1A2E22] dark:text-gray-100 hover:bg-[#F7FAF7] dark:hover:bg-gray-700 border border-[#E6ECE6] dark:border-gray-700 shadow-xs',
+        ghost: 'bg-transparent text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800 hover:text-[#1A2E22] dark:hover:text-white',
         streak: 'bg-[#ED8936] text-white hover:bg-[#DD6B20] shadow-sm hover:-translate-y-0.5',
         success: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm hover:shadow-md hover:-translate-y-0.5'
     }

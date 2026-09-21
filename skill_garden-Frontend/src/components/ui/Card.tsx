@@ -14,10 +14,10 @@ export const Card: React.FC<CardProps> = ({
     ...props
 }) => {
     const variants = {
-        default: 'bg-white border border-[#E6ECE6] shadow-[0_4px_20px_-2px_rgba(45,122,79,0.04)]',
-        subtle: 'bg-[#F7FAF7] border border-[#E6ECE6]',
-        bordered: 'bg-white border-2 border-[#E6ECE6]',
-        glass: 'bg-white/80 backdrop-blur-md border border-white/60 shadow-lg'
+        default: 'bg-white dark:bg-gray-800 border border-[#E6ECE6] dark:border-gray-700 shadow-[0_4px_20px_-2px_rgba(45,122,79,0.04)] text-[#1A2E22] dark:text-gray-100',
+        subtle: 'bg-[#F7FAF7] dark:bg-gray-800/80 border border-[#E6ECE6] dark:border-gray-700 text-[#1A2E22] dark:text-gray-100',
+        bordered: 'bg-white dark:bg-gray-800 border-2 border-[#E6ECE6] dark:border-gray-700 text-[#1A2E22] dark:text-gray-100',
+        glass: 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-white/60 dark:border-gray-700 shadow-lg text-[#1A2E22] dark:text-gray-100'
     }
 
     return (
