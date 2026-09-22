@@ -11,7 +11,6 @@ import {
     Flame,
     Zap,
     Bell,
-    ChevronDown,
     Menu,
     X,
     ShieldCheck,
@@ -27,6 +26,7 @@ import {
 } from 'lucide-react'
 import { Avatar } from '../components/ui/Avatar'
 import { PltLogo } from '../components/ui/PltLogo'
+import { WelcomeRewardModal } from '../components/ui/WelcomeRewardModal'
 import { useAuthStore } from '../stores/authStore'
 import { getStudentStats } from '../services/studentStats'
 
@@ -34,11 +34,15 @@ export const DashboardLayout: React.FC = () => {
     const location = useLocation()
     const navigate = useNavigate()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [dismissedWelcomeModal, setDismissedWelcomeModal] = useState(false)
     const { user, logout, isDarkMode, toggleDarkMode } = useAuthStore()
     const studentStats = getStudentStats(user?.email || 'guest')
 
     const isSuperAdmin = user?.role === 'SUPER_ADMIN'
     const isAdmin = user?.role === 'ADMIN'
+    const isStudent = !isAdmin && !isSuperAdmin
+
+    const showWelcomeModal = !dismissedWelcomeModal && isStudent && user?.has_claimed_welcome_xp === false
 
     const studentNavItems = [
         { label: 'Tổng quan Vườn', path: '/dashboard', icon: <Sprout className="w-5 h-5 text-emerald-600" /> },
@@ -79,6 +83,34 @@ export const DashboardLayout: React.FC = () => {
         { label: 'Cài đặt', path: '/dashboard/settings', icon: <Settings className="w-5 h-5" /> },
     ]
 
+    /**
+     * Exact & strict active route detector.
+     * Prevents '/dashboard' from staying active when on other pages.
+     */
+    const isRouteActive = (itemPath: string) => {
+        const basePath = itemPath.split('?')[0]
+        const currentPath = location.pathname
+
+        // Root dashboard and overview paths must match EXACTLY
+        if (basePath === '/dashboard' || basePath === '/dashboard/superadmin') {
+            return currentPath === basePath || currentPath === `${basePath}/`
+        }
+
+        // Course & video learning dynamic routes
+        if (basePath.startsWith('/dashboard/learning-path')) {
+            return currentPath.startsWith('/dashboard/learning-path')
+        }
+        if (basePath.startsWith('/dashboard/video-learning')) {
+            return currentPath.startsWith('/dashboard/video-learning') || currentPath.startsWith('/dashboard/video-lesson')
+        }
+        if (basePath.startsWith('/dashboard/quiz-room')) {
+            return currentPath.startsWith('/dashboard/quiz-room')
+        }
+
+        // Specific sub-route match (e.g. /dashboard/garden, /dashboard/skill-catalog, /dashboard/profile, /dashboard/admin/courses)
+        return currentPath === basePath || currentPath.startsWith(`${basePath}/`)
+    }
+
     const handleLogout = async () => {
         await logout()
         navigate('/login')
@@ -117,21 +149,19 @@ export const DashboardLayout: React.FC = () => {
                     {/* Navigation links */}
                     <nav className="space-y-1">
                         {currentNavItems.map((item) => {
-                            const isActive = item.path === '/dashboard'
-                                ? location.pathname === '/dashboard'
-                                : location.pathname === item.path || location.pathname.startsWith(item.path + '/')
+                            const active = isRouteActive(item.path)
                             return (
-                                <NavLink
+                                <Link
                                     key={item.path}
                                     to={item.path}
-                                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isActive
+                                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${active
                                         ? 'bg-[#3F49C8] text-white shadow-sm font-bold dark:bg-indigo-600'
                                         : 'text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800 hover:text-[#1A2E22] dark:hover:text-white'
                                         }`}
                                 >
-                                    <span className={isActive ? 'text-white' : 'text-[#718096] dark:text-gray-400'}>{item.icon}</span>
+                                    <span className={active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}>{item.icon}</span>
                                     <span>{item.label}</span>
-                                </NavLink>
+                                </Link>
                             )
                         })}
                     </nav>
@@ -140,19 +170,19 @@ export const DashboardLayout: React.FC = () => {
                 {/* Bottom Nav */}
                 <div className="pt-4 border-t border-[#E6ECE6] dark:border-gray-800 space-y-1">
                     {bottomNavItems.map((item) => {
-                        const isActive = location.pathname.startsWith(item.path)
+                        const active = isRouteActive(item.path)
                         return (
-                            <NavLink
+                            <Link
                                 key={item.path}
                                 to={item.path}
-                                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isActive
+                                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${active
                                     ? 'bg-[#3F49C8] text-white shadow-sm font-bold dark:bg-indigo-600'
                                     : 'text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800 hover:text-[#1A2E22] dark:hover:text-white'
                                     }`}
                             >
-                                <span className={isActive ? 'text-white' : 'text-[#718096] dark:text-gray-400'}>{item.icon}</span>
+                                <span className={active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}>{item.icon}</span>
                                 <span>{item.label}</span>
-                            </NavLink>
+                            </Link>
                         )
                     })}
 
@@ -182,38 +212,40 @@ export const DashboardLayout: React.FC = () => {
                             </div>
 
                             <nav className="space-y-1">
-                                {currentNavItems.map((item) => (
-                                    <NavLink
-                                        key={item.path}
-                                        to={item.path}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className={({ isActive }) =>
-                                            `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isActive ? 'bg-[#3F49C8] text-white font-bold' : 'text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800'
-                                            }`
-                                        }
-                                    >
-                                        {item.icon}
-                                        <span>{item.label}</span>
-                                    </NavLink>
-                                ))}
+                                {currentNavItems.map((item) => {
+                                    const active = isRouteActive(item.path)
+                                    return (
+                                        <Link
+                                            key={item.path}
+                                            to={item.path}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${active ? 'bg-[#3F49C8] text-white font-bold dark:bg-indigo-600' : 'text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800'
+                                                }`}
+                                        >
+                                            <span className={active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}>{item.icon}</span>
+                                            <span>{item.label}</span>
+                                        </Link>
+                                    )
+                                })}
                             </nav>
                         </div>
 
                         <div className="pt-4 border-t border-[#E6ECE6] dark:border-gray-800 space-y-1">
-                            {bottomNavItems.map((item) => (
-                                <NavLink
-                                    key={item.path}
-                                    to={item.path}
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={({ isActive }) =>
-                                        `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isActive ? 'bg-[#3F49C8] text-white font-bold' : 'text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800'
-                                        }`
-                                    }
-                                >
-                                    {item.icon}
-                                    <span>{item.label}</span>
-                                </NavLink>
-                            ))}
+                            {bottomNavItems.map((item) => {
+                                const active = isRouteActive(item.path)
+                                return (
+                                    <Link
+                                        key={item.path}
+                                        to={item.path}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${active ? 'bg-[#3F49C8] text-white font-bold dark:bg-indigo-600' : 'text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800'
+                                            }`}
+                                    >
+                                        <span className={active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}>{item.icon}</span>
+                                        <span>{item.label}</span>
+                                    </Link>
+                                )
+                            })}
                             <button
                                 onClick={handleLogout}
                                 className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/60 transition-all mt-2"
@@ -316,6 +348,12 @@ export const DashboardLayout: React.FC = () => {
                     <Outlet />
                 </main>
             </div>
+
+            {/* 100XP Welcome Gift Popup */}
+            <WelcomeRewardModal
+                isOpen={Boolean(showWelcomeModal)}
+                onClose={() => setDismissedWelcomeModal(true)}
+            />
 
         </div>
     )

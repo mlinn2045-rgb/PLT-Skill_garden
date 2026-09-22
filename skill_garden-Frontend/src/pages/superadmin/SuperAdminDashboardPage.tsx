@@ -6,9 +6,9 @@ import { Badge } from '../../components/ui/Badge'
 
 export const SuperAdminDashboardPage: React.FC = () => {
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-8">
+        <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-8">
             {/* Header Banner */}
-            <div className="bg-gradient-to-r from-[#1A1C2E] via-[#2A2D4A] to-[#1A1C2E] p-6 md:p-8 rounded-3xl text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1A1C2E] via-[#2A2D4A] to-[#1A1C2E] dark:from-gray-900 dark:via-purple-950/40 dark:to-gray-900 border border-transparent dark:border-gray-800 p-6 md:p-8 rounded-3xl text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
                 <div className="absolute right-0 top-0 text-9xl opacity-10 pointer-events-none">
                     👑
                 </div>
@@ -17,7 +17,7 @@ export const SuperAdminDashboardPage: React.FC = () => {
                         <ShieldCheck className="w-4 h-4 text-purple-400" />
                         <span>SUPER ADMIN EXECUTIVE CONSOLE</span>
                     </div>
-                    <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+                    <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
                         Tổng Quan Hệ Thống SkillGarden 🌐
                     </h1>
                     <p className="text-xs md:text-sm text-gray-300 max-w-2xl leading-relaxed">
@@ -36,46 +36,46 @@ export const SuperAdminDashboardPage: React.FC = () => {
 
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs space-y-2">
-                    <div className="flex items-center justify-between text-[#6B6D7A]">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-2">
+                    <div className="flex items-center justify-between text-gray-500 dark:text-gray-400">
                         <span className="text-xs font-bold uppercase">Tổng Người Dùng</span>
-                        <Users className="w-5 h-5 text-[#3C4097]" />
+                        <Users className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" />
                     </div>
-                    <div className="text-3xl font-black text-[#20223A]">1,280</div>
-                    <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
+                    <div className="text-3xl font-black text-gray-900 dark:text-white">1,280</div>
+                    <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                         <TrendingUp className="w-3.5 h-3.5" /> +12% tháng này
                     </span>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs space-y-2">
-                    <div className="flex items-center justify-between text-[#6B6D7A]">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-2">
+                    <div className="flex items-center justify-between text-gray-500 dark:text-gray-400">
                         <span className="text-xs font-bold uppercase">Tài Khoản Admin</span>
-                        <UserCheck className="w-5 h-5 text-purple-600" />
+                        <UserCheck className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                     </div>
-                    <div className="text-3xl font-black text-[#20223A]">8</div>
-                    <span className="text-[11px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">
+                    <div className="text-3xl font-black text-gray-900 dark:text-white">8</div>
+                    <span className="text-[11px] font-bold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/60 px-2 py-0.5 rounded">
                         Đang hoạt động
                     </span>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs space-y-2">
-                    <div className="flex items-center justify-between text-[#6B6D7A]">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-2">
+                    <div className="flex items-center justify-between text-gray-500 dark:text-gray-400">
                         <span className="text-xs font-bold uppercase">Khóa Học & Skill</span>
-                        <BookOpen className="w-5 h-5 text-emerald-600" />
+                        <BookOpen className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                     </div>
-                    <div className="text-3xl font-black text-[#20223A]">6</div>
-                    <span className="text-[11px] font-bold text-[#6B6D7A]">
+                    <div className="text-3xl font-black text-gray-900 dark:text-white">6</div>
+                    <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400">
                         48 Bài học video & Quiz
                     </span>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs space-y-2">
-                    <div className="flex items-center justify-between text-[#6B6D7A]">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-2">
+                    <div className="flex items-center justify-between text-gray-500 dark:text-gray-400">
                         <span className="text-xs font-bold uppercase">Hoạt Động Hệ Thống</span>
-                        <Activity className="w-5 h-5 text-yellow-600" />
+                        <Activity className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <div className="text-3xl font-black text-[#20223A]">99.9%</div>
-                    <span className="text-[11px] font-bold text-emerald-600">
+                    <div className="text-3xl font-black text-gray-900 dark:text-white">99.9%</div>
+                    <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
                         Uptime ổn định
                     </span>
                 </div>
@@ -85,9 +85,9 @@ export const SuperAdminDashboardPage: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left 2 Cols: System Alerts & Admin Summary */}
                 <div className="lg:col-span-2 space-y-6">
-                    <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs space-y-4">
-                        <h2 className="text-base font-extrabold text-[#20223A] flex items-center gap-2">
-                            <Key className="w-5 h-5 text-purple-600" /> Danh Sách Ban Quản Trị (Admin)
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-4">
+                        <h2 className="text-base font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
+                            <Key className="w-5 h-5 text-purple-600 dark:text-purple-400" /> Danh Sách Ban Quản Trị (Admin)
                         </h2>
 
                         <div className="space-y-3">
@@ -96,20 +96,20 @@ export const SuperAdminDashboardPage: React.FC = () => {
                                 { name: 'Admin Nội Dung LMS', email: 'lms.admin@pltsolutions.com', role: 'Content Admin', lastActive: '1 giờ trước', status: 'ACTIVE' },
                                 { name: 'Admin Kiểm Thử Quiz', email: 'qa.admin@pltsolutions.com', role: 'Quiz Admin', lastActive: '3 giờ trước', status: 'ACTIVE' }
                             ].map((adm, idx) => (
-                                <div key={idx} className="p-4 bg-[#FAFAF7] border border-[#E2E4EB] rounded-xl flex items-center justify-between">
+                                <div key={idx} className="p-4 bg-[#FAFAF7] dark:bg-gray-800/60 border border-[#E2E4EB] dark:border-gray-700/70 rounded-xl flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-800 font-extrabold flex items-center justify-center text-sm border border-purple-300">
+                                        <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-950/70 text-purple-800 dark:text-purple-300 font-extrabold flex items-center justify-center text-sm border border-purple-300 dark:border-purple-800">
                                             {adm.name.charAt(0)}
                                         </div>
                                         <div>
-                                            <h4 className="text-xs font-extrabold text-[#20223A]">{adm.name}</h4>
-                                            <p className="text-[11px] text-[#6B6D7A]">{adm.email}</p>
+                                            <h4 className="text-xs font-extrabold text-gray-900 dark:text-gray-100">{adm.name}</h4>
+                                            <p className="text-[11px] text-gray-500 dark:text-gray-400">{adm.email}</p>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-4 text-xs font-bold">
-                                        <span className="px-2.5 py-1 bg-purple-50 text-purple-700 rounded-md">{adm.role}</span>
-                                        <span className="text-emerald-700 font-extrabold text-[11px]">{adm.status}</span>
+                                        <span className="px-2.5 py-1 bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 rounded-md">{adm.role}</span>
+                                        <span className="text-emerald-700 dark:text-emerald-400 font-extrabold text-[11px]">{adm.status}</span>
                                     </div>
                                 </div>
                             ))}
@@ -118,27 +118,27 @@ export const SuperAdminDashboardPage: React.FC = () => {
                 </div>
 
                 {/* Right Col: System Status */}
-                <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs space-y-4">
-                    <h2 className="text-base font-extrabold text-[#20223A] flex items-center gap-2">
-                        <Server className="w-5 h-5 text-[#3C4097]" /> Thông Số Máy Chủ MySQL & API
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-4">
+                    <h2 className="text-base font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Server className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" /> Thông Số Máy Chủ MySQL & API
                     </h2>
 
                     <div className="space-y-3 text-xs">
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-[#6B6D7A] font-bold">Database Name</span>
-                            <span className="font-mono font-extrabold text-[#20223A]">skill_garden</span>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/60 rounded-xl">
+                            <span className="text-gray-500 dark:text-gray-400 font-bold">Database Name</span>
+                            <span className="font-mono font-extrabold text-gray-900 dark:text-white">skill_garden</span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-[#6B6D7A] font-bold">PHP Environment</span>
-                            <span className="font-mono font-extrabold text-[#20223A]">PHP 8.2 (Laragon)</span>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/60 rounded-xl">
+                            <span className="text-gray-500 dark:text-gray-400 font-bold">PHP Environment</span>
+                            <span className="font-mono font-extrabold text-gray-900 dark:text-white">PHP 8.3 (Docker)</span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-[#6B6D7A] font-bold">Frontend Stack</span>
-                            <span className="font-mono font-extrabold text-[#20223A]">React 19 + Vite</span>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/60 rounded-xl">
+                            <span className="text-gray-500 dark:text-gray-400 font-bold">Frontend Stack</span>
+                            <span className="font-mono font-extrabold text-gray-900 dark:text-white">React 19 + Vite</span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-[#6B6D7A] font-bold">Security Standard</span>
-                            <span className="font-mono font-extrabold text-emerald-700">AES-256 / Password Hash</span>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/60 rounded-xl">
+                            <span className="text-gray-500 dark:text-gray-400 font-bold">Security Standard</span>
+                            <span className="font-mono font-extrabold text-emerald-700 dark:text-emerald-400">AES-256 / Password Hash</span>
                         </div>
                     </div>
                 </div>

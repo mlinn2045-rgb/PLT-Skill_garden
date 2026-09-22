@@ -240,22 +240,22 @@ export const LessonManagementPage: React.FC = () => {
             : <Video className="w-4 h-4 text-blue-600" />
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-6">
+        <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-6">
             {/* Header */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-sm">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-sm">
                 <div>
-                    <h1 className="text-2xl font-extrabold flex items-center gap-2">
-                        <Layers className="w-6 h-6 text-[#3C4097]" /> Quản Lý Bài Học Theo Skill & Chỉnh Sửa Video
+                    <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
+                        <Layers className="w-6 h-6 text-[#3C4097] dark:text-indigo-400" /> Quản Lý Bài Học Theo Skill & Chỉnh Sửa Video
                     </h1>
-                    <p className="text-xs text-[#6B6D7A] mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Xem danh sách bài học thuộc từng Skill, chỉnh sửa Tên bài học và Link Video trực tiếp để cập nhật sang học viên.
                     </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    <Button variant="outline" onClick={handleClearMockData} className="font-bold text-rose-600 border-rose-200 hover:bg-rose-50 flex items-center gap-1.5 cursor-pointer" title="Xóa bỏ toàn bộ bài học mẫu cũ trong bộ nhớ">
+                    <Button variant="outline" onClick={handleClearMockData} className="font-bold text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-1.5 cursor-pointer" title="Xóa bỏ toàn bộ bài học mẫu cũ trong bộ nhớ">
                         <Trash2 className="w-4 h-4 text-rose-500" /> Xóa Dữ Liệu Mẫu
                     </Button>
-                    <Button variant="outline" onClick={() => void loadAllLessons()} disabled={isLoading} className="font-bold flex items-center gap-1.5 cursor-pointer">
+                    <Button variant="outline" onClick={() => void loadAllLessons()} disabled={isLoading} className="font-bold flex items-center gap-1.5 cursor-pointer dark:border-gray-700 dark:hover:bg-gray-800">
                         <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
                     </Button>
                     <Button variant="indigo" onClick={() => navigate('/dashboard/admin/create-video-lesson')} className="font-bold flex items-center gap-1.5 cursor-pointer">
@@ -265,14 +265,14 @@ export const LessonManagementPage: React.FC = () => {
             </div>
 
             {/* Filter by Skill */}
-            <div className="bg-white p-4 rounded-2xl border border-[#E2E4EB] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3 w-full sm:max-w-md">
-                    <label htmlFor="lesson-skill-filter" className="text-xs font-extrabold text-[#4A5568] shrink-0">LỌC THEO SKILL</label>
+                    <label htmlFor="lesson-skill-filter" className="text-xs font-extrabold text-[#4A5568] dark:text-gray-300 shrink-0">LỌC THEO SKILL</label>
                     <select
                         id="lesson-skill-filter"
                         value={selectedSkillId}
                         onChange={(event) => setSelectedSkillId(event.target.value)}
-                        className="w-full px-3 py-2 rounded-xl border border-[#E2E4EB] bg-[#FAFAF7] text-sm font-bold outline-none focus:ring-2 focus:ring-[#3C4097]"
+                        className="w-full px-3 py-2 rounded-xl border border-[#E2E4EB] dark:border-gray-700 bg-[#FAFAF7] dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm font-bold outline-none focus:ring-2 focus:ring-[#3C4097] dark:focus:ring-indigo-500"
                     >
                         <option value="">🎯 Tất cả Kỹ Năng ({availableSkills.length} Kỹ Năng)</option>
                         {availableSkills.map((skill) => (
@@ -280,42 +280,42 @@ export const LessonManagementPage: React.FC = () => {
                         ))}
                     </select>
                 </div>
-                <span className="text-xs font-extrabold text-[#3C4097] bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
+                <span className="text-xs font-extrabold text-[#3C4097] dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-200 dark:border-indigo-800">
                     Tổng số: {lessons.length} bài học
                 </span>
             </div>
 
             {/* Notifications */}
             {successMsg && (
-                <div className="p-4 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-2xl text-xs font-black flex items-center gap-2 animate-fade-in shadow-xs">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <div className="p-4 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300 rounded-2xl text-xs font-black flex items-center gap-2 animate-fade-in shadow-xs">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>{successMsg}</span>
                 </div>
             )}
             {errorMsg && (
-                <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-xs font-bold">
+                <div className="p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-2xl text-xs font-bold">
                     {errorMsg}
                 </div>
             )}
 
             {/* Content List */}
             {isLoading ? (
-                <div className="p-12 text-center bg-white rounded-2xl border border-[#E2E4EB] text-xs font-bold text-[#6B6D7A]">
+                <div className="p-12 text-center bg-white dark:bg-gray-900 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 text-xs font-bold text-gray-500 dark:text-gray-400">
                     Đang tải danh sách bài học...
                 </div>
             ) : Object.keys(groupedLessons).length === 0 ? (
-                <div className="p-12 text-center bg-white rounded-2xl border border-[#E2E4EB] text-xs text-[#6B6D7A]">
+                <div className="p-12 text-center bg-white dark:bg-gray-900 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 text-xs text-gray-500 dark:text-gray-400">
                     Chưa có bài học nào thuộc skill này.
                 </div>
             ) : (
                 <div className="space-y-6">
                     {Object.entries(groupedLessons).map(([skillTitle, skillLessons]) => (
-                        <section key={skillTitle} className="bg-white rounded-2xl border border-[#E2E4EB] p-6 shadow-sm space-y-4">
-                            <div className="flex items-center justify-between border-b border-[#E2E4EB] pb-3">
-                                <h2 className="text-base font-extrabold text-[#20223A] flex items-center gap-2">
-                                    <Sparkles className="w-4 h-4 text-indigo-600" /> {skillTitle}
+                        <section key={skillTitle} className="bg-white dark:bg-gray-900 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 p-6 shadow-sm space-y-4">
+                            <div className="flex items-center justify-between border-b border-[#E2E4EB] dark:border-gray-800 pb-3">
+                                <h2 className="text-base font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
+                                    <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> {skillTitle}
                                 </h2>
-                                <span className="text-xs font-bold text-[#6B6D7A] bg-gray-100 px-2.5 py-0.5 rounded-md">
+                                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2.5 py-0.5 rounded-md">
                                     {skillLessons.length} bài học
                                 </span>
                             </div>
@@ -326,35 +326,35 @@ export const LessonManagementPage: React.FC = () => {
                                     return (
                                         <div
                                             key={lesson.id}
-                                            className="p-4 bg-[#FAFAF7] hover:bg-white border border-[#E2E4EB] hover:border-indigo-200 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all shadow-2xs"
+                                            className="p-4 bg-[#FAFAF7] dark:bg-gray-800/60 hover:bg-white dark:hover:bg-gray-800 border border-[#E2E4EB] dark:border-gray-700/70 hover:border-indigo-200 dark:hover:border-indigo-500/50 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all shadow-2xs"
                                         >
                                             <div className="flex items-start gap-3 min-w-0 flex-1">
-                                                <div className="p-2 bg-indigo-50 rounded-lg shrink-0 mt-0.5">
+                                                <div className="p-2 bg-indigo-50 dark:bg-indigo-950/60 rounded-lg shrink-0 mt-0.5">
                                                     {typeIcon(lesson.content_type)}
                                                 </div>
                                                 <div className="min-w-0 space-y-1">
                                                     <div className="flex items-center gap-2 flex-wrap">
-                                                        <p className="text-sm font-extrabold text-[#20223A] truncate">
+                                                        <p className="text-sm font-extrabold text-gray-900 dark:text-gray-100 truncate">
                                                             {lesson.title}
                                                         </p>
                                                         {lesson.is_default && (
-                                                            <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-blue-100 text-blue-800 rounded">
+                                                            <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-blue-100 dark:bg-blue-950/70 text-blue-800 dark:text-blue-300 rounded">
                                                                 Bài học mặc định
                                                             </span>
                                                         )}
                                                         {lesson.is_custom && (
-                                                            <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded">
+                                                            <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 rounded">
                                                                 Admin Đã Thêm
                                                             </span>
                                                         )}
                                                     </div>
 
-                                                    <p className="text-xs text-[#6B6D7A] line-clamp-1">
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">
                                                         {lesson.description || 'Chưa có mô tả chi tiết cho bài học này.'}
                                                     </p>
 
                                                     {vUrl && (
-                                                        <div className="flex items-center gap-1.5 text-xs text-indigo-600 font-medium">
+                                                        <div className="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400 font-medium">
                                                             <LinkIcon className="w-3.5 h-3.5 shrink-0" />
                                                             <a
                                                                 href={vUrl}
@@ -370,8 +370,8 @@ export const LessonManagementPage: React.FC = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="flex items-center justify-between md:justify-end gap-3 shrink-0 border-t md:border-t-0 pt-2 md:pt-0 border-gray-200">
-                                                <span className="px-2.5 py-1 bg-indigo-50 text-[#3C4097] rounded-lg text-xs font-black border border-indigo-100">
+                                            <div className="flex items-center justify-between md:justify-end gap-3 shrink-0 border-t md:border-t-0 pt-2 md:pt-0 border-gray-200 dark:border-gray-700">
+                                                <span className="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-[#3C4097] dark:text-indigo-300 rounded-lg text-xs font-black border border-indigo-100 dark:border-indigo-900">
                                                     +{lesson.xp_reward} XP
                                                 </span>
 
@@ -380,7 +380,7 @@ export const LessonManagementPage: React.FC = () => {
                                                         variant="outline"
                                                         size="sm"
                                                         onClick={() => handleOpenEdit(lesson)}
-                                                        className="font-extrabold text-xs flex items-center gap-1.5 border-indigo-300 text-indigo-700 hover:bg-indigo-50 cursor-pointer"
+                                                        className="font-extrabold text-xs flex items-center gap-1.5 border-indigo-300 dark:border-indigo-800 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 cursor-pointer"
                                                         title="Sửa Tên & Link Video"
                                                     >
                                                         <Edit className="w-3.5 h-3.5" /> Sửa bài học
@@ -390,7 +390,7 @@ export const LessonManagementPage: React.FC = () => {
                                                         variant="ghost"
                                                         size="sm"
                                                         onClick={() => void handleDelete(lesson)}
-                                                        className="text-red-600 hover:bg-red-50 p-2 cursor-pointer"
+                                                        className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 p-2 cursor-pointer"
                                                         title="Xóa bài học"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
@@ -409,26 +409,26 @@ export const LessonManagementPage: React.FC = () => {
             {/* EDIT LESSON MODAL */}
             {editingLesson && (
                 <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
-                    <div className="bg-white rounded-3xl max-w-lg w-full p-6 border border-[#E2E4EB] shadow-2xl space-y-6">
-                        <div className="flex items-center justify-between border-b border-[#E2E4EB] pb-4">
-                            <h2 className="text-lg font-black text-[#20223A] flex items-center gap-2">
-                                <Edit className="w-5 h-5 text-indigo-600" /> Chỉnh Sửa Tên & Link Video Bài Học
+                    <div className="bg-white dark:bg-gray-900 rounded-3xl max-w-lg w-full p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-2xl space-y-6">
+                        <div className="flex items-center justify-between border-b border-[#E2E4EB] dark:border-gray-800 pb-4">
+                            <h2 className="text-lg font-black text-gray-900 dark:text-white flex items-center gap-2">
+                                <Edit className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /> Chỉnh Sửa Tên & Link Video Bài Học
                             </h2>
                             <button
                                 type="button"
                                 onClick={() => setEditingLesson(null)}
-                                className="text-gray-400 hover:text-gray-600 p-1 rounded-lg cursor-pointer"
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-lg cursor-pointer"
                             >
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
 
                         <form onSubmit={handleSaveEdit} className="space-y-4">
-                            <div className="bg-indigo-50 border border-indigo-200 p-3 rounded-xl flex items-center justify-between text-xs font-extrabold text-indigo-950">
+                            <div className="bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 p-3 rounded-xl flex items-center justify-between text-xs font-extrabold text-indigo-950 dark:text-indigo-200">
                                 <span className="flex items-center gap-1.5">
-                                    <Sparkles className="w-4 h-4 text-indigo-600" /> Kỹ năng thuộc bài học:
+                                    <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> Kỹ năng thuộc bài học:
                                 </span>
-                                <span className="bg-white px-2.5 py-1 rounded-lg border border-indigo-200 text-indigo-700 font-black shadow-2xs">
+                                <span className="bg-white dark:bg-gray-800 px-2.5 py-1 rounded-lg border border-indigo-200 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300 font-black shadow-2xs">
                                     {editingLesson.skill_title}
                                 </span>
                             </div>
@@ -451,7 +451,7 @@ export const LessonManagementPage: React.FC = () => {
                             />
 
                             <div>
-                                <label className="text-xs font-semibold uppercase tracking-wider text-[#4A5568] block mb-1">
+                                <label className="text-xs font-semibold uppercase tracking-wider text-[#4A5568] dark:text-gray-300 block mb-1">
                                     MÔ TẢ BÀI HỌC
                                 </label>
                                 <textarea
@@ -459,7 +459,7 @@ export const LessonManagementPage: React.FC = () => {
                                     onChange={(e) => setEditDescription(e.target.value)}
                                     rows={3}
                                     placeholder="Mô tả nội dung bài học..."
-                                    className="w-full p-3 border border-[#E2E4EB] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#3C4097]"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-800 border border-[#E2E4EB] dark:border-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#3C4097] dark:focus:ring-indigo-500"
                                 />
                             </div>
 
@@ -470,12 +470,12 @@ export const LessonManagementPage: React.FC = () => {
                                 onChange={(e) => setEditXpReward(e.target.value)}
                             />
 
-                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E2E4EB]">
+                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E2E4EB] dark:border-gray-800">
                                 <Button
                                     type="button"
                                     variant="outline"
                                     onClick={() => setEditingLesson(null)}
-                                    className="font-bold cursor-pointer"
+                                    className="font-bold cursor-pointer dark:border-gray-700 dark:hover:bg-gray-800"
                                 >
                                     Hủy
                                 </Button>

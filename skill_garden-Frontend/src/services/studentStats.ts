@@ -39,12 +39,12 @@ export const getStudentStats = (userKey = 'guest'): StudentStats => {
     const savedStats = localStorage.getItem(statsKey(userKey))
     const today = getToday()
     if (!savedStats) {
-        return { xp: 100, streakDays: 1, lastActivityDate: today, level: calculateLevel(100) }
+        return { xp: 0, streakDays: 1, lastActivityDate: today, level: calculateLevel(0) }
     }
 
     try {
         const parsedStats = JSON.parse(savedStats) as Partial<StudentStats>
-        const xp = Number(parsedStats.xp) >= 0 ? Number(parsedStats.xp) : 100
+        const xp = typeof parsedStats.xp === 'number' && parsedStats.xp >= 0 ? parsedStats.xp : 0
         return {
             xp,
             streakDays: Number(parsedStats.streakDays) || 1,
@@ -53,7 +53,7 @@ export const getStudentStats = (userKey = 'guest'): StudentStats => {
         }
     } catch {
         localStorage.removeItem(statsKey(userKey))
-        return { xp: 100, streakDays: 1, lastActivityDate: today, level: calculateLevel(100) }
+        return { xp: 0, streakDays: 1, lastActivityDate: today, level: calculateLevel(0) }
     }
 }
 
@@ -102,6 +102,29 @@ export const recordQuizCompletion = (skillId: string, chapterId: string, userKey
         level: calculateLevel(newXp),
     }
 
+    localStorage.setItem(statsKey(userKey), JSON.stringify(nextStats))
+    return nextStats
+}
+
+export const addStudentXp = (userKey = 'guest', xpToAdd: number): StudentStats => {
+    const currentStats = getStudentStats(userKey)
+    const newXp = currentStats.xp + xpToAdd
+    const nextStats: StudentStats = {
+        ...currentStats,
+        xp: newXp,
+        level: calculateLevel(newXp),
+    }
+    localStorage.setItem(statsKey(userKey), JSON.stringify(nextStats))
+    return nextStats
+}
+
+export const syncStudentXp = (userKey = 'guest', totalXp: number): StudentStats => {
+    const currentStats = getStudentStats(userKey)
+    const nextStats: StudentStats = {
+        ...currentStats,
+        xp: totalXp,
+        level: calculateLevel(totalXp),
+    }
     localStorage.setItem(statsKey(userKey), JSON.stringify(nextStats))
     return nextStats
 }

@@ -142,9 +142,9 @@ export const SkillCatalogPage: React.FC = () => {
     ]
 
     return (
-        <div className="min-h-screen bg-[#F7F9F7] dark:bg-gray-900 text-[#1A2E22] dark:text-gray-100 pb-16 pt-6 px-4 md:px-8 max-w-7xl mx-auto space-y-8">
+        <div className="min-h-screen bg-transparent text-[#1A2E22] dark:text-gray-100 pb-16 pt-6 px-4 md:px-8 max-w-7xl mx-auto space-y-8">
             {/* Header */}
-            <div className="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl border border-[#E6ECE6] dark:border-gray-700 shadow-xs space-y-4">
+            <div className="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-xs space-y-4">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <span className="text-xs font-bold text-[#3F49C8] dark:text-indigo-400 uppercase tracking-wider block mb-1">

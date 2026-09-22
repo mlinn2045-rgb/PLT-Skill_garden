@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `level` INT NOT NULL DEFAULT 1,
   `total_xp` INT NOT NULL DEFAULT 0,
   `streak_days` INT NOT NULL DEFAULT 0,
+  `has_claimed_welcome_xp` TINYINT(1) NOT NULL DEFAULT 0,
   `last_active_at` DATETIME NULL DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -341,13 +342,20 @@ CREATE TABLE IF NOT EXISTS `system_configs` (
 -- INITIAL SEED DATA (SUPER ADMIN & SAMPLE PLANTS)
 -- ===================================================================
 
--- 1. Default Accounts (Passwords: admin123 & 123456)
+-- 1. Default Accounts (All accounts with tested & verified bcrypt hashes)
 INSERT INTO `users` (`uuid`, `email`, `full_name`, `username`, `tag_id`, `password_hash`, `role`, `status`, `is_approved`, `level`, `total_xp`)
 VALUES 
-  ('11111111-1111-1111-1111-111111111111', 'admin@pltsolutions.com', 'SkillGarden Super Admin', 'skillgarden_super_admin', 'SuperAdmin#0001', '$2y$10$a8Bp10rIzct6mia3Q3PoD.5SS8SYidJA.LhKo4Uh6BBRfGZ9OVn6iq', 'SUPER_ADMIN', 'ACTIVE', 1, 99, 99999),
-  ('22222222-2222-2222-2222-222222222222', 'lms.admin@pltsolutions.com', 'SkillGarden LMS Admin', 'lms_admin', 'LMSAdmin#0002', '$2y$10$a8Bp10rIzct6mia3Q3PoD.5SS8SYidJA.LhKo4Uh6BBRfGZ9OVn6iq', 'ADMIN', 'ACTIVE', 1, 10, 5000),
-  ('33333333-3333-3333-3333-333333333333', 'user_khoa@pltsolutions.com', 'Nguyễn Anh Khoa', 'user_khoa', 'UserKhoa#0003', '$2y$10$a8Bp10rIzct6mia3Q3PoD.5SS8SYidJA.LhKo4Uh6BBRfGZ9OVn6iq', 'USER', 'ACTIVE', 1, 5, 1250)
-ON DUPLICATE KEY UPDATE `password_hash` = VALUES(`password_hash`), `is_approved` = 1;
+  ('11111111-1111-1111-1111-111111111111', 'admin@pltsolutions.com', 'SkillGarden Super Admin', 'skillgarden_super_admin', 'SuperAdmin#0001', '$2y$10$stGwrsDbYVoebM8iRxWgY.UwYOSdMtzBW9BMhGYVcrA8qtL3PRLdy', 'SUPER_ADMIN', 'ACTIVE', 1, 99, 99999),
+  ('138d0711-38dd-4b7a-b5cd-cf36d69e0064', 'admin@skillgarden.com', 'SkillGarden Super Admin', 'skillgarden_admin', 'SuperAdmin#0002', '$2y$10$l2oApCgf.4pAMBHM3xwCfuWQEW.HQ/XPtJ5rt1He1a62s2zw6A2Vm', 'SUPER_ADMIN', 'ACTIVE', 1, 99, 99999),
+  ('22222222-2222-2222-2222-222222222222', 'lms.admin@pltsolutions.com', 'SkillGarden LMS Admin', 'lms_admin', 'LMSAdmin#0002', '$2y$10$KSOSbPOJCio32MMZfuF.oed9x3Vd6lfVX5ySzBqymDeIerItInMaO', 'ADMIN', 'ACTIVE', 1, 10, 5000),
+  ('24e9995c-5b25-4ee0-9ad5-b7724d0b2e7b', 'baopq@skillgarden.com', 'Phạm Quốc Bảo', 'baopq_admin', 'LMSAdmin#0003', '$2y$10$1mwuBucaqqQS27/coJSwRuCxNgHilztlxViKSTvmQ7aQblAiJ9lA6', 'ADMIN', 'ACTIVE', 1, 15, 4500),
+  ('33333333-3333-3333-3333-333333333333', 'user_khoa@pltsolutions.com', 'Nguyễn Anh Khoa', 'user_khoa', 'UserKhoa#0003', '$2y$10$Lm7Oyory6AriRjfDMOFgo.zzoargUHVFATIZjXk6DkvgJ8srEwot2', 'USER', 'ACTIVE', 1, 5, 1250),
+  ('8095f557-6edc-4972-a3b9-a42487699e9e', 'anhkhoa@plt.com', 'Nguyễn Anh Khoa (PLT)', 'anhkhoa', 'UserKhoa#0004', '$2y$10$73FtVLHtgWfebqOwUsNv6.gWyMo4GF9OPu2uqX933HOqtj2WLvFqG', 'USER', 'ACTIVE', 1, 5, 1500),
+  ('fa01ad1a-fe99-4f2f-add7-0cfd0e9c8527', 'anhkhoa.user@gmail.com', 'Nguyễn Anh Khoa', 'anhkhoa_dev', 'UserKhoa#0005', '$2y$10$.0fy0PN12KZ6Br4lVXdkgu9Uk6y2LSEYwyCGcawMsBW6HPP3vjaBS', 'USER', 'ACTIVE', 1, 5, 1250),
+  ('f9700f14-e6cc-4ed5-bd16-a76ce6dc663d', 'nam.le@gmail.com', 'Lê Hoàng Nam', 'namle_backend', 'UserNam#0006', '$2y$10$hDk/EcILH.uYYX0kcWPZ0exxAfBoVf2f.5Ggdi1kiaog5.Pcl/wV2', 'USER', 'ACTIVE', 1, 3, 680),
+  ('fcc276f1-7627-45a0-a8a8-c2f4e45f3da2', 'maitran@gmail.com', 'Trần Thị Mai', 'maitran99', 'UserMai#0007', '$2y$10$P57rK78tf6Ipwrk1gg8MtOjuxOn/B/r5QF6CqkRed/NKiixwj91K2', 'USER', 'ACTIVE', 0, 1, 100),
+  ('2890a0cc-f463-41b1-8444-f894e164f354', 'tuanvm.pending@gmail.com', 'Vũ Minh Tuấn', 'tuanvm', 'UserTuan#0008', '$2y$10$Y6UoI.FOTcFm5wRgzPTCd.npvdsSCmKBnM2lOwjnR1oZwSBZfvoj6', 'USER', 'ACTIVE', 0, 1, 0)
+ON DUPLICATE KEY UPDATE `password_hash` = VALUES(`password_hash`), `is_approved` = VALUES(`is_approved`);
 
 -- 2. Seed Sample Plants
 INSERT INTO `plants` (`name`, `code`, `description`) VALUES

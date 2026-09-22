@@ -58,31 +58,31 @@ export const SystemConfigPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-5xl mx-auto space-y-6">
+        <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-5xl mx-auto space-y-6">
             {/* Header */}
-            <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs flex items-center justify-between">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-extrabold flex items-center gap-2">
-                        <Settings className="w-6 h-6 text-purple-600" /> Cấu Hình Hệ Thống (System Global Settings - API Thật)
+                    <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
+                        <Settings className="w-6 h-6 text-purple-600 dark:text-purple-400" /> Cấu Hình Hệ Thống (System Global Settings - API Thật)
                     </h1>
-                    <p className="text-xs text-[#6B6D7A] mt-1">Cấu hình thương hiệu, chính sách đăng ký, bảo mật tài khoản từ CSDL MySQL (FR-SA07).</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Cấu hình thương hiệu, chính sách đăng ký, bảo mật tài khoản từ CSDL MySQL (FR-SA07).</p>
                 </div>
-                <Button variant="outline" size="sm" onClick={fetchConfigs} disabled={isLoading} className="font-bold flex items-center gap-1">
+                <Button variant="outline" size="sm" onClick={fetchConfigs} disabled={isLoading} className="font-bold flex items-center gap-1 dark:border-gray-700 dark:hover:bg-gray-800">
                     <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
                 </Button>
             </div>
 
             {toastMsg && (
-                <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold shadow-xs">
+                <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs font-bold shadow-xs">
                     {toastMsg}
                 </div>
             )}
 
             <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* General Brand & Reg Config */}
-                <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-4">
-                    <h2 className="text-sm font-extrabold text-[#20223A] border-b border-[#E2E4EB] pb-3 flex items-center gap-2">
-                        <Globe className="w-4 h-4 text-purple-600" /> Cấu Hình Thương Hiệu & Đăng Ký
+                <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-4">
+                    <h2 className="text-sm font-extrabold text-gray-900 dark:text-white border-b border-[#E2E4EB] dark:border-gray-800 pb-3 flex items-center gap-2">
+                        <Globe className="w-4 h-4 text-purple-600 dark:text-purple-400" /> Cấu Hình Thương Hiệu & Đăng Ký
                     </h2>
 
                     <Input
@@ -92,7 +92,7 @@ export const SystemConfigPage: React.FC = () => {
                     />
 
                     <div className="space-y-3 pt-2">
-                        <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer text-xs font-bold">
+                        <label className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/60 rounded-xl border border-gray-200 dark:border-gray-700 cursor-pointer text-xs font-bold text-gray-800 dark:text-gray-200">
                             <input
                                 type="checkbox"
                                 checked={allowRegistration}
@@ -102,7 +102,7 @@ export const SystemConfigPage: React.FC = () => {
                             <span>Cho phép người dùng mới Đăng Ký tài khoản</span>
                         </label>
 
-                        <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer text-xs font-bold">
+                        <label className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/60 rounded-xl border border-gray-200 dark:border-gray-700 cursor-pointer text-xs font-bold text-gray-800 dark:text-gray-200">
                             <input
                                 type="checkbox"
                                 checked={requireApproval}
@@ -115,10 +115,10 @@ export const SystemConfigPage: React.FC = () => {
                 </div>
 
                 {/* Security Config */}
-                <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-4 flex flex-col justify-between">
+                <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-4 flex flex-col justify-between">
                     <div className="space-y-4">
-                        <h2 className="text-sm font-extrabold text-[#20223A] border-b border-[#E2E4EB] pb-3 flex items-center gap-2">
-                            <Lock className="w-4 h-4 text-purple-600" /> Chính Sách Bảo Mật Session
+                        <h2 className="text-sm font-extrabold text-gray-900 dark:text-white border-b border-[#E2E4EB] dark:border-gray-800 pb-3 flex items-center gap-2">
+                            <Lock className="w-4 h-4 text-purple-600 dark:text-purple-400" /> Chính Sách Bảo Mật Session
                         </h2>
 
                         <Input

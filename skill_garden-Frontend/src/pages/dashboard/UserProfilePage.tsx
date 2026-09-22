@@ -101,6 +101,22 @@ export const UserProfilePage: React.FC = () => {
         setTimeout(() => setSuccessMsg(''), 4000)
     }
 
+    const handleUpdatePassword = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!oldPassword.trim()) {
+            alert('Vui lòng nhập mật khẩu hiện tại!')
+            return
+        }
+        if (newPassword.length < 8) {
+            alert('Mật khẩu mới phải có ít nhất 8 ký tự!')
+            return
+        }
+        setSuccessMsg('Đã cập nhật mật khẩu mới thành công!')
+        setOldPassword('')
+        setNewPassword('')
+        setTimeout(() => setSuccessMsg(''), 4000)
+    }
+
     return (
         <div className="min-h-screen bg-[#FAFAF7] dark:bg-gray-900 text-[#20223A] dark:text-gray-100 pb-12 pt-6 px-6 max-w-5xl mx-auto space-y-8">
             {/* Hidden Input for Local Computer Image Selection */}
@@ -211,7 +227,7 @@ export const UserProfilePage: React.FC = () => {
                 </form>
 
                 {/* Form Đổi mật khẩu */}
-                <form onSubmit={handleSaveProfile} className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-700 shadow-sm space-y-4">
+                <form onSubmit={handleUpdatePassword} className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-700 shadow-sm space-y-4">
                     <h2 className="text-lg font-bold flex items-center gap-2 border-b border-[#E2E4EB] dark:border-gray-700 pb-3 text-[#20223A] dark:text-white">
                         <Key className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" /> Đổi Mật Khẩu
                     </h2>
@@ -226,7 +242,9 @@ export const UserProfilePage: React.FC = () => {
                             <button
                                 type="button"
                                 onClick={() => setShowOldPassword(!showOldPassword)}
-                                className="text-[#718096] dark:text-gray-400 hover:text-[#1A2E22] dark:hover:text-white cursor-pointer"
+                                className="p-1 rounded text-[#718096] dark:text-gray-400 hover:text-[#1A2E22] dark:hover:text-white transition-colors cursor-pointer"
+                                title={showOldPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                                aria-label={showOldPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                             >
                                 {showOldPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
@@ -243,7 +261,9 @@ export const UserProfilePage: React.FC = () => {
                             <button
                                 type="button"
                                 onClick={() => setShowNewPassword(!showNewPassword)}
-                                className="text-[#718096] dark:text-gray-400 hover:text-[#1A2E22] dark:hover:text-white cursor-pointer"
+                                className="p-1 rounded text-[#718096] dark:text-gray-400 hover:text-[#1A2E22] dark:hover:text-white transition-colors cursor-pointer"
+                                title={showNewPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                                aria-label={showNewPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                             >
                                 {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>

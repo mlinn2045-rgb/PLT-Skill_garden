@@ -156,6 +156,7 @@ class AuthService
                 'level' => (int) ($user['level'] ?? 1),
                 'total_xp' => (int) ($user['total_xp'] ?? 0),
                 'streak_days' => (int) ($user['streak_days'] ?? 0),
+                'has_claimed_welcome_xp' => !empty($user['has_claimed_welcome_xp']),
             ],
             'expires_in' => $jwtConfig['expires_in'],
         ];
@@ -210,8 +211,14 @@ class AuthService
             'level' => (int) ($user['level'] ?? 1),
             'total_xp' => (int) ($user['total_xp'] ?? 0),
             'streak_days' => (int) ($user['streak_days'] ?? 0),
+            'has_claimed_welcome_xp' => !empty($user['has_claimed_welcome_xp']),
             'created_at' => $user['created_at'],
         ];
+    }
+
+    public function claimWelcomeXp(int $userId): array
+    {
+        return $this->userModel->claimWelcomeXp($userId);
     }
 
     public function approveUser(int $userId): bool
@@ -222,7 +229,22 @@ class AuthService
     public function getTokenFromCookie(): ?string
     {
         $cookieName = $this->config['jwt']['cookie_name'] ?? 'skill_garden_token';
-        return $_COOKIE[$cookieName] ?? null;
+        if (!empty($_COOKIE[$cookieName])) {
+            return $_COOKIE[$cookieName];
+        }
+
+        // Also check Authorization: Bearer <token> header
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+        if (empty($authHeader) && function_exists('apache_request_headers')) {
+            $headers = apache_request_headers();
+            $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+        }
+
+        if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+            return trim($matches[1]);
+        }
+
+        return null;
     }
 
     public function setAuthCookie(string $token): void

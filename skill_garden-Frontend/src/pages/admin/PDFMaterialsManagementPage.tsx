@@ -158,16 +158,16 @@ export const PDFMaterialsManagementPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-6">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-sm">
+        <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-sm">
                 <div>
-                    <h1 className="text-2xl font-extrabold flex items-center gap-2">
-                        <FileText className="w-6 h-6 text-[#3C4097]" /> Quản Lý Tài Liệu PDF & Tài Nguyên (API Thật)
+                    <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
+                        <FileText className="w-6 h-6 text-[#3C4097] dark:text-indigo-400" /> Quản Lý Tài Liệu PDF & Giáo Trình
                     </h1>
-                    <p className="text-xs text-[#6B6D7A] mt-1">Upload từ máy tính hoặc nhập đường dẫn URL để quản lý tài liệu tham khảo, Slide từ CSDL MySQL.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Upload hoặc liên kết các tài liệu học tập, slide PDF cho học viên tải về.</p>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={fetchMaterials} disabled={isLoading} className="font-bold flex items-center gap-1">
+                <div className="flex items-center gap-3">
+                    <Button variant="outline" size="sm" onClick={fetchMaterials} disabled={isLoading} className="font-bold flex items-center gap-1 dark:border-gray-700 dark:hover:bg-gray-800">
                         <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
                     </Button>
                     <Button
@@ -189,39 +189,39 @@ export const PDFMaterialsManagementPage: React.FC = () => {
             </div>
 
             {!isLmsAdmin && (
-                <div className="p-4 bg-amber-50 border border-amber-300 text-amber-900 rounded-2xl text-xs font-bold flex items-center gap-3 shadow-xs">
+                <div className="p-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-300 rounded-2xl text-xs font-bold flex items-center gap-3 shadow-xs">
                     <span className="text-lg">🔒</span>
                     <div>
-                        <div className="font-extrabold text-amber-950 text-sm">Giới hạn phân quyền Admin LMS</div>
-                        <p className="mt-0.5 text-amber-800">Chỉ tài khoản Quản trị LMS (LMS Content Admin) mới có quyền Upload và Xóa tài liệu PDF trong hệ thống.</p>
+                        <div className="font-extrabold text-amber-950 dark:text-amber-200 text-sm">Giới hạn phân quyền Admin LMS</div>
+                        <p className="mt-0.5 text-amber-800 dark:text-amber-300/90">Chỉ tài khoản Quản trị LMS (LMS Content Admin) mới có quyền Upload và Xóa tài liệu PDF trong hệ thống.</p>
                     </div>
                 </div>
             )}
 
             {toastMsg && (
-                <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold shadow-sm">
+                <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs font-bold shadow-sm">
                     {toastMsg}
                 </div>
             )}
             {errorMsg && (
-                <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-bold">
+                <div className="p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-xl text-xs font-bold">
                     {errorMsg}
                 </div>
             )}
 
-            <div className="bg-white rounded-2xl border border-[#E2E4EB] shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-sm overflow-hidden">
                 {isLoading ? (
-                    <div className="p-12 text-center text-xs font-bold text-[#6B6D7A] space-y-2">
-                        <RefreshCw className="w-6 h-6 animate-spin mx-auto text-[#3C4097]" />
+                    <div className="p-12 text-center text-xs font-bold text-gray-500 dark:text-gray-400 space-y-2">
+                        <RefreshCw className="w-6 h-6 animate-spin mx-auto text-[#3C4097] dark:text-indigo-400" />
                         <p>Đang nạp danh sách tài liệu từ Backend...</p>
                     </div>
                 ) : materials.length === 0 ? (
-                    <div className="p-12 text-center text-xs text-[#6B6D7A]">
+                    <div className="p-12 text-center text-xs text-gray-500 dark:text-gray-400">
                         Chưa có tài liệu PDF nào trong hệ thống.
                     </div>
                 ) : (
                     <table className="w-full text-left text-xs">
-                        <thead className="bg-gray-50 border-b border-[#E2E4EB] text-[#6B6D7A] uppercase tracking-wider font-bold">
+                        <thead className="bg-gray-50 dark:bg-gray-800/80 border-b border-[#E2E4EB] dark:border-gray-800 text-gray-600 dark:text-gray-300 uppercase tracking-wider font-bold">
                             <tr>
                                 <th className="p-4">STT</th>
                                 <th className="p-4">Tên Tài Liệu</th>
@@ -231,22 +231,22 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                                 <th className="p-4 text-right">Thao Tác</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-[#E2E4EB]">
+                        <tbody className="divide-y divide-[#E2E4EB] dark:divide-gray-800">
                             {materials.map((m, idx) => (
-                                <tr key={m.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="p-4 font-bold">{idx + 1}</td>
-                                    <td className="p-4 font-bold text-[#20223A] flex items-center gap-2">
-                                        <FileText className="w-4 h-4 text-[#3C4097]" /> {m.title}
+                                <tr key={m.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                                    <td className="p-4 font-bold text-gray-600 dark:text-gray-400">{idx + 1}</td>
+                                    <td className="p-4 font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                        <FileText className="w-4 h-4 text-[#3C4097] dark:text-indigo-400" /> {m.title}
                                     </td>
-                                    <td className="p-4 text-[#6B6D7A]">{m.lesson_title || 'Tất cả bài học'}</td>
-                                    <td className="p-4 font-mono text-[#3C4097] truncate max-w-xs">{m.file_url}</td>
-                                    <td className="p-4 text-[#6B6D7A]">{m.created_at ? new Date(m.created_at).toLocaleDateString('vi-VN') : 'Vừa tạo'}</td>
+                                    <td className="p-4 text-gray-500 dark:text-gray-400">{m.lesson_title || 'Tất cả bài học'}</td>
+                                    <td className="p-4 font-mono text-[#3C4097] dark:text-indigo-400 truncate max-w-xs">{m.file_url}</td>
+                                    <td className="p-4 text-gray-500 dark:text-gray-400">{m.created_at ? new Date(m.created_at).toLocaleDateString('vi-VN') : 'Vừa tạo'}</td>
                                     <td className="p-4 text-right">
                                         <Button
                                             variant="outline"
                                             size="sm"
                                             onClick={() => handleEdit(m)}
-                                            className="text-[#3C4097] border-indigo-200 hover:bg-indigo-50 font-bold mr-2"
+                                            className="text-[#3C4097] dark:text-indigo-400 border-indigo-200 dark:border-indigo-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 font-bold mr-2"
                                         >
                                             <Edit className="w-3.5 h-3.5" />
                                         </Button>
@@ -254,7 +254,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                                             variant="outline"
                                             size="sm"
                                             onClick={() => handleDelete(m.id)}
-                                            className="text-red-600 border-red-200 hover:bg-red-50 font-bold"
+                                            className="text-red-600 dark:text-red-400 border-red-200 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/30 font-bold"
                                         >
                                             <Trash2 className="w-3.5 h-3.5" />
                                         </Button>
@@ -268,10 +268,10 @@ export const PDFMaterialsManagementPage: React.FC = () => {
 
             {/* Upload / Edit Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] max-w-lg w-full space-y-4 shadow-2xl">
-                        <h3 className="text-lg font-bold flex items-center gap-2 text-[#20223A]">
-                            <Upload className="w-5 h-5 text-[#3C4097]" /> {editingMaterial ? 'Sửa Tài Liệu PDF' : 'Upload Tài Liệu PDF Mới'}
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 max-w-lg w-full space-y-4 shadow-2xl">
+                        <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+                            <Upload className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" /> {editingMaterial ? 'Sửa Tài Liệu PDF' : 'Upload Tài Liệu PDF Mới'}
                         </h3>
 
                         {/* Source Type Selector */}
@@ -280,55 +280,55 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                                 type="button"
                                 onClick={() => setUploadType('URL')}
                                 className={`p-3 rounded-xl border-2 font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${uploadType === 'URL'
-                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-900 shadow-xs'
-                                    : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                                    ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-300 shadow-xs'
+                                    : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                                     }`}
                             >
-                                <LinkIcon className="w-4 h-4 text-indigo-600" /> Nhập Đường Dẫn URL
+                                <LinkIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> Nhập Đường Dẫn URL
                             </button>
 
                             <button
                                 type="button"
                                 onClick={() => setUploadType('FILE')}
                                 className={`p-3 rounded-xl border-2 font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${uploadType === 'FILE'
-                                    ? 'border-emerald-600 bg-emerald-50 text-emerald-900 shadow-xs'
-                                    : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                                    ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-300 shadow-xs'
+                                    : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                                     }`}
                             >
-                                <HardDrive className="w-4 h-4 text-emerald-600" /> Tải File Từ Máy Tính
+                                <HardDrive className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Tải File Từ Máy Tính
                             </button>
                         </div>
 
                         <div className="space-y-4 text-xs">
                             <div>
-                                <label className="font-bold block mb-1 text-[#4A5568]">Tiêu đề tài liệu *</label>
+                                <label className="font-bold block mb-1 text-[#4A5568] dark:text-gray-300">Tiêu đề tài liệu *</label>
                                 <input
                                     type="text"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     placeholder="Ví dụ: Slide_Bai_1_React_Introduction.pdf"
-                                    className="w-full p-2.5 border border-[#E2E4EB] rounded-xl focus:ring-2 focus:ring-[#3C4097] outline-none"
+                                    className="w-full p-2.5 bg-white dark:bg-gray-800 border border-[#E2E4EB] dark:border-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 rounded-xl focus:ring-2 focus:ring-[#3C4097] dark:focus:ring-indigo-500 outline-none"
                                 />
                             </div>
 
                             {uploadType === 'URL' ? (
                                 <div>
-                                    <label className="font-bold block mb-1 text-[#4A5568]">Đường dẫn File (URL) *</label>
+                                    <label className="font-bold block mb-1 text-[#4A5568] dark:text-gray-300">Đường dẫn File (URL) *</label>
                                     <input
                                         type="text"
                                         value={fileUrl}
                                         onChange={(e) => setFileUrl(e.target.value)}
                                         placeholder="https://example.com/materials/react-slide.pdf"
-                                        className="w-full p-2.5 border border-[#E2E4EB] rounded-xl focus:ring-2 focus:ring-[#3C4097] outline-none font-mono"
+                                        className="w-full p-2.5 bg-white dark:bg-gray-800 border border-[#E2E4EB] dark:border-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 rounded-xl focus:ring-2 focus:ring-[#3C4097] dark:focus:ring-indigo-500 outline-none font-mono"
                                     />
                                 </div>
                             ) : (
-                                <div className="space-y-3 bg-emerald-50/50 p-4 rounded-xl border border-emerald-200">
-                                    <div className="border-2 border-dashed border-emerald-300 rounded-xl p-5 text-center bg-white space-y-2">
-                                        <FileUp className="w-8 h-8 mx-auto text-emerald-600" />
+                                <div className="space-y-3 bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                                    <div className="border-2 border-dashed border-emerald-300 dark:border-emerald-700 rounded-xl p-5 text-center bg-white dark:bg-gray-800/80 space-y-2">
+                                        <FileUp className="w-8 h-8 mx-auto text-emerald-600 dark:text-emerald-400" />
                                         <div>
-                                            <p className="font-bold text-[#20223A]">Bấm để chọn file PDF từ máy tính</p>
-                                            <p className="text-[11px] text-gray-500 mt-0.5">Hỗ trợ các file .pdf, .doc, .docx, .ppt (Tối đa 100MB)</p>
+                                            <p className="font-bold text-gray-900 dark:text-gray-100">Bấm để chọn file PDF từ máy tính</p>
+                                            <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">Hỗ trợ các file .pdf, .doc, .docx, .ppt (Tối đa 100MB)</p>
                                         </div>
 
                                         <input
@@ -346,7 +346,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                                         </label>
 
                                         {selectedFile && (
-                                            <div className="pt-1 text-xs font-bold text-emerald-800">
+                                            <div className="pt-1 text-xs font-bold text-emerald-800 dark:text-emerald-300">
                                                 <span>Đã chọn: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)</span>
                                             </div>
                                         )}
@@ -366,8 +366,8 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                                     )}
 
                                     {uploadSuccess && (
-                                        <div className="p-2.5 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-lg text-xs font-extrabold flex items-center gap-2">
-                                            <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                                        <div className="p-2.5 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300 rounded-lg text-xs font-extrabold flex items-center gap-2">
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0" />
                                             <span className="truncate">Đã upload lên Server: {fileUrl}</span>
                                         </div>
                                     )}
@@ -375,8 +375,8 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                             )}
                         </div>
 
-                        <div className="flex justify-end gap-2 pt-2 border-t border-[#E2E4EB]">
-                            <Button variant="outline" disabled={isSubmitting} onClick={resetModalState}>Hủy</Button>
+                        <div className="flex justify-end gap-2 pt-2 border-t border-[#E2E4EB] dark:border-gray-800">
+                            <Button variant="outline" disabled={isSubmitting} onClick={resetModalState} className="dark:border-gray-700 dark:hover:bg-gray-800">Hủy</Button>
                             <Button variant="indigo" disabled={Boolean(isSubmitting || (uploadType === 'FILE' && selectedFile !== null && !uploadSuccess && !fileUrl))} onClick={handleCreateMaterial} className="font-bold">
                                 {isSubmitting ? 'Đang lưu...' : editingMaterial ? 'Lưu thay đổi' : 'Thêm tài liệu'}
                             </Button>

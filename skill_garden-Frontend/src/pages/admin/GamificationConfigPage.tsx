@@ -64,33 +64,33 @@ export const GamificationConfigPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-5xl mx-auto space-y-6">
+        <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-5xl mx-auto space-y-6">
             {/* Header */}
-            <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs flex items-center justify-between">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-extrabold flex items-center gap-2">
+                    <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
                         <Sparkles className="w-6 h-6 text-yellow-500" /> Cấu Hình Gamification & Cơ Chế Tăng Trưởng (API Thật)
                     </h1>
-                    <p className="text-xs text-[#6B6D7A] mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Thiết lập điểm kinh nghiệm XP thưởng, cấp độ học viên và tốc độ sinh trưởng từ CSDL MySQL.
                     </p>
                 </div>
-                <Button variant="outline" size="sm" onClick={fetchConfigs} disabled={isLoading} className="font-bold flex items-center gap-1">
+                <Button variant="outline" size="sm" onClick={fetchConfigs} disabled={isLoading} className="font-bold flex items-center gap-1 dark:border-gray-700 dark:hover:bg-gray-800">
                     <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
                 </Button>
             </div>
 
             {toastMsg && (
-                <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold shadow-xs">
+                <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs font-bold shadow-xs">
                     {toastMsg}
                 </div>
             )}
 
             <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Rules 1: XP Rewards */}
-                <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-4">
-                    <h2 className="text-sm font-extrabold text-[#20223A] border-b border-[#E2E4EB] pb-3 flex items-center gap-2">
-                        <Trophy className="w-4 h-4 text-emerald-600" /> Quy Tắc Thưởng Điểm XP
+                <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-4">
+                    <h2 className="text-sm font-extrabold text-gray-900 dark:text-white border-b border-[#E2E4EB] dark:border-gray-800 pb-3 flex items-center gap-2">
+                        <Trophy className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Quy Tắc Thưởng Điểm XP
                     </h2>
 
                     <Input
@@ -130,10 +130,10 @@ export const GamificationConfigPage: React.FC = () => {
                 </div>
 
                 {/* Rules 2: Level & Plant Progress */}
-                <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-4 flex flex-col justify-between">
+                <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-4 flex flex-col justify-between">
                     <div className="space-y-4">
-                        <h2 className="text-sm font-extrabold text-[#20223A] border-b border-[#E2E4EB] pb-3 flex items-center gap-2">
-                            <Sprout className="w-4 h-4 text-emerald-600" /> Cấp Độ & Tiến Độ Sinh Trưởng Cây
+                        <h2 className="text-sm font-extrabold text-gray-900 dark:text-white border-b border-[#E2E4EB] dark:border-gray-800 pb-3 flex items-center gap-2">
+                            <Sprout className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Cấp Độ & Tiến Độ Sinh Trưởng Cây
                         </h2>
 
                         <Input
@@ -150,7 +150,7 @@ export const GamificationConfigPage: React.FC = () => {
                             onChange={(e) => setGrowthPerLesson(e.target.value)}
                         />
 
-                        <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-900 leading-relaxed">
+                        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-900 dark:text-emerald-300 leading-relaxed">
                             <strong className="block font-bold">Lưu ý nghiệp vụ:</strong>
                             Các mốc sinh trưởng cây sẽ tự động cập nhật visual 5 giai đoạn dựa trên tỷ lệ % hoàn thành bài học.
                         </div>

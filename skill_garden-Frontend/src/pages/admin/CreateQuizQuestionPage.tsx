@@ -36,35 +36,35 @@ export const CreateQuizQuestionPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-4xl mx-auto space-y-6">
+        <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-4xl mx-auto space-y-6">
             <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/admin/quiz-bank')} aria-label="Quay lại ngân hàng câu hỏi">
+                <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/admin/quiz-bank')} aria-label="Quay lại ngân hàng câu hỏi" className="dark:border-gray-700 dark:hover:bg-gray-800">
                     <ArrowLeft className="w-4 h-4" />
                 </Button>
                 <div>
-                    <h1 className="text-2xl font-extrabold flex items-center gap-2">
-                        <HelpCircle className="w-6 h-6 text-[#3C4097]" /> Tạo câu hỏi Quiz mới
+                    <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
+                        <HelpCircle className="w-6 h-6 text-[#3C4097] dark:text-indigo-400" /> Tạo câu hỏi Quiz mới
                     </h1>
-                    <p className="text-xs text-[#6B6D7A] mt-1">Thiết lập nội dung, đáp án đúng và mức độ khó.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Thiết lập nội dung, đáp án đúng và mức độ khó.</p>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-sm space-y-5">
+            <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-sm space-y-5">
                 <div>
-                    <label htmlFor="question" className="text-sm font-bold block mb-2">Nội dung câu hỏi</label>
+                    <label htmlFor="question" className="text-sm font-bold block mb-2 text-gray-900 dark:text-gray-100">Nội dung câu hỏi</label>
                     <textarea
                         id="question"
                         required
                         value={question}
                         onChange={event => setQuestion(event.target.value)}
                         placeholder="Nhập nội dung câu hỏi..."
-                        className="w-full min-h-28 rounded-xl border border-[#E2E4EB] px-3 py-2 text-sm outline-none focus:border-[#3C4097]"
+                        className="w-full min-h-28 rounded-xl border border-[#E2E4EB] dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 outline-none focus:border-[#3C4097] dark:focus:border-indigo-500"
                     />
                 </div>
 
                 <div>
-                    <label htmlFor="difficulty" className="text-sm font-bold block mb-2">Mức độ khó</label>
-                    <select id="difficulty" value={difficulty} onChange={event => setDifficulty(event.target.value)} className="w-full rounded-xl border border-[#E2E4EB] px-3 py-2.5 text-sm bg-white">
+                    <label htmlFor="difficulty" className="text-sm font-bold block mb-2 text-gray-900 dark:text-gray-100">Mức độ khó</label>
+                    <select id="difficulty" value={difficulty} onChange={event => setDifficulty(event.target.value)} className="w-full rounded-xl border border-[#E2E4EB] dark:border-gray-700 px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 outline-none focus:border-[#3C4097] dark:focus:border-indigo-500">
                         <option value="EASY">Dễ</option>
                         <option value="MEDIUM">Trung bình</option>
                         <option value="HARD">Khó</option>
@@ -73,26 +73,26 @@ export const CreateQuizQuestionPage: React.FC = () => {
 
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-sm font-bold">Các phương án trả lời</h2>
-                        <Button type="button" variant="outline" size="sm" onClick={addOption} className="font-bold flex items-center gap-1">
+                        <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100">Các phương án trả lời</h2>
+                        <Button type="button" variant="outline" size="sm" onClick={addOption} className="font-bold flex items-center gap-1 dark:border-gray-700 dark:hover:bg-gray-800">
                             <Plus className="w-3.5 h-3.5" /> Thêm phương án
                         </Button>
                     </div>
                     {options.map((option, index) => (
                         <div key={index} className="flex items-center gap-2">
-                            <button type="button" onClick={() => setCorrectOption(index)} className={`shrink-0 ${option.correct ? 'text-emerald-600' : 'text-gray-300'}`} aria-label={`Chọn phương án ${index + 1} là đáp án đúng`}>
+                            <button type="button" onClick={() => setCorrectOption(index)} className={`shrink-0 ${option.correct ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-300 dark:text-gray-600'}`} aria-label={`Chọn phương án ${index + 1} là đáp án đúng`}>
                                 <CheckCircle className="w-5 h-5" />
                             </button>
                             <Input required value={option.text} onChange={event => updateOption(index, event.target.value)} placeholder={`Phương án ${String.fromCharCode(65 + index)}`} />
-                            <Button type="button" variant="outline" size="sm" onClick={() => removeOption(index)} disabled={options.length <= 2} aria-label={`Xóa phương án ${index + 1}`}>
-                                <Trash2 className="w-4 h-4 text-red-600" />
+                            <Button type="button" variant="outline" size="sm" onClick={() => removeOption(index)} disabled={options.length <= 2} aria-label={`Xóa phương án ${index + 1}`} className="dark:border-gray-700">
+                                <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
                             </Button>
                         </div>
                     ))}
                 </div>
 
-                <div className="flex justify-end gap-2 border-t border-[#E2E4EB] pt-4">
-                    <Button type="button" variant="outline" onClick={() => navigate('/dashboard/admin/quiz-bank')}>Hủy</Button>
+                <div className="flex justify-end gap-2 border-t border-[#E2E4EB] dark:border-gray-800 pt-4">
+                    <Button type="button" variant="outline" onClick={() => navigate('/dashboard/admin/quiz-bank')} className="dark:border-gray-700 dark:hover:bg-gray-800">Hủy</Button>
                     <Button type="submit" variant="indigo" className="font-bold flex items-center gap-2"><Save className="w-4 h-4" /> Lưu câu hỏi</Button>
                 </div>
             </form>
