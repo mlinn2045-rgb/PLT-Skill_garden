@@ -42,12 +42,12 @@ export const SkillDetailPage: React.FC = () => {
 
             {/* Breadcrumbs & Actions bar */}
             <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#718096]">
-                    <Link to="/dashboard" className="hover:text-[#1A2E22]">Kỹ năng</Link>
+                <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                    <Link to="/dashboard" className="hover:text-gray-900 dark:hover:text-white">Kỹ năng</Link>
                     <span>&rsaquo;</span>
-                    <Link to="/dashboard/learning-path/1" className="hover:text-[#1A2E22]">Lập trình Front-end</Link>
+                    <Link to="/dashboard/learning-path/1" className="hover:text-gray-900 dark:hover:text-white">Lập trình Front-end</Link>
                     <span>&rsaquo;</span>
-                    <span className="text-[#1A2E22] font-bold">JavaScript Core & Async</span>
+                    <span className="text-gray-900 dark:text-white font-bold">JavaScript Core & Async</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -60,7 +60,7 @@ export const SkillDetailPage: React.FC = () => {
             </div>
 
             {/* Hero Header Box */}
-            <div className="bg-[#E6FFFA]/40 border border-[#68D391]/30 rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+            <div className="bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-300/40 dark:border-emerald-800/40 rounded-3xl p-6 sm:p-8 relative overflow-hidden">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
                     <div className="lg:col-span-8 space-y-4">
@@ -70,11 +70,11 @@ export const SkillDetailPage: React.FC = () => {
                             <Badge variant="success">Cập nhật 2026</Badge>
                         </div>
 
-                        <h1 className="text-2xl sm:text-4xl font-black text-[#1A2E22] tracking-tight">
-                            JavaScript Core & Async <span className="text-[#3F49C8] font-normal">(ES6+ & Bất đồng bộ)</span>
+                        <h1 className="text-2xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight">
+                            JavaScript Core & Async <span className="text-[#3F49C8] dark:text-indigo-400 font-normal">(ES6+ & Bất đồng bộ)</span>
                         </h1>
 
-                        <p className="text-sm text-[#4A5568] leading-relaxed max-w-2xl">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl">
                             Làm chủ tư duy lập trình JavaScript hiện đại, cơ chế Event Loop, Promise, Async/Await, Microtasks và xử lý DOM thời gian thực với tiêu chuẩn kỹ sư PLT Solutions.
                         </p>
 
@@ -87,7 +87,7 @@ export const SkillDetailPage: React.FC = () => {
                             <Button variant="outline" size="md">Xem sơ đồ cây kỹ năng</Button>
                         </div>
 
-                        <div className="flex items-center gap-4 pt-2 text-xs text-[#718096]">
+                        <div className="flex items-center gap-4 pt-2 text-xs text-gray-500 dark:text-gray-400">
                             <span>⏱️ Bài kế: <strong>15 phút</strong></span>
                             <span>•</span>
                             <span>📖 Đề tài: <strong>Promise.allSettled & Generators</strong></span>
@@ -95,22 +95,22 @@ export const SkillDetailPage: React.FC = () => {
                     </div>
 
                     {/* Right Circular Gauge Widget */}
-                    <div className="lg:col-span-4 bg-white/90 backdrop-blur-md rounded-2xl p-6 border border-[#E6ECE6] shadow-sm flex flex-col items-center justify-center text-center space-y-3">
-                        <div className="flex items-center gap-2 w-full justify-between text-xs font-bold text-[#4A5568]">
-                            <span className="flex items-center gap-1"><Sprout className="w-4 h-4 text-[#2D7A4F]" /> Cây JS Sinh Khối</span>
-                            <span className="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full">Cấp độ 3</span>
+                    <div className="lg:col-span-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col items-center justify-center text-center space-y-3">
+                        <div className="flex items-center gap-2 w-full justify-between text-xs font-bold text-gray-700 dark:text-gray-300">
+                            <span className="flex items-center gap-1"><Sprout className="w-4 h-4 text-[#2D7A4F] dark:text-emerald-400" /> Cây JS Sinh Khối</span>
+                            <span className="bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[10px] px-2 py-0.5 rounded-full">Cấp độ 3</span>
                         </div>
 
                         <CircularProgress percentage={68} label="TIẾN ĐỘ SINH TRƯỞNG" size={130} />
 
-                        <div className="grid grid-cols-2 gap-3 w-full pt-2 border-t border-[#E6ECE6] text-xs">
-                            <div className="p-2 rounded-xl bg-[#F7FAF7] text-left">
-                                <span className="text-[10px] text-[#718096] block">Độ ẩm kiến thức</span>
-                                <strong className="text-[#2D7A4F] font-bold">85% Tươi tốt</strong>
+                        <div className="grid grid-cols-2 gap-3 w-full pt-2 border-t border-gray-200 dark:border-gray-700 text-xs">
+                            <div className="p-2 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-left">
+                                <span className="text-[10px] text-gray-500 dark:text-gray-400 block">Độ ẩm kiến thức</span>
+                                <strong className="text-emerald-600 dark:text-emerald-400 font-bold">85% Tươi tốt</strong>
                             </div>
-                            <div className="p-2 rounded-xl bg-[#F7FAF7] text-left">
-                                <span className="text-[10px] text-[#718096] block">Kinh nghiệm đạt</span>
-                                <strong className="text-amber-600 font-bold font-mono">420 / 600 XP</strong>
+                            <div className="p-2 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-left">
+                                <span className="text-[10px] text-gray-500 dark:text-gray-400 block">Kinh nghiệm đạt</span>
+                                <strong className="text-amber-600 dark:text-amber-400 font-bold font-mono">420 / 600 XP</strong>
                             </div>
                         </div>
                     </div>
@@ -121,42 +121,42 @@ export const SkillDetailPage: React.FC = () => {
             {/* 4 Quick Stat Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <Card className="p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-50 text-[#3F49C8] flex items-center justify-center font-bold">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-[#3F49C8] dark:text-indigo-400 flex items-center justify-center font-bold">
                         <BookOpen className="w-5 h-5" />
                     </div>
                     <div>
-                        <div className="text-lg font-black text-[#1A2E22]">28 / 42</div>
-                        <div className="text-[11px] text-[#718096]">Bài học hoàn thành</div>
+                        <div className="text-lg font-black text-gray-900 dark:text-white">28 / 42</div>
+                        <div className="text-[11px] text-gray-500 dark:text-gray-400">Bài học hoàn thành</div>
                     </div>
                 </Card>
 
                 <Card className="p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
                         <CheckCircle2 className="w-5 h-5" />
                     </div>
                     <div>
-                        <div className="text-lg font-black text-[#1A2E22]">6 / 8</div>
-                        <div className="text-[11px] text-[#718096]">Quiz đạt chuẩn</div>
+                        <div className="text-lg font-black text-gray-900 dark:text-white">6 / 8</div>
+                        <div className="text-[11px] text-gray-500 dark:text-gray-400">Quiz đạt chuẩn</div>
                     </div>
                 </Card>
 
                 <Card className="p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+                    <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
                         <Code className="w-5 h-5" />
                     </div>
                     <div>
-                        <div className="text-lg font-black text-[#1A2E22]">2 Mini-lab</div>
-                        <div className="text-[11px] text-[#718096]">Dự án thực chiến</div>
+                        <div className="text-lg font-black text-gray-900 dark:text-white">2 Mini-lab</div>
+                        <div className="text-[11px] text-gray-500 dark:text-gray-400">Dự án thực chiến</div>
                     </div>
                 </Card>
 
                 <Card className="p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
                         <Sprout className="w-5 h-5" />
                     </div>
                     <div>
-                        <div className="text-lg font-black text-[#1A2E22]">Cấp độ 3</div>
-                        <div className="text-[11px] text-[#718096]">Thân gỗ vững chãi</div>
+                        <div className="text-lg font-black text-gray-900 dark:text-white">Cấp độ 3</div>
+                        <div className="text-[11px] text-gray-500 dark:text-gray-400">Thân gỗ vững chãi</div>
                     </div>
                 </Card>
             </div>
@@ -169,125 +169,125 @@ export const SkillDetailPage: React.FC = () => {
 
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="text-xl font-bold text-[#1A2E22]">Lộ trình học chi tiết</h2>
-                            <p className="text-xs text-[#718096]">5 Modules từ nền tảng đến kiến trúc ứng dụng bất đồng bộ</p>
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Lộ trình học chi tiết</h2>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">5 Modules từ nền tảng đến kiến trúc ứng dụng bất đồng bộ</p>
                         </div>
-                        <button className="text-xs font-bold text-[#3F49C8] hover:underline">
+                        <button className="text-xs font-bold text-[#3F49C8] dark:text-indigo-400 hover:underline">
                             Mở rộng tất cả
                         </button>
                     </div>
 
                     {/* Module 01 */}
-                    <Card className="overflow-hidden border-[#E6ECE6]">
-                        <div className="p-4 bg-[#F7FAF7] flex items-center justify-between cursor-pointer" onClick={() => toggleModule(1)}>
+                    <Card className="overflow-hidden border-gray-200 dark:border-gray-700">
+                        <div className="p-4 bg-gray-50 dark:bg-gray-800/60 flex items-center justify-between cursor-pointer" onClick={() => toggleModule(1)}>
                             <div className="flex items-center gap-3">
                                 <div className="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0">✓</div>
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">MODULE 01</span>
-                                        <span className="text-[10px] text-emerald-600 font-bold">Đã hoàn thành 100%</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300 px-2 py-0.5 rounded-md">MODULE 01</span>
+                                        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Đã hoàn thành 100%</span>
                                     </div>
-                                    <h3 className="text-sm font-bold text-[#1A2E22] mt-0.5">Căn bản & Kiểu dữ liệu nâng cao</h3>
+                                    <h3 className="text-sm font-bold text-gray-900 dark:text-white mt-0.5">Căn bản & Kiểu dữ liệu nâng cao</h3>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
-                                <span className="text-xs font-mono text-[#718096]">8/8 bài học</span>
-                                {openModules.includes(1) ? <ChevronUp className="w-4 h-4 text-[#718096]" /> : <ChevronDown className="w-4 h-4 text-[#718096]" />}
+                                <span className="text-xs font-mono text-gray-500 dark:text-gray-400">8/8 bài học</span>
+                                {openModules.includes(1) ? <ChevronUp className="w-4 h-4 text-gray-500 dark:text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />}
                             </div>
                         </div>
                     </Card>
 
                     {/* Module 02 */}
-                    <Card className="overflow-hidden border-[#E6ECE6]">
-                        <div className="p-4 bg-[#F7FAF7] flex items-center justify-between cursor-pointer" onClick={() => toggleModule(2)}>
+                    <Card className="overflow-hidden border-gray-200 dark:border-gray-700">
+                        <div className="p-4 bg-gray-50 dark:bg-gray-800/60 flex items-center justify-between cursor-pointer" onClick={() => toggleModule(2)}>
                             <div className="flex items-center gap-3">
                                 <div className="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0">✓</div>
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">MODULE 02</span>
-                                        <span className="text-[10px] text-emerald-600 font-bold">Đã hoàn thành 100%</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300 px-2 py-0.5 rounded-md">MODULE 02</span>
+                                        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Đã hoàn thành 100%</span>
                                     </div>
-                                    <h3 className="text-sm font-bold text-[#1A2E22] mt-0.5">Hàm, Closure & Scope chuyên sâu</h3>
+                                    <h3 className="text-sm font-bold text-gray-900 dark:text-white mt-0.5">Hàm, Closure & Scope chuyên sâu</h3>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
-                                <span className="text-xs font-mono text-[#718096]">10/10 bài học</span>
-                                {openModules.includes(2) ? <ChevronUp className="w-4 h-4 text-[#718096]" /> : <ChevronDown className="w-4 h-4 text-[#718096]" />}
+                                <span className="text-xs font-mono text-gray-500 dark:text-gray-400">10/10 bài học</span>
+                                {openModules.includes(2) ? <ChevronUp className="w-4 h-4 text-gray-500 dark:text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />}
                             </div>
                         </div>
                     </Card>
 
                     {/* Module 03 - Active Module (Open by default) */}
-                    <Card className="overflow-hidden border-2 border-[#3F49C8] shadow-md">
-                        <div className="p-4 bg-indigo-50/50 flex items-center justify-between cursor-pointer border-b border-indigo-100" onClick={() => toggleModule(3)}>
+                    <Card className="overflow-hidden border-2 border-[#3F49C8] dark:border-indigo-500 shadow-md">
+                        <div className="p-4 bg-indigo-50/50 dark:bg-indigo-950/40 flex items-center justify-between cursor-pointer border-b border-indigo-100 dark:border-indigo-900/50" onClick={() => toggleModule(3)}>
                             <div className="flex items-center gap-3">
                                 <div className="w-7 h-7 rounded-full bg-[#3F49C8] text-white flex items-center justify-center text-xs font-bold shrink-0">03</div>
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#3F49C8] bg-indigo-100 px-2 py-0.5 rounded-md">MODULE ĐANG HỌC</span>
-                                        <span className="text-[10px] text-indigo-700 font-bold">Tiến độ 65%</span>
+                                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#3F49C8] bg-indigo-100 dark:bg-indigo-950 dark:text-indigo-300 px-2 py-0.5 rounded-md">MODULE ĐANG HỌC</span>
+                                        <span className="text-[10px] text-indigo-700 dark:text-indigo-300 font-bold">Tiến độ 65%</span>
                                     </div>
-                                    <h3 className="text-sm font-extrabold text-[#1A2E22] mt-0.5">Bất đồng bộ, Promise & Event Loop</h3>
+                                    <h3 className="text-sm font-extrabold text-gray-900 dark:text-white mt-0.5">Bất đồng bộ, Promise & Event Loop</h3>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
-                                <span className="text-xs font-mono text-[#718096]">8/12 bài hoàn thành</span>
-                                {openModules.includes(3) ? <ChevronUp className="w-4 h-4 text-[#3F49C8]" /> : <ChevronDown className="w-4 h-4 text-[#3F49C8]" />}
+                                <span className="text-xs font-mono text-gray-500 dark:text-gray-400">8/12 bài hoàn thành</span>
+                                {openModules.includes(3) ? <ChevronUp className="w-4 h-4 text-[#3F49C8] dark:text-indigo-400" /> : <ChevronDown className="w-4 h-4 text-[#3F49C8] dark:text-indigo-400" />}
                             </div>
                         </div>
 
                         {openModules.includes(3) && (
-                            <div className="p-4 space-y-3 bg-white">
+                            <div className="p-4 space-y-3 bg-white dark:bg-gray-800">
 
                                 {/* 3.1 */}
-                                <div className="p-3 rounded-xl bg-[#F7FAF7] flex items-center justify-between text-xs hover:bg-gray-100 transition-colors">
+                                <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 flex items-center justify-between text-xs hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                                     <div className="flex items-center gap-3">
-                                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                                        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                                         <div>
-                                            <h4 className="font-semibold text-[#1A2E22]">3.1 - Cơ chế Call Stack, Web APIs và Task Queue</h4>
-                                            <div className="flex items-center gap-2 text-[11px] text-[#718096] mt-0.5">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">3.1 - Cơ chế Call Stack, Web APIs và Task Queue</h4>
+                                            <div className="flex items-center gap-2 text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
                                                 <span>📖 Lý thuyết</span>
                                                 <span>• 14 phút</span>
-                                                <span className="text-amber-600 font-bold">+20 XP</span>
+                                                <span className="text-amber-600 dark:text-amber-400 font-bold">+20 XP</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <Link to={`/dashboard/video-lesson/${id}`} className="text-[11px] font-semibold text-[#3F49C8] hover:underline">
+                                    <Link to={`/dashboard/video-lesson/${id}`} className="text-[11px] font-semibold text-[#3F49C8] dark:text-indigo-400 hover:underline">
                                         Ôn lại
                                     </Link>
                                 </div>
 
                                 {/* 3.2 */}
-                                <div className="p-3 rounded-xl bg-[#F7FAF7] flex items-center justify-between text-xs hover:bg-gray-100 transition-colors">
+                                <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 flex items-center justify-between text-xs hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                                     <div className="flex items-center gap-3">
-                                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                                        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                                         <div>
-                                            <h4 className="font-semibold text-[#1A2E22]">3.2 - Microtasks vs Macrotasks qua ví dụ thực tế</h4>
-                                            <div className="flex items-center gap-2 text-[11px] text-[#718096] mt-0.5">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">3.2 - Microtasks vs Macrotasks qua ví dụ thực tế</h4>
+                                            <div className="flex items-center gap-2 text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
                                                 <span>💻 Code Lab</span>
                                                 <span>• 22 phút</span>
-                                                <span className="text-amber-600 font-bold">+25 XP</span>
+                                                <span className="text-amber-600 dark:text-amber-400 font-bold">+25 XP</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <Link to={`/dashboard/video-lesson/${id}`} className="text-[11px] font-semibold text-[#3F49C8] hover:underline">
+                                    <Link to={`/dashboard/video-lesson/${id}`} className="text-[11px] font-semibold text-[#3F49C8] dark:text-indigo-400 hover:underline">
                                         Ôn lại
                                     </Link>
                                 </div>
 
                                 {/* 3.3 - CURRENT LESSON */}
-                                <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 border-2 border-emerald-500 shadow-sm flex flex-wrap items-center justify-between gap-3">
+                                <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 dark:from-emerald-950/40 dark:via-teal-950/30 dark:to-indigo-950/40 border-2 border-emerald-500 shadow-sm flex flex-wrap items-center justify-between gap-3">
                                     <div className="flex items-center gap-3">
                                         <div className="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
                                             <PlayCircle className="w-5 h-5" />
                                         </div>
                                         <div>
-                                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-200 px-2 py-0.5 rounded-md">BÀI HỌC HIỆN TẠI</span>
-                                            <h4 className="text-sm font-bold text-[#1A2E22] mt-0.5">3.3 - Xử lý lỗi với Promise.allSettled() và async generators</h4>
-                                            <div className="flex items-center gap-2 text-xs text-[#718096] mt-0.5">
+                                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 px-2 py-0.5 rounded-md">BÀI HỌC HIỆN TẠI</span>
+                                            <h4 className="text-sm font-bold text-gray-900 dark:text-white mt-0.5">3.3 - Xử lý lỗi với Promise.allSettled() và async generators</h4>
+                                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                                 <span>💻 Code Lab & Bài tập</span>
                                                 <span>• 18 phút</span>
-                                                <span className="text-amber-600 font-bold">+30 XP</span>
+                                                <span className="text-amber-600 dark:text-amber-400 font-bold">+30 XP</span>
                                             </div>
                                         </div>
                                     </div>
@@ -300,35 +300,35 @@ export const SkillDetailPage: React.FC = () => {
                                 </div>
 
                                 {/* 3.4 */}
-                                <div className="p-3 rounded-xl bg-white border border-[#E6ECE6] flex items-center justify-between text-xs">
+                                <div className="p-3 rounded-xl bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 flex items-center justify-between text-xs">
                                     <div className="flex items-center gap-3 opacity-80">
-                                        <div className="w-4 h-4 rounded-full border border-gray-300 shrink-0" />
+                                        <div className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600 shrink-0" />
                                         <div>
-                                            <h4 className="font-semibold text-[#1A2E22]">3.4 - Hủy Fetch Request với AbortController</h4>
-                                            <div className="flex items-center gap-2 text-[11px] text-[#718096] mt-0.5">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">3.4 - Hủy Fetch Request với AbortController</h4>
+                                            <div className="flex items-center gap-2 text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
                                                 <span>📖 Lý thuyết & Demo</span>
                                                 <span>• 15 phút</span>
                                                 <span>+20 XP</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <span className="text-[11px] text-[#718096]">Kế tiếp</span>
+                                    <span className="text-[11px] text-gray-500 dark:text-gray-400">Kế tiếp</span>
                                 </div>
 
                                 {/* 3.5 */}
-                                <div className="p-3 rounded-xl bg-white border border-[#E6ECE6] flex items-center justify-between text-xs opacity-60">
+                                <div className="p-3 rounded-xl bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 flex items-center justify-between text-xs opacity-60">
                                     <div className="flex items-center gap-3">
                                         <Lock className="w-4 h-4 text-gray-400 shrink-0" />
                                         <div>
-                                            <h4 className="font-semibold text-[#1A2E22]">3.5 - Quiz trắc nghiệm năng lực Event Loop & Async</h4>
-                                            <div className="flex items-center gap-2 text-[11px] text-[#718096] mt-0.5">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">3.5 - Quiz trắc nghiệm năng lực Event Loop & Async</h4>
+                                            <div className="flex items-center gap-2 text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
                                                 <span>❓ 15 câu hỏi</span>
                                                 <span>• 20 phút</span>
                                                 <span>+40 XP</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <span className="text-[11px] text-[#718096]">🔒 Khóa</span>
+                                    <span className="text-[11px] text-gray-500 dark:text-gray-400">🔒 Khóa</span>
                                 </div>
 
                             </div>
@@ -336,21 +336,21 @@ export const SkillDetailPage: React.FC = () => {
                     </Card>
 
                     {/* Module 04 */}
-                    <Card className="overflow-hidden border-[#E6ECE6]">
-                        <div className="p-4 bg-[#F7FAF7] flex items-center justify-between cursor-pointer" onClick={() => toggleModule(4)}>
+                    <Card className="overflow-hidden border-gray-200 dark:border-gray-700">
+                        <div className="p-4 bg-gray-50 dark:bg-gray-800/60 flex items-center justify-between cursor-pointer" onClick={() => toggleModule(4)}>
                             <div className="flex items-center gap-3">
-                                <div className="w-7 h-7 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-xs font-bold shrink-0">04</div>
+                                <div className="w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 flex items-center justify-center text-xs font-bold shrink-0">04</div>
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-600 bg-gray-200 px-2 py-0.5 rounded-md">MODULE TIẾP THEO</span>
-                                        <span className="text-[10px] text-gray-500">Đã mở khóa</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-md">MODULE TIẾP THEO</span>
+                                        <span className="text-[10px] text-gray-500 dark:text-gray-400">Đã mở khóa</span>
                                     </div>
-                                    <h3 className="text-sm font-bold text-[#1A2E22] mt-0.5">DOM tương tác & Web APIs hiện đại</h3>
+                                    <h3 className="text-sm font-bold text-gray-900 dark:text-white mt-0.5">DOM tương tác & Web APIs hiện đại</h3>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
-                                <span className="text-xs font-mono text-[#718096]">8 bài học</span>
-                                {openModules.includes(4) ? <ChevronUp className="w-4 h-4 text-[#718096]" /> : <ChevronDown className="w-4 h-4 text-[#718096]" />}
+                                <span className="text-xs font-mono text-gray-500 dark:text-gray-400">8 bài học</span>
+                                {openModules.includes(4) ? <ChevronUp className="w-4 h-4 text-gray-500 dark:text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />}
                             </div>
                         </div>
                     </Card>
@@ -361,17 +361,17 @@ export const SkillDetailPage: React.FC = () => {
                 <div className="lg:col-span-4 space-y-6">
 
                     {/* Care for Skill Tree Widget */}
-                    <Card className="p-5 bg-gradient-to-br from-emerald-50 to-[#E6FFFA] border-[#68D391]/40">
+                    <Card className="p-5 bg-gradient-to-br from-emerald-50 to-[#E6FFFA] dark:from-emerald-950/30 dark:to-teal-950/30 border-emerald-300/40 dark:border-emerald-800/50">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-extrabold uppercase tracking-wider text-[#2D7A4F] flex items-center gap-1.5">
+                            <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
                                 🪴 Chăm sóc Cây Kỹ Năng
                             </span>
-                            <span className="text-xs font-mono font-bold text-[#2D7A4F]">Chuỗi 7 ngày</span>
+                            <span className="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400">Chuỗi 7 ngày</span>
                         </div>
 
-                        <div className="bg-white p-3 rounded-xl border border-[#68D391]/30 text-xs space-y-1">
-                            <strong className="text-[#1A2E22] block font-bold">💡 Gợi ý sinh trưởng hôm nay</strong>
-                            <p className="text-[#718096]">
+                        <div className="bg-white dark:bg-gray-800 p-3 rounded-xl border border-emerald-300/30 dark:border-emerald-800/40 text-xs space-y-1">
+                            <strong className="text-gray-900 dark:text-white block font-bold">💡 Gợi ý sinh trưởng hôm nay</strong>
+                            <p className="text-gray-600 dark:text-gray-300">
                                 Học thêm <strong>1 bài học</strong> nữa trước 23:59 để giữ độ tươi tốt của cây ở mức 100% và nhận tối đa điểm tích lũy vườn số (+50 XP).
                             </p>
                         </div>
@@ -384,42 +384,42 @@ export const SkillDetailPage: React.FC = () => {
                     {/* Special Certificate Badge */}
                     <Card className="p-5">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-bold uppercase tracking-wider text-[#4A5568]">Chứng nhận chuyên môn</span>
-                            <Award className="w-4 h-4 text-[#3F49C8]" />
+                            <span className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">Chứng nhận chuyên môn</span>
+                            <Award className="w-4 h-4 text-[#3F49C8] dark:text-indigo-400" />
                         </div>
 
-                        <div className="p-4 rounded-xl bg-indigo-50/50 border border-indigo-100 flex items-center gap-3">
+                        <div className="p-4 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-[#3F49C8] text-white flex items-center justify-center font-bold text-lg shrink-0">
                                 🛡️
                             </div>
                             <div>
-                                <h4 className="text-xs font-bold text-[#1A2E22]">JavaScript Architect</h4>
-                                <p className="text-[10px] text-[#718096]">Cấp bởi PLT Solutions • Mở khóa khi đạt 100%</p>
+                                <h4 className="text-xs font-bold text-gray-900 dark:text-white">JavaScript Architect</h4>
+                                <p className="text-[10px] text-gray-500 dark:text-gray-400">Cấp bởi PLT Solutions • Mở khóa khi đạt 100%</p>
                             </div>
                         </div>
 
                         <div className="mt-3">
-                            <div className="flex justify-between text-[11px] text-[#718096] mb-1">
+                            <div className="flex justify-between text-[11px] text-gray-500 dark:text-gray-400 mb-1">
                                 <span>Tiến độ chứng chỉ</span>
                                 <span className="font-bold font-mono">28/42 bài</span>
                             </div>
-                            <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-                                <div className="bg-[#3F49C8] h-full w-[66%]" />
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
+                                <div className="bg-[#3F49C8] dark:bg-indigo-500 h-full w-[66%]" />
                             </div>
                         </div>
                     </Card>
 
                     {/* Instructor & Mentor Widget */}
                     <Card className="p-5">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-[#4A5568] mb-3">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-3">
                             Giảng viên & Cố vấn
                         </h4>
                         <div className="flex items-center gap-3">
                             <Avatar name="Anh Khoa" levelBadge="TL" size="lg" />
                             <div>
-                                <h4 className="text-xs font-bold text-[#1A2E22]">Anh Khoa (Tech Lead)</h4>
-                                <p className="text-[11px] text-[#718096]">Front-end Lead @ PLT Solutions</p>
-                                <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
+                                <h4 className="text-xs font-bold text-gray-900 dark:text-white">Anh Khoa (Tech Lead)</h4>
+                                <p className="text-[11px] text-gray-500 dark:text-gray-400">Front-end Lead @ PLT Solutions</p>
+                                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Trực tuyến hỗ trợ giải đáp
                                 </span>
                             </div>
@@ -432,23 +432,23 @@ export const SkillDetailPage: React.FC = () => {
 
                     {/* Community Resources */}
                     <Card className="p-5 space-y-3">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-[#4A5568]">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
                             Tài nguyên & Cộng đồng
                         </h4>
 
-                        <a href="#" className="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 transition-colors text-xs text-[#4A5568]">
+                        <a href="#" className="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-xs text-gray-700 dark:text-gray-300">
                             <span className="flex items-center gap-2">📄 Tài liệu CheatSheet ES6+ (PDF)</span>
-                            <Download className="w-3.5 h-3.5 text-[#718096]" />
+                            <Download className="w-3.5 h-3.5 text-gray-400" />
                         </a>
 
-                        <a href="#" className="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 transition-colors text-xs text-[#4A5568]">
+                        <a href="#" className="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-xs text-gray-700 dark:text-gray-300">
                             <span className="flex items-center gap-2">💬 Kênh thảo luận Discord PLT</span>
-                            <ExternalLink className="w-3.5 h-3.5 text-[#718096]" />
+                            <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
                         </a>
 
-                        <a href="#" className="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 transition-colors text-xs text-[#4A5568]">
+                        <a href="#" className="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-xs text-gray-700 dark:text-gray-300">
                             <span className="flex items-center gap-2">💻 Kho mã nguồn GitHub Labs</span>
-                            <ExternalLink className="w-3.5 h-3.5 text-[#718096]" />
+                            <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
                         </a>
                     </Card>
 

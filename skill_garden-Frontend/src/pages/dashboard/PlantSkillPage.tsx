@@ -40,12 +40,12 @@ export const PlantSkillPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#F7F9F7] text-[#1A2E22] pb-16 pt-6 px-4 md:px-8 max-w-3xl mx-auto space-y-6">
+        <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-16 pt-6 px-4 md:px-8 max-w-3xl mx-auto space-y-6">
             <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/skill-catalog')} className="font-bold flex items-center gap-2">
                 <ArrowLeft className="w-4 h-4" /> Quay lại danh mục kỹ năng
             </Button>
 
-            <div className="bg-white rounded-3xl border border-[#E6ECE6] shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
                 <div className="bg-gradient-to-r from-[#1B3624] to-[#2D7A4F] p-6 md:p-8 text-white">
                     <div className="flex items-center gap-4">
                         <div className="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center text-4xl">{skill.icon}</div>
@@ -59,8 +59,8 @@ export const PlantSkillPage: React.FC = () => {
 
                 <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6">
                     <div>
-                        <h2 className="text-lg font-extrabold flex items-center gap-2"><Sprout className="w-5 h-5 text-emerald-600" /> Thiết lập cây kỹ năng</h2>
-                        <p className="text-xs text-[#718096] mt-1">Chọn hạt giống để bắt đầu lộ trình học tập của bạn.</p>
+                        <h2 className="text-lg font-extrabold flex items-center gap-2"><Sprout className="w-5 h-5 text-emerald-600 dark:text-emerald-400" /> Thiết lập cây kỹ năng</h2>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Chọn hạt giống để bắt đầu lộ trình học tập của bạn.</p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -69,21 +69,21 @@ export const PlantSkillPage: React.FC = () => {
                                 key={choice.name}
                                 type="button"
                                 onClick={() => setSelectedPlant(choice.name)}
-                                className={`p-4 rounded-2xl border text-center transition-colors ${selectedPlant === choice.name ? 'border-emerald-500 bg-emerald-50' : 'border-[#E6ECE6] hover:border-emerald-300'}`}
+                                className={`p-4 rounded-2xl border text-center transition-colors cursor-pointer ${selectedPlant === choice.name ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200' : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 hover:border-emerald-300 dark:hover:border-emerald-500 text-gray-800 dark:text-gray-200'}`}
                             >
                                 <span className="text-3xl block">{choice.icon}</span>
                                 <span className="text-xs font-bold mt-2 block">{choice.name}</span>
-                                {selectedPlant === choice.name && <Check className="w-4 h-4 text-emerald-600 mx-auto mt-2" />}
+                                {selectedPlant === choice.name && <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto mt-2" />}
                             </button>
                         ))}
                     </div>
 
                     <div>
-                        <label htmlFor="plant-name" className="text-sm font-bold block mb-2">Đặt tên cho cây</label>
+                        <label htmlFor="plant-name" className="text-sm font-bold block mb-2 text-gray-900 dark:text-gray-100">Đặt tên cho cây</label>
                         <Input id="plant-name" required value={plantName} onChange={event => setPlantName(event.target.value)} placeholder="Ví dụ: Cây Testing của tôi" />
                     </div>
 
-                    <div className="flex justify-end gap-3 border-t border-[#E6ECE6] pt-5">
+                    <div className="flex justify-end gap-3 border-t border-gray-200 dark:border-gray-700 pt-5">
                         <Button type="button" variant="outline" onClick={() => navigate('/dashboard/skill-catalog')}>Hủy</Button>
                         <Button type="submit" variant="success" className="font-bold flex items-center gap-2"><Leaf className="w-4 h-4" /> Bắt đầu học skill này</Button>
                     </div>

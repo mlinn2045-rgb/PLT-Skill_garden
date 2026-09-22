@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `level` INT NOT NULL DEFAULT 1,
   `total_xp` INT NOT NULL DEFAULT 0,
   `streak_days` INT NOT NULL DEFAULT 0,
+  `has_claimed_welcome_xp` TINYINT(1) NOT NULL DEFAULT 0,
   `last_active_at` DATETIME NULL DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -54,8 +55,8 @@ CREATE TABLE IF NOT EXISTS `courses` (
 -- SEED INITIAL ACCOUNTS
 INSERT INTO `users` (`uuid`, `email`, `full_name`, `username`, `tag_id`, `password_hash`, `role`, `status`, `is_approved`)
 VALUES 
-('c56a4180-65aa-42ec-a945-5fd21dec0538', 'admin@pltsolutions.com', 'Super Admin System', 'superadmin_plt', 'superadmin#1001', '$2y$10$wE9sS4Q8L.L6gM/.YV4XEOQ1iUjDq72g/8jT0xL6B4n9g6e0k6.', 'SUPER_ADMIN', 'ACTIVE', 1),
-('d56a4180-65aa-42ec-a945-5fd21dec0539', 'admin@skillgarden.com', 'Master Super Admin', 'admin_master', 'adminmaster#1002', '$2y$10$wE9sS4Q8L.L6gM/.YV4XEOQ1iUjDq72g/8jT0xL6B4n9g6e0k6.', 'SUPER_ADMIN', 'ACTIVE', 1),
-('e56a4180-65aa-42ec-a945-5fd21dec0540', 'lms.admin@pltsolutions.com', 'Quản Trị Viên LMS', 'lms_admin_plt', 'lmsadmin#1003', '$2y$10$wE9sS4Q8L.L6gM/.YV4XEOQ1iUjDq72g/8jT0xL6B4n9g6e0k6.', 'ADMIN', 'ACTIVE', 1),
-('f56a4180-65aa-42ec-a945-5fd21dec0541', 'user_khoa@pltsolutions.com', 'Nguyễn Anh Khoa', 'user_khoa_plt', 'userkhoa#1004', '$2y$10$G0N45Vp3s6L1v7t2pL7WYeLqT4/N3l2gX2N9K1/K2L9gX2N9K1.', 'USER', 'ACTIVE', 1)
+('11111111-1111-1111-1111-111111111111', 'admin@pltsolutions.com', 'SkillGarden Super Admin', 'skillgarden_super_admin', 'superadmin#1001', '$2y$10$stGwrsDbYVoebM8iRxWgY.UwYOSdMtzBW9BMhGYVcrA8qtL3PRLdy', 'SUPER_ADMIN', 'ACTIVE', 1),
+('138d0711-38dd-4b7a-b5cd-cf36d69e0064', 'admin@skillgarden.com', 'SkillGarden Super Admin', 'skillgarden_admin', 'adminmaster#1002', '$2y$10$l2oApCgf.4pAMBHM3xwCfuWQEW.HQ/XPtJ5rt1He1a62s2zw6A2Vm', 'SUPER_ADMIN', 'ACTIVE', 1),
+('22222222-2222-2222-2222-222222222222', 'lms.admin@pltsolutions.com', 'SkillGarden LMS Admin', 'lms_admin', 'lmsadmin#1003', '$2y$10$KSOSbPOJCio32MMZfuF.oed9x3Vd6lfVX5ySzBqymDeIerItInMaO', 'ADMIN', 'ACTIVE', 1),
+('33333333-3333-3333-3333-333333333333', 'user_khoa@pltsolutions.com', 'Nguyễn Anh Khoa', 'user_khoa', 'userkhoa#1004', '$2y$10$Lm7Oyory6AriRjfDMOFgo.zzoargUHVFATIZjXk6DkvgJ8srEwot2', 'USER', 'ACTIVE', 1)
 ON DUPLICATE KEY UPDATE `is_approved` = 1, `status` = 'ACTIVE';

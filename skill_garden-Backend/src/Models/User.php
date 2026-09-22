@@ -42,8 +42,8 @@ class User
     public function create(array $data): array
     {
         $stmt = $this->db->prepare("
-            INSERT INTO users (uuid, email, full_name, password_hash, role, is_approved, total_xp)
-            VALUES (:uuid, :email, :full_name, :password_hash, :role, :is_approved, :total_xp)
+            INSERT INTO users (uuid, email, full_name, password_hash, role, is_approved, total_xp, has_claimed_welcome_xp)
+            VALUES (:uuid, :email, :full_name, :password_hash, :role, :is_approved, :total_xp, :has_claimed_welcome_xp)
         ");
         $stmt->execute([
             'uuid' => $data['uuid'],
@@ -52,7 +52,8 @@ class User
             'password_hash' => $data['password_hash'],
             'role' => $data['role'] ?? 'USER',
             'is_approved' => $data['is_approved'] ?? 0,
-            'total_xp' => $data['total_xp'] ?? 100,
+            'total_xp' => $data['total_xp'] ?? 0,
+            'has_claimed_welcome_xp' => $data['has_claimed_welcome_xp'] ?? 0,
         ]);
 
         $id = (int) $this->db->lastInsertId();
@@ -136,5 +137,31 @@ class User
         $stmt = $this->db->prepare("DELETE FROM token_blacklist WHERE expires_at < NOW()");
         $stmt->execute();
         return $stmt->rowCount();
+    }
+
+    public function claimWelcomeXp(int $id): array
+    {
+        $user = $this->findById($id);
+        if (!$user) {
+            throw new \Exception("Không tìm thấy người dùng.", 404);
+        }
+
+        if (!empty($user['has_claimed_welcome_xp'])) {
+            throw new \Exception("Bạn đã nhận phần thưởng chào mừng 100 XP rồi.", 400);
+        }
+
+        $stmt = $this->db->prepare("
+            UPDATE users 
+            SET total_xp = total_xp + 100, 
+                has_claimed_welcome_xp = 1 
+            WHERE id = :id AND has_claimed_welcome_xp = 0
+        ");
+        $stmt->execute(['id' => $id]);
+
+        if ($stmt->rowCount() === 0) {
+            throw new \Exception("Phần thưởng chào mừng đã được nhận trước đó.", 400);
+        }
+
+        return $this->findById($id);
     }
 }

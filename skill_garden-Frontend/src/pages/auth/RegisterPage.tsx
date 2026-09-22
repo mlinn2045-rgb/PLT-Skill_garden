@@ -70,10 +70,10 @@ export const RegisterPage: React.FC = () => {
         >
             <div className="space-y-5">
                 <div>
-                    <h2 className="text-2xl font-extrabold text-[#1A2E22] flex items-center gap-2">
+                    <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
                         Bắt đầu khu vườn của bạn <span className="text-xl">🌱</span>
                     </h2>
-                    <p className="text-xs text-[#718096] mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Đăng ký tài khoản học viên chỉ mất chưa đầy 1 phút.
                     </p>
                 </div>
@@ -83,7 +83,7 @@ export const RegisterPage: React.FC = () => {
                     variant="outline"
                     fullWidth
                     size="lg"
-                    className="border-[#E2E8F0] text-[#1A2E22] hover:bg-gray-50 flex items-center justify-center gap-3 font-semibold text-sm"
+                    className="border-[#E2E8F0] dark:border-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center gap-3 font-semibold text-sm"
                     onClick={() => navigate('/dashboard/learning-path/1')}
                 >
                     <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -97,16 +97,16 @@ export const RegisterPage: React.FC = () => {
 
                 {/* Divider */}
                 <div className="relative flex items-center justify-center my-3">
-                    <div className="border-t border-[#E6ECE6] w-full" />
-                    <span className="bg-white px-3 text-[11px] font-bold text-[#A0AEC0] uppercase tracking-wider absolute">
+                    <div className="border-t border-gray-200 dark:border-gray-700 w-full" />
+                    <span className="bg-white dark:bg-gray-900 px-3 text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider absolute">
                         HOẶC ĐIỀN THÔNG TIN
                     </span>
                 </div>
 
                 {/* Messages */}
                 {errorMessage && (
-                    <div className="bg-red-50 border border-red-200 rounded-2xl p-3.5 flex items-start gap-2.5 text-xs text-red-700">
-                        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                    <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-2xl p-3.5 flex items-start gap-2.5 text-xs text-red-700 dark:text-red-300">
+                        <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
                         <div>
                             <strong className="block font-bold">Lỗi đăng ký</strong>
                             <span>{errorMessage}</span>
@@ -115,12 +115,12 @@ export const RegisterPage: React.FC = () => {
                 )}
 
                 {successMessage ? (
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 space-y-3">
-                        <div className="flex items-start gap-3 text-emerald-900">
-                            <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0 mt-0.5" />
+                    <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 space-y-3">
+                        <div className="flex items-start gap-3 text-emerald-900 dark:text-emerald-200">
+                            <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                             <div>
                                 <h4 className="text-sm font-bold">Tạo tài khoản thành công!</h4>
-                                <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
+                                <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-1 leading-relaxed">
                                     {successMessage}
                                 </p>
                             </div>
@@ -166,16 +166,16 @@ export const RegisterPage: React.FC = () => {
 
                             {/* Password strength meter matching design */}
                             {password.length > 0 && (
-                                <div className="mt-2.5 bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
+                                <div className="mt-2.5 bg-gray-50 dark:bg-gray-800/80 p-3 rounded-xl border border-gray-200 dark:border-gray-700 space-y-2">
                                     <div className="flex items-center justify-between text-[11px]">
-                                        <span className="text-[#718096]">Độ mạnh mật khẩu:</span>
+                                        <span className="text-gray-500 dark:text-gray-400">Độ mạnh mật khẩu:</span>
                                         <span className={`font-bold ${strength.color}`}>{strength.text}</span>
                                     </div>
                                     <div className="grid grid-cols-4 gap-1.5 h-1.5">
                                         {[1, 2, 3, 4].map((idx) => (
                                             <div
                                                 key={idx}
-                                                className={`rounded-full h-full transition-all ${idx <= strength.count ? strength.bar : 'bg-gray-200'
+                                                className={`rounded-full h-full transition-all ${idx <= strength.count ? strength.bar : 'bg-gray-200 dark:bg-gray-700'
                                                     }`}
                                             />
                                         ))}
@@ -183,23 +183,23 @@ export const RegisterPage: React.FC = () => {
 
                                     {/* Password policy checks */}
                                     <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px] pt-1">
-                                        <div className={`flex items-center gap-1.5 ${policy.minLength ? 'text-emerald-600 font-semibold' : 'text-gray-500'}`}>
+                                        <div className={`flex items-center gap-1.5 ${policy.minLength ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-gray-500 dark:text-gray-400'}`}>
                                             {policy.minLength ? <Check className="w-3.5 h-3.5 shrink-0" /> : <X className="w-3.5 h-3.5 shrink-0 text-gray-400" />}
                                             <span>Tối thiểu 8 ký tự</span>
                                         </div>
-                                        <div className={`flex items-center gap-1.5 ${policy.hasUppercase ? 'text-emerald-600 font-semibold' : 'text-gray-500'}`}>
+                                        <div className={`flex items-center gap-1.5 ${policy.hasUppercase ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-gray-500 dark:text-gray-400'}`}>
                                             {policy.hasUppercase ? <Check className="w-3.5 h-3.5 shrink-0" /> : <X className="w-3.5 h-3.5 shrink-0 text-gray-400" />}
                                             <span>Ít nhất 1 chữ hoa (A-Z)</span>
                                         </div>
-                                        <div className={`flex items-center gap-1.5 ${policy.hasLowercase ? 'text-emerald-600 font-semibold' : 'text-gray-500'}`}>
+                                        <div className={`flex items-center gap-1.5 ${policy.hasLowercase ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-gray-500 dark:text-gray-400'}`}>
                                             {policy.hasLowercase ? <Check className="w-3.5 h-3.5 shrink-0" /> : <X className="w-3.5 h-3.5 shrink-0 text-gray-400" />}
                                             <span>Ít nhất 1 chữ thường (a-z)</span>
                                         </div>
-                                        <div className={`flex items-center gap-1.5 ${policy.hasDigit ? 'text-emerald-600 font-semibold' : 'text-gray-500'}`}>
+                                        <div className={`flex items-center gap-1.5 ${policy.hasDigit ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-gray-500 dark:text-gray-400'}`}>
                                             {policy.hasDigit ? <Check className="w-3.5 h-3.5 shrink-0" /> : <X className="w-3.5 h-3.5 shrink-0 text-gray-400" />}
                                             <span>Ít nhất 1 chữ số (0-9)</span>
                                         </div>
-                                        <div className={`col-span-2 flex items-center gap-1.5 ${policy.hasSpecial ? 'text-emerald-600 font-semibold' : 'text-gray-500'}`}>
+                                        <div className={`col-span-2 flex items-center gap-1.5 ${policy.hasSpecial ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-gray-500 dark:text-gray-400'}`}>
                                             {policy.hasSpecial ? <Check className="w-3.5 h-3.5 shrink-0" /> : <X className="w-3.5 h-3.5 shrink-0 text-gray-400" />}
                                             <span>Ít nhất 1 ký tự đặc biệt (!@#$%^&*)</span>
                                         </div>
@@ -210,7 +210,7 @@ export const RegisterPage: React.FC = () => {
 
                         {/* Seed Selection */}
                         <div className="space-y-1.5 pt-1">
-                            <label className="text-[11px] font-bold uppercase tracking-wider text-[#4A5568] block">
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 block">
                                 CHỌN HẠT GIỐNG ĐẦU TIÊN MUỐN GIEO:
                             </label>
                             <div className="grid grid-cols-3 gap-2">
@@ -222,8 +222,8 @@ export const RegisterPage: React.FC = () => {
                                             type="button"
                                             onClick={() => setSelectedSeed(seed.id)}
                                             className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${isSelected
-                                                    ? 'border-[#3F49C8] bg-[#EEF0FD] text-[#3F49C8] shadow-xs ring-1 ring-[#3F49C8]'
-                                                    : 'border-[#E2E8F0] bg-[#F7FAF7] text-[#4A5568] hover:bg-white'
+                                                    ? 'border-[#3F49C8] dark:border-indigo-500 bg-[#EEF0FD] dark:bg-indigo-950/60 text-[#3F49C8] dark:text-indigo-300 shadow-xs ring-1 ring-[#3F49C8] dark:ring-indigo-500'
+                                                    : 'border-[#E2E8F0] dark:border-gray-700 bg-[#F7FAF7] dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-750'
                                                 }`}
                                         >
                                             {seed.icon}
@@ -234,10 +234,10 @@ export const RegisterPage: React.FC = () => {
                             </div>
                         </div>
 
-                        <p className="text-[11px] text-[#718096] leading-relaxed pt-1">
+                        <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed pt-1">
                             Bằng việc đăng ký, bạn đồng ý với{' '}
-                            <a href="#" className="font-semibold text-[#3F49C8] underline">Điều khoản dịch vụ</a> và{' '}
-                            <a href="#" className="font-semibold text-[#3F49C8] underline">Chính sách bảo mật</a> của SkillGarden.
+                            <a href="#" className="font-semibold text-[#3F49C8] dark:text-indigo-400 underline">Điều khoản dịch vụ</a> và{' '}
+                            <a href="#" className="font-semibold text-[#3F49C8] dark:text-indigo-400 underline">Chính sách bảo mật</a> của SkillGarden.
                         </p>
 
                         <Button

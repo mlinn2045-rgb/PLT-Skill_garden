@@ -44,10 +44,10 @@ export const LoginPage: React.FC = () => {
             <div className="space-y-6">
                 {/* Form Title */}
                 <div>
-                    <h2 className="text-2xl font-extrabold text-[#1A2E22] flex items-center gap-2">
+                    <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
                         Chào mừng trở lại <span className="text-xl">🌱</span>
                     </h2>
-                    <p className="text-xs text-[#718096] mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Đăng nhập để tiếp tục hành trình nuôi dưỡng khu vườn kỹ năng.
                     </p>
                 </div>
@@ -59,19 +59,19 @@ export const LoginPage: React.FC = () => {
                         variant="outline"
                         fullWidth
                         size="lg"
-                        className="border-[#E2E8F0] text-[#1A2E22] hover:bg-gray-50 font-semibold"
+                        className="border-[#E2E8F0] dark:border-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold"
                         onClick={() => setIsGoogleFormOpen(true)}
                         icon={<GoogleIcon />}
                     >
                         Tiếp tục với tài khoản Google
                     </Button>
                 ) : (
-                    <form className="space-y-3 rounded-2xl border border-[#E2E8F0] bg-[#FAFCFF] p-4" onSubmit={(event) => event.preventDefault()}>
-                        <div className="flex items-center gap-2 text-sm font-bold text-[#1A2E22]">
+                    <form className="space-y-3 rounded-2xl border border-[#E2E8F0] dark:border-gray-700 bg-[#FAFCFF] dark:bg-gray-800/80 p-4" onSubmit={(event) => event.preventDefault()}>
+                        <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
                             <GoogleIcon />
                             <span>Đăng nhập bằng Google</span>
                         </div>
-                        <p className="text-xs text-[#718096]">Nhập email Google để tiếp tục xác thực tài khoản.</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Nhập email Google để tiếp tục xác thực tài khoản.</p>
                         <Input
                             label="EMAIL GOOGLE"
                             type="email"
@@ -93,16 +93,16 @@ export const LoginPage: React.FC = () => {
 
                 {/* Divider */}
                 <div className="relative flex items-center justify-center my-4">
-                    <div className="border-t border-[#E6ECE6] w-full" />
-                    <span className="bg-white px-3 text-[11px] font-bold text-[#A0AEC0] uppercase tracking-wider absolute">
+                    <div className="border-t border-gray-200 dark:border-gray-700 w-full" />
+                    <span className="bg-white dark:bg-gray-900 px-3 text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider absolute">
                         HOẶC EMAIL
                     </span>
                 </div>
 
                 {/* Error Banner */}
                 {error && (
-                    <div className="bg-red-50 border border-red-200 rounded-2xl p-3.5 flex items-start gap-3 text-xs text-red-700">
-                        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                    <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-2xl p-3.5 flex items-start gap-3 text-xs text-red-700 dark:text-red-300">
+                        <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
                         <div>
                             <span className="font-bold block">Đăng nhập không thành công</span>
                             <span>{error}</span>
@@ -119,15 +119,15 @@ export const LoginPage: React.FC = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="nhap-email@plt.com"
                         required
-                        iconRight={email.includes('@') ? <Check className="w-4 h-4 text-emerald-600" /> : undefined}
+                        iconRight={email.includes('@') ? <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : undefined}
                     />
 
                     <div>
                         <div className="flex items-center justify-between mb-1">
-                            <label className="text-xs font-semibold uppercase tracking-wider text-[#4A5568]">
+                            <label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
                                 MẬT KHẨU
                             </label>
-                            <Link to="/forgot-password" className="text-xs font-bold text-[#3F49C8] hover:underline">
+                            <Link to="/forgot-password" className="text-xs font-bold text-[#3F49C8] dark:text-indigo-400 hover:underline">
                                 Quên mật khẩu?
                             </Link>
                         </div>
@@ -141,7 +141,7 @@ export const LoginPage: React.FC = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="text-[#718096] hover:text-[#1A2E22]"
+                                    className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                                 >
                                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
@@ -157,7 +157,7 @@ export const LoginPage: React.FC = () => {
                                 onChange={(e) => setRememberMe(e.target.checked)}
                                 className="w-4 h-4 rounded border-gray-300 text-[#3F49C8] focus:ring-[#3F49C8]"
                             />
-                            <span className="text-xs font-medium text-[#4A5568]">Ghi nhớ đăng nhập trên thiết bị này</span>
+                            <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Ghi nhớ đăng nhập trên thiết bị này</span>
                         </label>
                     </div>
 
@@ -175,8 +175,8 @@ export const LoginPage: React.FC = () => {
                 </form>
 
                 {/* Footer info */}
-                <p className="text-[11px] text-center text-[#A0AEC0] pt-4 border-t border-[#E6ECE6]">
-                    Được bảo mật bởi hạ tầng chứng thực <span className="font-semibold text-[#718096]">PLT Solutions Security</span>
+                <p className="text-[11px] text-center text-gray-400 dark:text-gray-500 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    Được bảo mật bởi hạ tầng chứng thực <span className="font-semibold text-gray-600 dark:text-gray-300">PLT Solutions Security</span>
                 </p>
             </div>
         </AuthLayout>

@@ -61,14 +61,14 @@ export const AdminRolePermissionPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-6">
+        <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-6">
             {/* Header */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs">
                 <div>
-                    <h1 className="text-2xl font-extrabold flex items-center gap-2">
-                        <Key className="w-6 h-6 text-purple-600" /> Phân Quyền Chi Tiết Cho Admin
+                    <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
+                        <Key className="w-6 h-6 text-purple-600 dark:text-purple-400" /> Phân Quyền Chi Tiết Cho Admin
                     </h1>
-                    <p className="text-xs text-[#6B6D7A] mt-1">Cấp hoặc thu hồi các quyền quản lý thành phần hệ thống theo đúng Ma trận Phân quyền (FR-SA03).</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Cấp hoặc thu hồi các quyền quản lý thành phần hệ thống theo đúng Ma trận Phân quyền (FR-SA03).</p>
                 </div>
                 <Button variant="indigo" onClick={handleSave} className="font-bold flex items-center gap-2 bg-purple-700 hover:bg-purple-800 border-none">
                     <Save className="w-4 h-4" /> Lưu Ma Trận Phân Quyền
@@ -76,9 +76,9 @@ export const AdminRolePermissionPage: React.FC = () => {
             </div>
 
             {/* Permission Matrix Table */}
-            <div className="bg-white rounded-2xl border border-[#E2E4EB] shadow-xs overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs overflow-hidden">
                 <table className="w-full text-left text-xs">
-                    <thead className="bg-gray-50 border-b border-[#E2E4EB] text-[#6B6D7A] uppercase tracking-wider font-bold">
+                    <thead className="bg-gray-50 dark:bg-gray-800/80 border-b border-[#E2E4EB] dark:border-gray-800 text-gray-600 dark:text-gray-300 uppercase tracking-wider font-bold">
                         <tr>
                             <th className="p-4">Tài Khoản Admin</th>
                             <th className="p-4 text-center">Quản Lý User</th>
@@ -89,26 +89,26 @@ export const AdminRolePermissionPage: React.FC = () => {
                             <th className="p-4 text-center">Cấu Hình System</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#E2E4EB]">
+                    <tbody className="divide-y divide-[#E2E4EB] dark:divide-gray-800">
                         {permissions.map((p, idx) => (
-                            <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                            <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                                 <td className="p-4">
-                                    <div className="font-extrabold text-[#20223A]">{p.adminName}</div>
-                                    <div className="text-[11px] text-[#6B6D7A]">{p.role}</div>
+                                    <div className="font-extrabold text-gray-900 dark:text-gray-100">{p.adminName}</div>
+                                    <div className="text-[11px] text-gray-500 dark:text-gray-400">{p.role}</div>
                                 </td>
 
                                 {(['manageUsers', 'manageSkills', 'manageLessons', 'manageQuizzes', 'manageAchievements', 'systemConfig'] as const).map(key => (
                                     <td key={key} className="p-4 text-center">
                                         <button
                                             onClick={() => togglePermission(idx, key)}
-                                            className="inline-flex items-center justify-center cursor-pointer p-1 rounded hover:bg-gray-100"
+                                            className="inline-flex items-center justify-center cursor-pointer p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
                                         >
                                             {p[key] ? (
-                                                <span className="px-2 py-1 bg-emerald-100 text-emerald-800 rounded font-bold text-[11px] flex items-center gap-1">
-                                                    <Check className="w-3.5 h-3.5 text-emerald-600" /> Cấp Quyền
+                                                <span className="px-2 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 rounded font-bold text-[11px] flex items-center gap-1">
+                                                    <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Cấp Quyền
                                                 </span>
                                             ) : (
-                                                <span className="px-2 py-1 bg-gray-100 text-gray-500 rounded font-bold text-[11px] flex items-center gap-1">
+                                                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded font-bold text-[11px] flex items-center gap-1">
                                                     <X className="w-3.5 h-3.5 text-gray-400" /> Khóa Quyền
                                                 </span>
                                             )}

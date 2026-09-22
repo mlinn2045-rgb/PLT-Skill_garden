@@ -59,6 +59,7 @@ foreach ($usersData as $u) {
                 level = :level,
                 total_xp = :total_xp,
                 streak_days = :streak_days,
+                has_claimed_welcome_xp = :has_claimed_welcome_xp,
                 bio = :bio
             WHERE email = :email
         ");
@@ -71,6 +72,7 @@ foreach ($usersData as $u) {
             'level' => $level,
             'total_xp' => $totalXp,
             'streak_days' => $streakDays,
+            'has_claimed_welcome_xp' => $totalXp > 0 ? 1 : 0,
             'bio' => $bio,
             'email' => $email
         ]);
@@ -89,8 +91,8 @@ foreach ($usersData as $u) {
         );
 
         $stmtInsert = $db->prepare("
-            INSERT INTO users (uuid, email, full_name, username, tag_id, password_hash, role, status, is_approved, level, total_xp, streak_days, bio)
-            VALUES (:uuid, :email, :full_name, :username, :tag_id, :password_hash, :role, 'ACTIVE', :is_approved, :level, :total_xp, :streak_days, :bio)
+            INSERT INTO users (uuid, email, full_name, username, tag_id, password_hash, role, status, is_approved, level, total_xp, streak_days, has_claimed_welcome_xp, bio)
+            VALUES (:uuid, :email, :full_name, :username, :tag_id, :password_hash, :role, 'ACTIVE', :is_approved, :level, :total_xp, :streak_days, :has_claimed_welcome_xp, :bio)
         ");
         $stmtInsert->execute([
             'uuid' => $uuid,
@@ -104,6 +106,7 @@ foreach ($usersData as $u) {
             'level' => $level,
             'total_xp' => $totalXp,
             'streak_days' => $streakDays,
+            'has_claimed_welcome_xp' => $totalXp > 0 ? 1 : 0,
             'bio' => $bio
         ]);
         $insertedCount++;

@@ -246,36 +246,36 @@ export const CreateLessonVideoPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] text-[#20223A] pb-12 pt-6 px-6 max-w-5xl mx-auto space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-[#E2E4EB] shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-5xl mx-auto space-y-6">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-extrabold flex items-center gap-2">
-                        <Video className="w-6 h-6 text-[#3C4097]" /> Tạo Bài Học & Quản Lý Video (Nối Trực Tiếp Học Viên)
+                    <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
+                        <Video className="w-6 h-6 text-[#3C4097] dark:text-indigo-400" /> Tạo Bài Học & Quản Lý Video (Nối Trực Tiếp Học Viên)
                     </h1>
-                    <p className="text-xs text-[#6B6D7A] mt-1">Khi bạn xuất bản bài học tại đây, dữ liệu bài học sẽ được cập nhật ngay lập tức sang giao diện học của User.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Khi bạn xuất bản bài học tại đây, dữ liệu bài học sẽ được cập nhật ngay lập tức sang giao diện học của User.</p>
                 </div>
                 <Button
                     variant="outline"
                     size="sm"
-                    className="font-bold flex items-center gap-1 shrink-0"
+                    className="font-bold flex items-center gap-1 shrink-0 dark:border-gray-700 dark:hover:bg-gray-800"
                     onClick={() => navigate(`/dashboard/video-learning?skill_id=${selectedSkillId}`)}
                 >
-                    <Eye className="w-4 h-4 text-emerald-600" /> Xem Giao Diện Học Viên
+                    <Eye className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Xem Giao Diện Học Viên
                 </Button>
             </div>
 
             {!isLmsAdmin && (
-                <div className="p-4 bg-amber-50 border border-amber-300 text-amber-900 rounded-2xl text-xs font-bold flex items-center gap-3 shadow-xs">
+                <div className="p-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-300 rounded-2xl text-xs font-bold flex items-center gap-3 shadow-xs">
                     <span className="text-lg">🔒</span>
                     <div>
-                        <div className="font-extrabold text-amber-950 text-sm">Rào chắn phân quyền Quản trị LMS</div>
-                        <p className="mt-0.5 text-amber-800">Tài khoản hiện tại của bạn không phải là <strong>Admin LMS (LMS Content Admin)</strong>. Quyền hạn tạo, upload và xuất bản bài học Video bị giới hạn chỉ dành cho Quản trị viên LMS.</p>
+                        <div className="font-extrabold text-amber-950 dark:text-amber-200 text-sm">Rào chắn phân quyền Quản trị LMS</div>
+                        <p className="mt-0.5 text-amber-800 dark:text-amber-300/90">Tài khoản hiện tại của bạn không phải là <strong>Admin LMS (LMS Content Admin)</strong>. Quyền hạn tạo, upload và xuất bản bài học Video bị giới hạn chỉ dành cho Quản trị viên LMS.</p>
                     </div>
                 </div>
             )}
 
             {successAlert && (
-                <div className="p-4 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-2xl text-xs font-bold flex items-center justify-between shadow-sm animate-fade-in">
+                <div className="p-4 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300 rounded-2xl text-xs font-bold flex items-center justify-between shadow-sm animate-fade-in">
                     <span>{successAlert}</span>
                     <Button
                         size="sm"
@@ -290,17 +290,17 @@ export const CreateLessonVideoPage: React.FC = () => {
 
             <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Left 2 cols: Content Info */}
-                <div className="md:col-span-2 bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-6">
+                <div className="md:col-span-2 bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-6">
 
                     {/* Skill / Course Selector */}
                     <div className="space-y-2">
-                        <label className="text-xs font-extrabold uppercase tracking-wider text-[#4A5568] block">
+                        <label className="text-xs font-extrabold uppercase tracking-wider text-[#4A5568] dark:text-gray-300 block">
                             CHỌN KHÓA HỌC / KỸ NĂNG ÁP DỤNG
                         </label>
                         <select
                             value={selectedSkillId}
                             onChange={(e) => setSelectedSkillId(e.target.value)}
-                            className="w-full p-3 border border-[#E2E4EB] rounded-xl text-xs font-bold bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#3C4097] text-[#20223A]"
+                            className="w-full p-3 border border-[#E2E4EB] dark:border-gray-700 rounded-xl text-xs font-bold bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#3C4097] dark:focus:ring-indigo-500 text-gray-900 dark:text-gray-100"
                         >
                             {skillOptions.map(opt => (
                                 <option key={opt.id} value={opt.id}>{opt.title}</option>
@@ -318,7 +318,7 @@ export const CreateLessonVideoPage: React.FC = () => {
 
                     {/* Source Type Selector */}
                     <div className="space-y-2">
-                        <label className="text-xs font-extrabold uppercase tracking-wider text-[#4A5568] block">
+                        <label className="text-xs font-extrabold uppercase tracking-wider text-[#4A5568] dark:text-gray-300 block">
                             CHỌN NGUỒN VIDEO BÀI GIẢNG
                         </label>
                         <div className="grid grid-cols-2 gap-3">
@@ -326,8 +326,8 @@ export const CreateLessonVideoPage: React.FC = () => {
                                 type="button"
                                 onClick={() => setSourceType('YOUTUBE')}
                                 className={`p-4 rounded-2xl border-2 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${sourceType === 'YOUTUBE'
-                                    ? 'border-purple-600 bg-purple-50 text-purple-900 shadow-xs'
-                                    : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                                    ? 'border-purple-600 bg-purple-50 dark:bg-purple-950/60 text-purple-900 dark:text-purple-300 shadow-xs'
+                                    : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                                     }`}
                             >
                                 <LinkIcon className="w-4 h-4 text-red-500" /> Nhập Link YouTube
@@ -337,18 +337,18 @@ export const CreateLessonVideoPage: React.FC = () => {
                                 type="button"
                                 onClick={() => setSourceType('FILE')}
                                 className={`p-4 rounded-2xl border-2 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${sourceType === 'FILE'
-                                    ? 'border-purple-600 bg-purple-50 text-purple-900 shadow-xs'
-                                    : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                                    ? 'border-purple-600 bg-purple-50 dark:bg-purple-950/60 text-purple-900 dark:text-purple-300 shadow-xs'
+                                    : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                                     }`}
                             >
-                                <HardDrive className="w-4 h-4 text-emerald-600" /> Tải File Từ Máy Tính
+                                <HardDrive className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Tải File Từ Máy Tính
                             </button>
                         </div>
                     </div>
 
                     {/* YouTube Link Field */}
                     {sourceType === 'YOUTUBE' && (
-                        <div className="space-y-3 bg-gray-50 p-4 rounded-2xl border border-gray-200">
+                        <div className="space-y-3 bg-gray-50 dark:bg-gray-800/60 p-4 rounded-2xl border border-gray-200 dark:border-gray-700">
                             <Input
                                 label="ĐƯỜNG DẪN VIDEO YOUTUBE (URL / EMBED)"
                                 value={videoUrl}
@@ -358,7 +358,7 @@ export const CreateLessonVideoPage: React.FC = () => {
                             />
 
                             {videoUrl && (
-                                <div className="mt-2 aspect-video bg-black rounded-xl overflow-hidden border border-gray-300">
+                                <div className="mt-2 aspect-video bg-black rounded-xl overflow-hidden border border-gray-300 dark:border-gray-700">
                                     <iframe
                                         className="w-full h-full"
                                         src={videoUrl.includes('embed') ? videoUrl : `https://www.youtube.com/embed/${videoUrl.split('v=')[1] || videoUrl.split('/').pop() || ''}`}
@@ -372,14 +372,14 @@ export const CreateLessonVideoPage: React.FC = () => {
 
                     {/* Local File Upload Field */}
                     {sourceType === 'FILE' && (
-                        <div className="space-y-4 bg-emerald-50/50 p-5 rounded-2xl border border-emerald-200">
-                            <div className="border-2 border-dashed border-emerald-300 rounded-2xl p-6 text-center bg-white space-y-3">
-                                <FileVideo className="w-10 h-10 mx-auto text-emerald-600" />
+                        <div className="space-y-4 bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-2xl border border-emerald-200 dark:border-emerald-800">
+                            <div className="border-2 border-dashed border-emerald-300 dark:border-emerald-700 rounded-2xl p-6 text-center bg-white dark:bg-gray-800/80 space-y-3">
+                                <FileVideo className="w-10 h-10 mx-auto text-emerald-600 dark:text-emerald-400" />
                                 <div>
-                                    <p className="text-xs font-extrabold text-[#20223A]">
+                                    <p className="text-xs font-extrabold text-gray-900 dark:text-gray-100">
                                         Kéo thả hoặc bấm để chọn video từ máy tính
                                     </p>
-                                    <p className="text-[11px] text-[#6B6D7A] mt-1">
+                                    <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-1">
                                         Hỗ trợ các định dạng .mp4, .webm, .mkv, .mov (Tối đa 500MB)
                                     </p>
                                 </div>
@@ -399,7 +399,7 @@ export const CreateLessonVideoPage: React.FC = () => {
                                 </label>
 
                                 {selectedFile && (
-                                    <div className="pt-2 text-xs font-bold text-emerald-800 flex items-center justify-center gap-2">
+                                    <div className="pt-2 text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center justify-center gap-2">
                                         <span>File đã chọn: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(1)} MB)</span>
                                     </div>
                                 )}
@@ -419,14 +419,14 @@ export const CreateLessonVideoPage: React.FC = () => {
                             )}
 
                             {uploadSuccess && (
-                                <div className="p-3 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-xl text-xs font-extrabold flex items-center gap-2">
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                                <div className="p-3 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300 rounded-xl text-xs font-extrabold flex items-center gap-2">
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0" />
                                     <span>Đã upload thành công lên Server: {videoUrl}</span>
                                 </div>
                             )}
 
                             {videoUrl && sourceType === 'FILE' && (
-                                <div className="aspect-video bg-black rounded-xl overflow-hidden border border-gray-300 mt-3">
+                                <div className="aspect-video bg-black rounded-xl overflow-hidden border border-gray-300 dark:border-gray-700 mt-3">
                                     <video controls src={videoUrl} className="w-full h-full" />
                                 </div>
                             )}
@@ -434,7 +434,7 @@ export const CreateLessonVideoPage: React.FC = () => {
                     )}
 
                     <div>
-                        <label className="text-xs font-semibold uppercase tracking-wider text-[#4A5568] block mb-1">
+                        <label className="text-xs font-semibold uppercase tracking-wider text-[#4A5568] dark:text-gray-300 block mb-1">
                             MÔ TẢ BÀI HỌC & NỘI DUNG LÝ THUYẾT
                         </label>
                         <textarea
@@ -442,15 +442,15 @@ export const CreateLessonVideoPage: React.FC = () => {
                             onChange={(e) => setDescription(e.target.value)}
                             rows={4}
                             placeholder="Nhập nội dung mô tả vắn tắt hoặc hướng dẫn thực hành cho bài học này..."
-                            className="w-full p-3 border border-[#E2E4EB] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#3C4097]"
+                            className="w-full p-3 bg-gray-50 dark:bg-gray-800 border border-[#E2E4EB] dark:border-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#3C4097] dark:focus:ring-indigo-500"
                         />
                     </div>
                 </div>
 
                 {/* Right Col: Gamification Config */}
                 <div className="space-y-6">
-                    <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-6 h-fit">
-                        <h2 className="text-sm font-extrabold text-[#20223A] border-b border-[#E2E4EB] pb-3 flex items-center gap-2">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-6 h-fit">
+                        <h2 className="text-sm font-extrabold text-gray-900 dark:text-white border-b border-[#E2E4EB] dark:border-gray-800 pb-3 flex items-center gap-2">
                             <Sparkles className="w-4 h-4 text-yellow-500" /> Cấu Hình Thưởng & Tác Động
                         </h2>
 
@@ -466,10 +466,10 @@ export const CreateLessonVideoPage: React.FC = () => {
                             type="number"
                             value={growthImpact}
                             onChange={(e) => setGrowthImpact(e.target.value)}
-                            iconRight={<Sprout className="w-4 h-4 text-emerald-600" />}
+                            iconRight={<Sprout className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />}
                         />
 
-                        <div className="p-3 bg-[#FAFAF7] rounded-xl text-[11px] text-[#6B6D7A] border border-[#E2E4EB]">
+                        <div className="p-3 bg-[#FAFAF7] dark:bg-gray-800/60 rounded-xl text-[11px] text-gray-500 dark:text-gray-400 border border-[#E2E4EB] dark:border-gray-700">
                             Khi xuất bản, bài học sẽ hiển thị ngay trong playlist xem video của Học Viên thuộc khóa học đã chọn.
                         </div>
 
@@ -479,8 +479,8 @@ export const CreateLessonVideoPage: React.FC = () => {
                     </div>
 
                     {/* Admin Published Lessons History List */}
-                    <div className="bg-white rounded-2xl p-6 border border-[#E2E4EB] shadow-xs space-y-4">
-                        <h3 className="text-xs font-extrabold text-[#20223A] uppercase tracking-wider flex items-center justify-between">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-4">
+                        <h3 className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider flex items-center justify-between">
                             <span>Bài học Admin đã thêm ({adminLessons.length})</span>
                         </h3>
 
@@ -489,29 +489,31 @@ export const CreateLessonVideoPage: React.FC = () => {
                         ) : (
                             <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                                 {adminLessons.map((item) => (
-                                    <div key={item.id} className="p-3 bg-gray-50 border border-gray-200 rounded-xl text-xs space-y-1">
+                                    <div key={item.id} className="p-3 bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-xl text-xs space-y-1">
                                         <div className="flex items-center justify-between font-bold">
-                                            <span className="text-[#3C4097] truncate max-w-[180px]">{item.title}</span>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleEditCustomLesson(item)}
-                                                className="text-gray-400 hover:text-indigo-600 p-1 cursor-pointer"
-                                                title="Sửa bài học này"
-                                            >
-                                                <Edit className="w-3.5 h-3.5" />
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDeleteCustomLesson(item.id)}
-                                                className="text-gray-400 hover:text-red-600 p-1 cursor-pointer"
-                                                title="Xóa bài học này"
-                                            >
-                                                <Trash2 className="w-3.5 h-3.5" />
-                                            </button>
+                                            <span className="text-[#3C4097] dark:text-indigo-400 truncate max-w-[180px]">{item.title}</span>
+                                            <div className="flex items-center gap-1">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleEditCustomLesson(item)}
+                                                    className="text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 p-1 cursor-pointer"
+                                                    title="Sửa bài học này"
+                                                >
+                                                    <Edit className="w-3.5 h-3.5" />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDeleteCustomLesson(item.id)}
+                                                    className="text-gray-400 hover:text-red-600 dark:hover:text-red-400 p-1 cursor-pointer"
+                                                    title="Xóa bài học này"
+                                                >
+                                                    <Trash2 className="w-3.5 h-3.5" />
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div className="text-[11px] text-gray-500 flex items-center justify-between">
+                                        <div className="text-[11px] text-gray-500 dark:text-gray-400 flex items-center justify-between">
                                             <span>Khóa: #{item.skillId}</span>
-                                            <span className="text-emerald-700 font-bold">+{item.xpReward} XP</span>
+                                            <span className="text-emerald-700 dark:text-emerald-400 font-bold">+{item.xpReward} XP</span>
                                         </div>
                                     </div>
                                 ))}

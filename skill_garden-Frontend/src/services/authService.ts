@@ -14,6 +14,7 @@ export interface UserProfile {
     level?: number;
     total_xp?: number;
     streak_days?: number;
+    has_claimed_welcome_xp?: boolean;
     created_at?: string;
 }
 
@@ -122,6 +123,24 @@ export const authService = {
         const data = await parseApiResponse(response, 'Phe duyet tai khoan that bai.');
         if (!response.ok || !data.success) {
             throw new Error(data.message || 'Phê duyệt tài khoản thất bại.');
+        }
+        return data;
+    },
+
+    async claimWelcomeXp(): Promise<ApiResponse<{ total_xp: number; has_claimed_welcome_xp: boolean }>> {
+        const token = localStorage.getItem('skill_garden_token') || '';
+        const response = await fetch(`${API_BASE_URL}/user/claim-welcome.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+            },
+            credentials: 'include',
+            body: JSON.stringify({}),
+        });
+        const data = await parseApiResponse<{ total_xp: number; has_claimed_welcome_xp: boolean }>(response, 'Nhận thưởng chào mừng thất bại.');
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || 'Không thể nhận phần thưởng chào mừng.');
         }
         return data;
     }

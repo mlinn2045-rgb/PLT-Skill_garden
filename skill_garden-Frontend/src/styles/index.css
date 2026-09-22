@@ -67,6 +67,13 @@
     color: #f9fafb;
   }
 
+  /* WCAG AA High-contrast text defaults in dark mode */
+  html.dark input,
+  html.dark select,
+  html.dark textarea {
+    color-scheme: dark;
+  }
+
   img,
   svg,
   video,
@@ -109,4 +116,17 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #9DB4A0;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #111827;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 4px;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4B5563;
 }

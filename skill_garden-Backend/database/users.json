@@ -24,6 +24,18 @@
         "bio": "Học viên SkillGarden."
     },
     {
+        "fullName": "Nguyễn Anh Khoa (PLT)",
+        "email": "anhkhoa@plt.com",
+        "username": "anhkhoa",
+        "password": "Password123!",
+        "role": "USER",
+        "isApproved": true,
+        "level": 5,
+        "totalXp": 1500,
+        "streakDays": 10,
+        "bio": "Lập trình viên Fullstack PLT Solutions."
+    },
+    {
         "fullName": "SkillGarden Super Admin",
         "email": "admin@pltsolutions.com",
         "username": "skillgarden_super_admin",

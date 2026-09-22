@@ -53,7 +53,7 @@ export const GoalsBadgesPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAF7] dark:bg-gray-900 text-[#20223A] dark:text-gray-100 pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-8">
+        <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-8">
             {/* Header Banner */}
             <div className="bg-gradient-to-r from-[#3C4097] to-[#292C72] dark:from-indigo-950 dark:to-gray-900 rounded-2xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-indigo-900/50">
                 <div className="space-y-2">
@@ -80,12 +80,12 @@ export const GoalsBadgesPage: React.FC = () => {
             </div>
 
             {/* Daily Quests Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-700 shadow-sm space-y-4">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold flex items-center gap-2 text-[#20223A] dark:text-white">
+                    <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
                         <Target className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" /> Nhiệm vụ hàng ngày (Daily Quests)
                     </h2>
-                    <span className="text-xs text-[#6B6D7A] dark:text-gray-400 font-medium">Làm mới sau 05:42:10</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Làm mới sau 05:42:10</span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -93,18 +93,18 @@ export const GoalsBadgesPage: React.FC = () => {
                         const isDone = q.current >= q.target
                         const isClaimed = claimedQuests.includes(q.id)
                         return (
-                            <div key={q.id} className="p-4 rounded-xl border border-[#E2E4EB] dark:border-gray-700 bg-[#FAFAF7] dark:bg-gray-900 space-y-3">
+                            <div key={q.id} className="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/60 space-y-3">
                                 <div className="flex items-start justify-between">
-                                    <p className="text-xs font-bold text-[#20223A] dark:text-white leading-snug">{q.title}</p>
-                                    <span className="text-xs font-bold text-[#3C4097] dark:text-indigo-400 bg-[#F4F5FF] dark:bg-indigo-950 px-2 py-0.5 rounded">+{q.xp} XP</span>
+                                    <p className="text-xs font-bold text-gray-900 dark:text-white leading-snug">{q.title}</p>
+                                    <span className="text-xs font-bold text-[#3C4097] dark:text-indigo-400 bg-[#F4F5FF] dark:bg-indigo-950/60 px-2 py-0.5 rounded">+{q.xp} XP</span>
                                 </div>
                                 <div className="space-y-1">
-                                    <div className="flex justify-between text-[11px] font-bold text-[#6B6D7A] dark:text-gray-400">
+                                    <div className="flex justify-between text-[11px] font-bold text-gray-500 dark:text-gray-400">
                                         <span>Tiến độ</span>
                                         <span>{q.current} / {q.target}</span>
                                     </div>
-                                    <div className="w-full bg-[#E2E4EB] dark:bg-gray-700 h-2 rounded-full overflow-hidden">
-                                        <div className="bg-[#6FAF7B] h-full" style={{ width: `${(q.current / q.target) * 100}%` }}></div>
+                                    <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
+                                        <div className="bg-emerald-500 h-full" style={{ width: `${(q.current / q.target) * 100}%` }}></div>
                                     </div>
                                 </div>
 
@@ -129,7 +129,7 @@ export const GoalsBadgesPage: React.FC = () => {
 
             {/* Badges Collection Grid */}
             <div className="space-y-4">
-                <h2 className="text-xl font-bold flex items-center gap-2 text-[#20223A] dark:text-white">
+                <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
                     <Award className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" /> Bộ Sưu Tập Huy Hiệu (Badges)
                 </h2>
 
@@ -138,17 +138,17 @@ export const GoalsBadgesPage: React.FC = () => {
                         <div
                             key={b.id}
                             className={`p-5 rounded-2xl border text-center space-y-2 transition-all ${b.unlocked
-                                ? 'bg-white dark:bg-gray-800 border-[#6FAF7B] shadow-md hover:-translate-y-1'
-                                : 'bg-gray-50 dark:bg-gray-900 border-[#E2E4EB] dark:border-gray-800 opacity-60'
+                                ? 'bg-white dark:bg-gray-800 border-emerald-500 dark:border-emerald-600 shadow-md hover:-translate-y-1'
+                                : 'bg-gray-50 dark:bg-gray-900/40 border-gray-200 dark:border-gray-800 opacity-60'
                                 }`}
                         >
                             <div className="text-4xl mx-auto my-2 relative inline-block">
                                 <span>{b.icon}</span>
                                 {!b.unlocked && <Lock className="w-4 h-4 text-gray-500 absolute -bottom-1 -right-1" />}
                             </div>
-                            <h3 className="text-xs font-extrabold text-[#20223A] dark:text-white">{b.name}</h3>
-                            <p className="text-[11px] text-[#6B6D7A] dark:text-gray-400 leading-tight">{b.desc}</p>
-                            <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${b.unlocked ? 'bg-[#DCEFE1] dark:bg-emerald-950 text-[#2C6A3D] dark:text-emerald-300' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                            <h3 className="text-xs font-extrabold text-gray-900 dark:text-white">{b.name}</h3>
+                            <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-tight">{b.desc}</p>
+                            <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${b.unlocked ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                                 }`}>
                                 {b.unlocked ? 'Đã Mở Khóa' : 'Đang Khóa'}
                             </span>
