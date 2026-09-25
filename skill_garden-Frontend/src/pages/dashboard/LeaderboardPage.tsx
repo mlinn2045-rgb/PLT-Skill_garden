@@ -24,13 +24,18 @@ export const LeaderboardPage: React.FC = () => {
             let list = Array.isArray(data) ? data : []
 
             // If user is logged in, ensure their entry is present or synchronized
+            const userEmail = user?.email?.toLowerCase().trim()
+            const userId = user?.id ? String(user.id) : null
+
             let userFound = false
             let updatedList = list.map(u => {
-                const isCurrentUser = user?.email && u.username === user.email
+                const uEmail = (u.username || u.email || '').toLowerCase().trim()
+                const uId = u.id ? String(u.id) : null
+                const isCurrentUser = Boolean(userEmail && (uEmail === userEmail || (userId && uId === userId)))
                 if (isCurrentUser) userFound = true
-                const xp = isCurrentUser ? Math.max(u.total_xp || 0, localStats.xp) : (u.total_xp || 0)
+                const xp = isCurrentUser ? Math.max(u.total_xp || 0, user?.total_xp || 0, localStats.xp) : (u.total_xp || 0)
                 const level = calculateLevel(xp)
-                const streak_days = isCurrentUser ? Math.max(u.streak_days || 0, localStats.streakDays) : (u.streak_days || 0)
+                const streak_days = isCurrentUser ? Math.max(u.streak_days || 0, user?.streak_days || 0, localStats.streakDays) : (u.streak_days || 0)
                 return {
                     ...u,
                     total_xp: xp,
@@ -39,22 +44,23 @@ export const LeaderboardPage: React.FC = () => {
                 }
             })
 
-            if (!userFound && user) {
+            if (!userFound && user && userEmail) {
+                const userXp = Math.max(user.total_xp || 0, localStats.xp)
                 updatedList.push({
-                    id: 9999,
+                    id: typeof user.id === 'number' ? user.id : 9999,
                     username: user.email,
                     full_name: user.full_name || user.email.split('@')[0],
-                    total_xp: localStats.xp,
-                    level: calculateLevel(localStats.xp),
-                    streak_days: localStats.streakDays,
+                    total_xp: userXp,
+                    level: calculateLevel(userXp),
+                    streak_days: Math.max(user.streak_days || 1, localStats.streakDays),
                     rank: 1,
                 })
             }
 
-            // Sort primarily by Level DESC, then total_xp DESC
+            // Sort primarily by total_xp DESC, then streak_days DESC
             updatedList.sort((a, b) => {
-                if (b.level !== a.level) return b.level - a.level
-                return b.total_xp - a.total_xp
+                if (b.total_xp !== a.total_xp) return b.total_xp - a.total_xp
+                return b.streak_days - a.streak_days
             })
 
             // Assign ranks
@@ -70,7 +76,16 @@ export const LeaderboardPage: React.FC = () => {
 
     useEffect(() => {
         fetchLeaderboard()
-    }, [])
+        const handleUpdate = () => fetchLeaderboard()
+        window.addEventListener('skillgarden_xp_updated', handleUpdate)
+        window.addEventListener('storage', handleUpdate)
+        window.addEventListener('focus', handleUpdate)
+        return () => {
+            window.removeEventListener('skillgarden_xp_updated', handleUpdate)
+            window.removeEventListener('storage', handleUpdate)
+            window.removeEventListener('focus', handleUpdate)
+        }
+    }, [user])
 
     const top1 = rankings[0] || { rank: 1, full_name: 'Đang cập nhật...', total_xp: 0, level: 1, streak_days: 0 }
     const top2 = rankings[1] || { rank: 2, full_name: 'Đang cập nhật...', total_xp: 0, level: 1, streak_days: 0 }

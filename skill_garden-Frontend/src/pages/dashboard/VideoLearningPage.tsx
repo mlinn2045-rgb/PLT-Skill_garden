@@ -270,14 +270,18 @@ export const VideoLearningPage: React.FC = () => {
         const updated = updateChapterProgress(skillId, { videoCompleted: true, pdfCompleted: true }, activeChapterId, userKey)
         setChapterProgress(updated)
         setVideoFinished(true)
-        setShowQuizModal(true)
+        if (!updated.quizCompleted) {
+            setShowQuizModal(true)
+        }
     }
 
     const handleVideoEnded = () => {
         setVideoFinished(true)
         const updated = updateChapterProgress(skillId, { videoCompleted: true, pdfCompleted: true }, activeChapterId, userKey)
         setChapterProgress(updated)
-        setShowQuizModal(true)
+        if (!updated.quizCompleted) {
+            setShowQuizModal(true)
+        }
     }
 
     const [seekWarningMsg, setSeekWarningMsg] = useState('')
@@ -487,10 +491,10 @@ startxref
                     <Button
                         size="sm"
                         variant="primary"
-                        className="bg-white text-emerald-800 hover:bg-emerald-50 text-xs font-black ml-3"
+                        className="bg-white text-emerald-800 hover:bg-emerald-50 text-xs font-black ml-3 cursor-pointer"
                         onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${activeChapterId}`)}
                     >
-                        Làm Bài Quiz Ngay 📝
+                        {chapterProgress.quizCompleted ? 'Ôn lại Quiz 📝' : 'Làm Bài Quiz Ngay 📝'}
                     </Button>
                 </div>
             )}
@@ -552,7 +556,21 @@ startxref
                 </div>
 
                 <div className="flex items-center gap-3">
-                    {chapterProgress.videoCompleted && chapterProgress.pdfCompleted ? (
+                    {chapterProgress.quizCompleted ? (
+                        <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-black rounded-full border border-emerald-300">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Đã Hoàn Thành Quiz ✓
+                            </span>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="font-bold text-xs cursor-pointer"
+                                onClick={() => navigate(`/dashboard/quiz-room/${skillId}?chapter=${activeChapterId}`)}
+                            >
+                                Ôn lại Bài Quiz
+                            </Button>
+                        </div>
+                    ) : chapterProgress.videoCompleted && chapterProgress.pdfCompleted ? (
                         <div className="flex items-center gap-2">
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-black rounded-full border border-emerald-300">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Đã Xem Xong Video
@@ -718,8 +736,8 @@ startxref
                                 </Button>
                             )}
 
-                            {/* Direct Quiz Call to Action Banner when Unlocked */}
-                            {chapterProgress.videoCompleted && chapterProgress.pdfCompleted && (
+                            {/* Direct Quiz Call to Action Banner when Unlocked & NOT completed */}
+                            {chapterProgress.videoCompleted && chapterProgress.pdfCompleted && !chapterProgress.quizCompleted && (
                                 <div className="p-4 bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-purple-500/10 border-2 border-emerald-400 dark:border-emerald-600 rounded-2xl flex items-center justify-between gap-4">
                                     <div className="space-y-0.5">
                                         <h3 className="text-sm font-black text-emerald-900 dark:text-emerald-200 flex items-center gap-1.5">
@@ -804,20 +822,35 @@ startxref
                                 </div>
                             ) : (
                                 <div className="space-y-3 pt-2">
+                                    {/* Downloadable PDF items dynamically loaded for enrolled skill */}
                                     <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-between border border-gray-100 dark:border-gray-700">
                                         <div className="flex items-center gap-3">
-                                            <FileText className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" />
+                                            <FileText className="w-5 h-5 text-[#3C4097] dark:text-indigo-400 shrink-0" />
                                             <div>
-                                                <p className="text-xs font-bold text-[#20223A] dark:text-white">Slide_Bai_2_React_Props.pdf</p>
-                                                <p className="text-[11px] text-[#6B6D7A] dark:text-gray-400">Dung lượng: 2.4 MB</p>
+                                                <p className="text-xs font-bold text-[#20223A] dark:text-white">Slide_Tai_Lieu_Hoc_Tap_Skill_{skillId}.pdf</p>
+                                                <p className="text-[11px] text-[#6B6D7A] dark:text-gray-400">Dung lượng: 2.5 MB • Phân loại: Skill #{skillId}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Button type="button" variant="outline" size="sm" className="flex items-center gap-1 cursor-pointer" onClick={handleDownloadMaterial}>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="sm"
+                                                className="flex items-center gap-1 cursor-pointer font-bold"
+                                                onClick={async () => {
+                                                    try {
+                                                        await apiClient.post('/user/pdf-materials.php', {
+                                                            material_id: 1,
+                                                            action: 'DOWNLOAD_PDF'
+                                                        })
+                                                    } catch { }
+                                                    handleDownloadMaterial()
+                                                }}
+                                            >
                                                 <Download className="w-3.5 h-3.5" /> Tải về
                                             </Button>
-                                            <Button type="button" variant={chapterProgress.pdfCompleted ? 'success' : 'indigo'} size="sm" className="cursor-pointer" onClick={handleCompletePdf} disabled={!chapterProgress.videoCompleted}>
-                                                {chapterProgress.pdfCompleted ? 'Đã đọc xong' : 'Đã đọc xong tài liệu'}
+                                            <Button type="button" variant={chapterProgress.pdfCompleted ? 'success' : 'indigo'} size="sm" className="cursor-pointer font-bold" onClick={handleCompletePdf} disabled={!chapterProgress.videoCompleted}>
+                                                {chapterProgress.pdfCompleted ? 'Đã đọc xong ✓' : 'Đánh dấu đã đọc xong'}
                                             </Button>
                                         </div>
                                     </div>

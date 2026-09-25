@@ -35,9 +35,34 @@ try {
     echo "<p>⏳ Executing <code>schema.sql</code> script...</p>";
     $sql = file_get_contents($schemaFile);
 
-    // Disable foreign key checks during import
     $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
     $pdo->exec($sql);
+
+    // Auto-migrate schema updates for existing tables
+    try {
+        $checkCol = $pdo->query("SHOW COLUMNS FROM lesson_materials LIKE 'skill_id'");
+        if ($checkCol->rowCount() === 0) {
+            $pdo->exec("ALTER TABLE lesson_materials ADD COLUMN skill_id INT NULL AFTER lesson_id");
+            $pdo->exec("ALTER TABLE lesson_materials ADD CONSTRAINT fk_lesson_materials_skill FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE");
+        }
+        $pdo->exec("ALTER TABLE lesson_materials MODIFY COLUMN lesson_id INT NULL");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS `course_sync_logs` (
+              `id` INT AUTO_INCREMENT PRIMARY KEY,
+              `course_id` INT NOT NULL,
+              `action` ENUM('CREATE', 'UPDATE', 'DELETE') NOT NULL,
+              `sync_status` ENUM('PENDING', 'SYNCED', 'FAILED') DEFAULT 'PENDING',
+              `retry_count` INT DEFAULT 0,
+              `error_message` TEXT NULL,
+              `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              FOREIGN KEY (`course_id`) REFERENCES `skills`(`id`) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        ");
+    } catch (Exception $ex) {
+        // Log/ignore if already applied
+    }
 
     // Now seed all accounts from users.json with valid bcrypt hashes
     $usersJsonFile = __DIR__ . '/database/users.json';

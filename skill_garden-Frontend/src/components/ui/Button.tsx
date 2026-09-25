@@ -20,7 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
     disabled,
     ...props
 }) => {
-    const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]'
+    const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98] leading-none'
 
     const variants = {
         primary: 'bg-[#2D7A4F] text-white hover:bg-[#38A169] shadow-sm hover:shadow-md hover:-translate-y-0.5',
@@ -50,9 +50,9 @@ export const Button: React.FC<ButtonProps> = ({
             disabled={disabled}
             {...props}
         >
-            {icon && <span className="inline-flex shrink-0">{icon}</span>}
-            <span>{children}</span>
-            {iconRight && <span className="inline-flex shrink-0">{iconRight}</span>}
+            {icon && <span className="inline-flex items-center justify-center shrink-0">{icon}</span>}
+            <span className="inline-flex items-center justify-center">{children}</span>
+            {iconRight && <span className="inline-flex items-center justify-center shrink-0">{iconRight}</span>}
         </button>
     )
 }

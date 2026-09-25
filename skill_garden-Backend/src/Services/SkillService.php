@@ -102,6 +102,37 @@ class SkillService
         return $skill;
     }
 
+    public function logSyncEvent(int $courseId, string $action, string $status = 'SYNCED', ?string $errorMessage = null): bool
+    {
+        try {
+            $stmt = $this->db->prepare("
+                INSERT INTO course_sync_logs (course_id, action, sync_status, error_message)
+                VALUES (:c_id, :action, :status, :err_msg)
+            ");
+            return $stmt->execute([
+                'c_id' => $courseId,
+                'action' => strtoupper($action),
+                'status' => strtoupper($status),
+                'err_msg' => $errorMessage
+            ]);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getLatestSyncStatus(?int $courseId = null): array
+    {
+        if ($courseId) {
+            $stmt = $this->db->prepare("SELECT * FROM course_sync_logs WHERE course_id = :c_id ORDER BY id DESC LIMIT 1");
+            $stmt->execute(['c_id' => $courseId]);
+            $log = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $log ?: ['sync_status' => 'SYNCED', 'action' => 'NONE'];
+        }
+
+        $stmt = $this->db->query("SELECT * FROM course_sync_logs ORDER BY id DESC LIMIT 10");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function createSkill(array $data): array
     {
         $title = trim($data['title'] ?? '');
@@ -114,15 +145,29 @@ class SkillService
             $slug .= '-' . rand(10, 99);
         }
 
-        return $this->skillModel->create([
-            'title' => $title,
-            'slug' => $slug,
-            'category' => $data['category'] ?? 'Development',
-            'description' => $data['description'] ?? null,
-            'icon_url' => $data['icon_url'] ?? null,
-            'plant_id' => !empty($data['plant_id']) ? (int) $data['plant_id'] : null,
-            'status' => $data['status'] ?? 'ACTIVE',
-        ]);
+        $this->db->beginTransaction();
+        try {
+            $createdSkill = $this->skillModel->create([
+                'title' => $title,
+                'slug' => $slug,
+                'category' => $data['category'] ?? 'Development',
+                'description' => $data['description'] ?? null,
+                'icon_url' => $data['icon_url'] ?? null,
+                'plant_id' => !empty($data['plant_id']) ? (int) $data['plant_id'] : null,
+                'status' => $data['status'] ?? 'ACTIVE',
+            ]);
+
+            $skillId = (int) $createdSkill['id'];
+            $this->logSyncEvent($skillId, 'CREATE', 'SYNCED');
+
+            $this->db->commit();
+            return $createdSkill;
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            throw new Exception("Lỗi khi tạo khóa học (Transaction Rolled Back): " . $e->getMessage(), 500);
+        }
     }
 
     public function updateSkill(int $skillId, array $data): bool
@@ -146,7 +191,20 @@ class SkillService
         if (isset($data['status']))
             $updateData['status'] = $data['status'];
 
-        return $this->skillModel->update($skillId, $updateData);
+        $this->db->beginTransaction();
+        try {
+            $success = $this->skillModel->update($skillId, $updateData);
+            if ($success) {
+                $this->logSyncEvent($skillId, 'UPDATE', 'SYNCED');
+            }
+            $this->db->commit();
+            return $success;
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            throw new Exception("Lỗi khi cập nhật khóa học (Transaction Rolled Back): " . $e->getMessage(), 500);
+        }
     }
 
     public function deleteSkill(int $skillId): bool
@@ -156,7 +214,47 @@ class SkillService
             throw new Exception("Không tìm thấy kỹ năng.", 404);
         }
 
-        return $this->skillModel->delete($skillId);
+        $this->db->beginTransaction();
+        try {
+            $this->logSyncEvent($skillId, 'DELETE', 'SYNCED');
+
+            $stmt1 = $this->db->prepare("DELETE FROM lesson_materials WHERE skill_id = :s_id");
+            $stmt1->execute(['s_id' => $skillId]);
+
+            $stmt2 = $this->db->prepare("DELETE FROM questions WHERE skill_id = :s_id");
+            $stmt2->execute(['s_id' => $skillId]);
+
+            $stmt3 = $this->db->prepare("DELETE FROM user_skills WHERE skill_id = :s_id");
+            $stmt3->execute(['s_id' => $skillId]);
+
+            $lpStmt = $this->db->prepare("SELECT id FROM learning_paths WHERE skill_id = :s_id");
+            $lpStmt->execute(['s_id' => $skillId]);
+            $pathIds = $lpStmt->fetchAll(PDO::FETCH_COLUMN);
+
+            if (!empty($pathIds)) {
+                $inLp = implode(',', array_map('intval', $pathIds));
+                $modStmt = $this->db->prepare("SELECT id FROM modules WHERE learning_path_id IN ($inLp)");
+                $modStmt->execute();
+                $modIds = $modStmt->fetchAll(PDO::FETCH_COLUMN);
+
+                if (!empty($modIds)) {
+                    $inMod = implode(',', array_map('intval', $modIds));
+                    $this->db->exec("DELETE FROM user_lessons WHERE lesson_id IN (SELECT id FROM lessons WHERE module_id IN ($inMod))");
+                    $this->db->exec("DELETE FROM lessons WHERE module_id IN ($inMod)");
+                    $this->db->exec("DELETE FROM modules WHERE id IN ($inMod)");
+                }
+                $this->db->exec("DELETE FROM learning_paths WHERE id IN ($inLp)");
+            }
+
+            $success = $this->skillModel->delete($skillId);
+            $this->db->commit();
+            return $success;
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            throw new Exception("Lỗi khi xóa khóa học (Transaction Rolled Back): " . $e->getMessage(), 500);
+        }
     }
 
     public function assignPlantToSkill(int $skillId, int $plantId): bool
@@ -164,3 +262,4 @@ class SkillService
         return $this->skillModel->update($skillId, ['plant_id' => $plantId]);
     }
 }
+

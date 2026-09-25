@@ -145,13 +145,15 @@ CREATE TABLE IF NOT EXISTS `lessons` (
 -- 10. LESSON MATERIALS TABLE (PDF / Downloadable Resources)
 CREATE TABLE IF NOT EXISTS `lesson_materials` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `lesson_id` INT NOT NULL,
+  `lesson_id` INT NULL,
+  `skill_id` INT NULL,
   `title` VARCHAR(255) NOT NULL,
   `file_url` VARCHAR(500) NOT NULL,
   `file_type` VARCHAR(50) NOT NULL DEFAULT 'pdf', -- pdf, zip, slide, doc
   `file_size_bytes` BIGINT NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (`lesson_id`) REFERENCES `lessons`(`id`) ON DELETE CASCADE
+  FOREIGN KEY (`lesson_id`) REFERENCES `lessons`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`skill_id`) REFERENCES `skills`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 11. QUIZZES TABLE
@@ -413,7 +415,19 @@ INSERT INTO `lessons` (`id`, `module_id`, `title`, `slug`, `description`, `conte
 (2, 1, '2. React Components, JSX & Props Deep Dive', 'react-components-props', 'Hướng dẫn xây dựng Functional Component, JSX syntax và giao tiếp dữ liệu qua Props.', 'VIDEO', 'https://www.youtube.com/watch?v=bMknfKXIFA8', 1200, 50, 2, 1),
 (3, 1, '3. State Management với useState & useReducer', 'state-management-usestate', 'Quản lý trạng thái giao diện UI mượt mà với useState và useReducer hook.', 'VIDEO', 'https://www.youtube.com/watch?v=0ZJgOiR4LUs', 1500, 50, 3, 1),
 (4, 2, '4. Side Effects & Lifecycle với useEffect', 'side-effects-useeffect', 'Xử lý bất đồng bộ, call API và giải phóng bộ nhớ với useEffect hook.', 'VIDEO', 'https://www.youtube.com/watch?v=0ZJgOiR4LUs', 1800, 100, 1, 1)
-ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `video_url` = VALUES(`video_url`);
+-- 16. COURSE SYNC LOGS TABLE (Real-Time Synchronization & Rollback Audit)
+CREATE TABLE IF NOT EXISTS `course_sync_logs` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `course_id` INT NOT NULL,
+  `action` ENUM('CREATE', 'UPDATE', 'DELETE') NOT NULL,
+  `sync_status` ENUM('PENDING', 'SYNCED', 'FAILED') DEFAULT 'PENDING',
+  `retry_count` INT DEFAULT 0,
+  `error_message` TEXT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`course_id`) REFERENCES `skills`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
 

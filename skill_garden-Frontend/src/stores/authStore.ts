@@ -25,6 +25,7 @@ interface AuthState {
     register: (fullName: string, email: string, password: string) => Promise<{ success: boolean; message: string }>;
     logout: () => Promise<void>;
     updateUser: (updatedData: Partial<UserProfile>) => void;
+    addXP: (amount: number) => void;
     toggleDarkMode: () => void;
     clearError: () => void;
 }
@@ -111,6 +112,26 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         if (updatedData.avatar_url) {
             localStorage.setItem('skillgarden_avatar_' + currentUser.email, updatedData.avatar_url);
         }
+    },
+
+    addXP: (amount: number) => {
+        const currentUser = get().user;
+        if (!currentUser) return;
+        const currentXP = currentUser.total_xp ?? currentUser.xp ?? 0;
+        const newXP = currentXP + amount;
+
+        // Level calculation rule:
+        // L1-5: +1000XP per level (L1: 0-999, L2: 1000-1999, L3: 2000-2999, L4: 3000-3999, L5: 4000-4999)
+        // L6-10: +2000XP per level (L6: 5000-6999, L7: 7000-8999, etc.)
+        let newLevel = 1;
+        if (newXP >= 5000) {
+            newLevel = 5 + Math.floor((newXP - 5000) / 2000) + 1;
+        } else {
+            newLevel = Math.floor(newXP / 1000) + 1;
+        }
+
+        const newUser = { ...currentUser, xp: newXP, total_xp: newXP, level: newLevel };
+        set({ user: newUser });
     },
 
     toggleDarkMode: () => {

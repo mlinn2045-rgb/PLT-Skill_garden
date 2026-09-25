@@ -18,6 +18,7 @@ export interface SkillItem {
 export interface LeaderboardUser {
     id: number;
     username: string;
+    email?: string;
     full_name: string;
     avatar?: string;
     total_xp: number;

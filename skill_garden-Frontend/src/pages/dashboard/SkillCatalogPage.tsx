@@ -5,6 +5,8 @@ import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Badge } from '../../components/ui/Badge'
 import { gardenService } from '../../services/gardenService'
+import { isSkillGrowing } from '../../services/learningProgress'
+import { useAuthStore } from '../../stores/authStore'
 
 interface SkillItem {
     id: string
@@ -26,7 +28,19 @@ export const SkillCatalogPage: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState('ALL')
     const [loadingSkillId, setLoadingSkillId] = useState<string | null>(null)
 
-    const [skills, setSkills] = useState<SkillItem[]>([
+    // Load planted skill IDs from localStorage
+    const getPlantedSkillIds = (): string[] => {
+        try {
+            const saved = localStorage.getItem('skillgarden_planted_skills')
+            return saved ? JSON.parse(saved) : []
+        } catch {
+            return []
+        }
+    }
+
+    const [plantedSkillIds, setPlantedSkillIds] = useState<string[]>(getPlantedSkillIds())
+
+    const initialSkillsList: SkillItem[] = [
         {
             id: '1',
             title: 'Frontend React 19 Mastery',
@@ -37,7 +51,7 @@ export const SkillCatalogPage: React.FC = () => {
             lessonsCount: 18,
             totalXp: 900,
             levelRequired: 'Cơ bản',
-            isEnrolled: true,
+            isEnrolled: false,
             color: 'border-pink-200 bg-pink-50/30 dark:border-pink-900/50 dark:bg-pink-950/20'
         },
         {
@@ -50,7 +64,7 @@ export const SkillCatalogPage: React.FC = () => {
             lessonsCount: 22,
             totalXp: 1200,
             levelRequired: 'Trung cấp',
-            isEnrolled: true,
+            isEnrolled: false,
             color: 'border-emerald-200 bg-emerald-50/30 dark:border-emerald-900/50 dark:bg-emerald-950/20'
         },
         {
@@ -63,7 +77,7 @@ export const SkillCatalogPage: React.FC = () => {
             lessonsCount: 14,
             totalXp: 700,
             levelRequired: 'Cơ bản',
-            isEnrolled: true,
+            isEnrolled: false,
             color: 'border-teal-200 bg-teal-50/30 dark:border-teal-900/50 dark:bg-teal-950/20'
         },
         {
@@ -76,7 +90,7 @@ export const SkillCatalogPage: React.FC = () => {
             lessonsCount: 16,
             totalXp: 800,
             levelRequired: 'Cơ bản',
-            isEnrolled: true,
+            isEnrolled: false,
             color: 'border-amber-200 bg-amber-50/30 dark:border-amber-900/50 dark:bg-amber-950/20'
         },
         {
@@ -105,17 +119,29 @@ export const SkillCatalogPage: React.FC = () => {
             isEnrolled: false,
             color: 'border-blue-200 bg-blue-50/30 dark:border-blue-900/50 dark:bg-blue-950/20'
         }
-    ])
+    ]
+
+    const { user } = useAuthStore()
+    const userKey = user?.email || 'guest'
+
+    const skills = initialSkillsList.map(skill => ({
+        ...skill,
+        isEnrolled: plantedSkillIds.includes(skill.id) || isSkillGrowing(skill.id, userKey)
+    }))
 
     const handlePlantOrLearn = async (skill: SkillItem) => {
         setLoadingSkillId(skill.id)
         try {
             if (!skill.isEnrolled) {
+                // Save to localStorage
+                const updatedPlanted = [...plantedSkillIds, skill.id]
+                localStorage.setItem('skillgarden_planted_skills', JSON.stringify(updatedPlanted))
+                setPlantedSkillIds(updatedPlanted)
+
                 // Plant tree in backend
                 await gardenService.plantSeed(Number(skill.id), 1)
-                setSkills(prev => prev.map(s => s.id === skill.id ? { ...s, isEnrolled: true } : s))
             }
-            // Open the learning path for the selected skill.
+            // Navigate to lesson 1 / learning path for the selected skill
             navigate(`/dashboard/learning-path/${skill.id}`)
         } catch {
             navigate(`/dashboard/learning-path/${skill.id}`)
@@ -242,13 +268,13 @@ export const SkillCatalogPage: React.FC = () => {
                                     <span>Đang chuẩn bị mầm cây...</span>
                                 ) : skill.isEnrolled ? (
                                     <>
-                                        <span>Vào Học Ngay</span>
+                                        <span>Vào học ngay (Học tiếp skill đó)</span>
                                         <ArrowRight className="w-4 h-4" />
                                     </>
                                 ) : (
                                     <>
-                                        <Sprout className="w-4 h-4" />
-                                        <span>Bắt Đầu Trồng Cây Này</span>
+                                        <Sprout className="w-4 h-4 text-emerald-500" />
+                                        <span>Bắt đầu trồng cây này</span>
                                     </>
                                 )}
                             </Button>

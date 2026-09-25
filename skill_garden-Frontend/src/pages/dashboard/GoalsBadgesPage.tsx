@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Award, Flame, Target, CheckCircle2, Lock, Star } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { getChapterProgress, isSkillCompleted, isSkillGrowing } from '../../services/learningProgress'
-import { getStudentStats } from '../../services/studentStats'
+import { addStudentXp, getStudentStats } from '../../services/studentStats'
 import { useAuthStore } from '../../stores/authStore'
 
 export const GoalsBadgesPage: React.FC = () => {
@@ -10,6 +10,7 @@ export const GoalsBadgesPage: React.FC = () => {
     const userKey = user?.email || 'guest'
     const storageKey = `skillgarden_claimed_quests_${userKey}`
     const studentStats = getStudentStats(userKey)
+    const userXp = user?.total_xp ?? studentStats.xp
     const skillIds = ['1', '2', '3', '4', '5', '6']
     const completedQuizCount = skillIds.reduce((count, skillId) => (
         count + (getChapterProgress(skillId, '1', userKey).quizCompleted ? 1 : 0)
@@ -43,13 +44,15 @@ export const GoalsBadgesPage: React.FC = () => {
         { id: 3, name: 'Bậc Thầy Streak 7', desc: 'Học tập liên tục 7 ngày', unlocked: studentStats.streakDays >= 7, icon: '🔥' },
         { id: 4, name: 'Cây Đại Thụ Python', desc: 'Hoàn thành khóa học Python Advanced', unlocked: isSkillCompleted('4', userKey), icon: '🌳' },
         { id: 5, name: 'Chuyên Gia Database', desc: 'Hoàn thành lộ trình SQL', unlocked: isSkillCompleted('3', userKey), icon: '🗄️' },
-        { id: 6, name: 'Học Viên Xuất Sắc', desc: 'Tích lũy 5,000 XP', unlocked: studentStats.xp >= 5000, icon: '👑' }
+        { id: 6, name: 'Học Viên Xuất Sắc', desc: 'Tích lũy 5,000 XP', unlocked: userXp >= 5000, icon: '👑' }
     ]
 
-    const handleClaim = (id: number) => {
+    const handleClaim = (id: number, xpAmount: number) => {
+        if (claimedQuests.includes(id)) return
         const updated = [...claimedQuests, id]
         setClaimedQuests(updated)
         localStorage.setItem(storageKey, JSON.stringify(updated))
+        addStudentXp(userKey, xpAmount)
     }
 
     return (
@@ -73,7 +76,7 @@ export const GoalsBadgesPage: React.FC = () => {
                     </div>
                     <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 text-center border border-white/20 min-w-[110px]">
                         <Star className="w-6 h-6 text-yellow-300 mx-auto mb-1" />
-                        <p className="text-2xl font-extrabold">{studentStats.xp.toLocaleString('vi-VN')}</p>
+                        <p className="text-2xl font-extrabold">{userXp.toLocaleString('vi-VN')}</p>
                         <p className="text-[11px] text-indigo-200 font-semibold">Tổng XP</p>
                     </div>
                 </div>
@@ -113,7 +116,7 @@ export const GoalsBadgesPage: React.FC = () => {
                                         <CheckCircle2 className="w-4 h-4 mr-1" /> Đã nhận thưởng
                                     </Button>
                                 ) : isDone ? (
-                                    <Button variant="indigo" size="sm" fullWidth onClick={() => handleClaim(q.id)} className="text-xs font-bold cursor-pointer">
+                                    <Button variant="indigo" size="sm" fullWidth onClick={() => handleClaim(q.id, q.xp)} className="text-xs font-bold cursor-pointer">
                                         Nhận {q.xp} XP
                                     </Button>
                                 ) : (

@@ -17,7 +17,7 @@ import { Badge } from '../../components/ui/Badge'
 import { Avatar } from '../../components/ui/Avatar'
 import { useAuthStore } from '../../stores/authStore'
 import { getChapterProgress, getSkillGrowth } from '../../services/learningProgress'
-import { getStudentStats } from '../../services/studentStats'
+import { calculateLevel, getStudentStats } from '../../services/studentStats'
 import { apiClient } from '../../services/apiClient'
 
 const learningPaths = {
@@ -90,17 +90,19 @@ export const LearningPathPage: React.FC = () => {
     const userKey = user?.email || 'guest'
     const studentStats = getStudentStats(userKey)
     const displayName = user?.full_name || user?.email?.split('@')[0] || 'Học viên'
-    const displayLevel = Math.max(user?.level || 0, studentStats.xp > 0 ? Math.floor(studentStats.xp / 100) + 1 : 0)
+    const displayLevel = calculateLevel(user?.total_xp ?? studentStats.xp)
     const growthLabel = displayLevel > 0 ? (displayLevel >= 5 ? 'Cây trưởng thành' : 'Mầm Tri Thức') : 'Hạt giống mới gieo'
     const chapterProgress = getChapterProgress(id, '1', userKey)
     const chapter2Progress = getChapterProgress(id, '2', userKey)
     const chapter3Progress = getChapterProgress(id, '3', userKey)
-    const activeChapterId = chapterProgress.quizCompleted ? '2' : '1'
-    const activeChapterProgress = activeChapterId === '2' ? chapter2Progress : chapterProgress
+    const chapter4Progress = getChapterProgress(id, '4', userKey)
+    const activeChapterId = chapter3Progress.quizCompleted ? '4' : chapter2Progress.quizCompleted ? '3' : chapterProgress.quizCompleted ? '2' : '1'
+    const activeChapterProgress = activeChapterId === '4' ? chapter4Progress : activeChapterId === '3' ? chapter3Progress : activeChapterId === '2' ? chapter2Progress : chapterProgress
     const skillGrowth = getSkillGrowth(id, userKey)
     const learningProgress = skillGrowth.progress
     const chapter2Unlocked = chapterProgress.quizCompleted
     const chapter3Unlocked = chapter2Progress.quizCompleted
+    const chapter4Unlocked = chapter3Progress.quizCompleted
     const chapterPercent = (progress: typeof chapterProgress) => {
         if (progress.quizCompleted) return 100
         if (progress.videoCompleted && progress.pdfCompleted) return 75
@@ -113,17 +115,24 @@ export const LearningPathPage: React.FC = () => {
 
     useEffect(() => {
         let isMounted = true
-        apiClient.get<any[]>(`/lessons.php?skill_id=${encodeURIComponent(id)}`)
-            .then(res => {
-                if (isMounted) {
-                    const list = Array.isArray(res.data) ? res.data : []
-                    setDbLessons(list)
-                }
-            })
-            .catch(() => {
-                if (isMounted) setDbLessons([])
-            })
-        return () => { isMounted = false }
+        const fetchLessons = () => {
+            apiClient.get<any[]>(`/lessons.php?skill_id=${encodeURIComponent(id)}`)
+                .then(res => {
+                    if (isMounted) {
+                        const list = Array.isArray(res.data) ? res.data : []
+                        setDbLessons(list)
+                    }
+                })
+                .catch(() => {
+                    if (isMounted) setDbLessons([])
+                })
+        }
+        fetchLessons()
+        const syncInterval = setInterval(fetchLessons, 4000)
+        return () => {
+            isMounted = false
+            clearInterval(syncInterval)
+        }
     }, [id])
 
     const lesson1 = dbLessons[0]
@@ -300,18 +309,18 @@ export const LearningPathPage: React.FC = () => {
                             </Card>
                         </div>
 
-                        {/* Chapter 02 - Active Now (72%) */}
+                        {/* Chapter 02 - Active / Completed */}
                         <div className="relative flex items-start gap-4 group">
-                            <div className={`w-12 h-12 rounded-full ${chapter2Unlocked && learningProgress > 0 ? 'bg-[#3F49C8] text-white ring-indigo-100 dark:ring-indigo-950' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 ring-white dark:ring-gray-900'} flex items-center justify-center font-bold text-sm ring-4 shadow-md z-10 shrink-0`}>
-                                {chapter2Unlocked ? `${learningProgress}%` : '02'}
+                            <div className={`w-12 h-12 rounded-full ${chapter2Progress.quizCompleted ? 'bg-emerald-500 text-white' : chapter2Unlocked ? 'bg-[#3F49C8] text-white ring-indigo-100 dark:ring-indigo-950' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 ring-white dark:ring-gray-900'} flex items-center justify-center font-bold text-sm ring-4 shadow-md z-10 shrink-0`}>
+                                {chapter2Progress.quizCompleted ? <CheckCircle2 className="w-6 h-6" /> : '02'}
                             </div>
-                            <Card className="flex-1 p-6 border-2 border-[#3F49C8] dark:border-indigo-500 shadow-md bg-gradient-to-r from-white via-indigo-50/30 to-white dark:from-gray-900 dark:via-indigo-950/40 dark:to-gray-900">
+                            <Card className={`flex-1 p-6 border-2 ${chapter2Progress.quizCompleted ? 'border-emerald-200 dark:border-emerald-800/80 bg-white dark:bg-gray-900' : 'border-[#3F49C8] dark:border-indigo-500 shadow-md bg-gradient-to-r from-white via-indigo-50/30 to-white dark:from-gray-900 dark:via-indigo-950/40 dark:to-gray-900'}`}>
                                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#3F49C8] dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/80 px-2.5 py-0.5 rounded-md border border-indigo-200 dark:border-indigo-800">
-                                        {chapter2Unlocked ? (chapter2Progress.quizCompleted ? 'CHẶNG 02 • HOÀN THÀNH' : 'CHẶNG 02 • ĐANG HỌC 🌱') : 'CHẶNG 02 • ĐANG KHÓA'}
+                                    <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${chapter2Progress.quizCompleted ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : chapter2Unlocked ? 'text-[#3F49C8] dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/80 border-indigo-200 dark:border-indigo-800' : 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400'}`}>
+                                        {chapter2Progress.quizCompleted ? 'CHẶNG 02 • HOÀN THÀNH ✓' : chapter2Unlocked ? 'CHẶNG 02 • ĐANG HỌC 🌱' : 'CHẶNG 02 • ĐANG KHÓA'}
                                     </span>
                                     <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                                        <Sprout className="w-3.5 h-3.5" /> {chapter2Unlocked ? 'Cây kỹ năng đang đâm chồi' : 'Hoàn thành quiz chặng 1 để mở khóa'}
+                                        <Sprout className="w-3.5 h-3.5" /> {chapter2Progress.quizCompleted ? 'Đã tốt nghiệp chặng 2' : chapter2Unlocked ? 'Cây kỹ năng đang đâm chồi' : 'Hoàn thành quiz chặng 1 để mở khóa'}
                                     </span>
                                 </div>
 
@@ -330,37 +339,35 @@ export const LearningPathPage: React.FC = () => {
                                             <PlayCircle className="w-5 h-5" />
                                         </div>
                                         <div>
-                                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#718096] dark:text-gray-400">BÀI HỌC TIẾP THEO</span>
-                                            <h4 className="text-xs font-bold text-[#1A2E22] dark:text-white">{lesson2?.title || 'Chưa có bài học ở Chặng 2'}</h4>
+                                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#718096] dark:text-gray-400">BÀI HỌC BẮT BUỘC</span>
+                                            <h4 className="text-xs font-bold text-[#1A2E22] dark:text-white">{lesson2?.title || 'Bài 2: Custom Hooks & State Management'}</h4>
                                         </div>
                                     </div>
 
                                     {chapter2Unlocked ? (
                                         <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=2`}>
-                                            <Button variant="indigo" size="sm">Vào học ngay &rsaquo;</Button>
+                                            <Button variant={chapter2Progress.quizCompleted ? "outline" : "indigo"} size="sm" className="font-bold cursor-pointer">
+                                                {chapter2Progress.quizCompleted ? 'Ôn lại bài học' : 'Vào học ngay ›'}
+                                            </Button>
                                         </Link>
                                     ) : (
                                         <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400">🔒 Chưa mở khóa</span>
                                     )}
                                 </div>
-
-                                <div className="mt-3 text-[11px] text-[#718096] dark:text-gray-400 flex items-center gap-1">
-                                    <span>ℹ️</span> {learningProgress > 0 ? 'Hoàn thành thêm bài học và quiz để cây tiếp tục sinh trưởng' : 'Bắt đầu từ lesson 1 để gieo hạt giống kỹ năng'}
-                                </div>
                             </Card>
                         </div>
 
-                        {/* Chapter 03 - Unlocked/Start Exploring */}
+                        {/* Chapter 03 - Unlocked/Completed */}
                         <div className="relative flex items-start gap-4 group">
-                            <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 flex items-center justify-center font-bold text-lg ring-4 ring-white dark:ring-gray-900 shadow-xs z-10 shrink-0">
-                                🌱
+                            <div className={`w-12 h-12 rounded-full ${chapter3Progress.quizCompleted ? 'bg-emerald-500 text-white' : chapter3Unlocked ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'} flex items-center justify-center font-bold text-lg ring-4 ring-white dark:ring-gray-900 shadow-xs z-10 shrink-0`}>
+                                {chapter3Progress.quizCompleted ? <CheckCircle2 className="w-6 h-6" /> : '03'}
                             </div>
                             <Card className="flex-1 p-5 border-[#E6ECE6] dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-purple-300 dark:hover:border-purple-700 transition-colors">
                                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/60 px-2.5 py-0.5 rounded-md border border-purple-200 dark:border-purple-800">
-                                        {chapter3Unlocked ? 'CHẶNG 03 • ĐÃ MỞ KHÓA • BẮT ĐẦU KHÁM PHÁ' : 'CHẶNG 03 • ĐANG KHÓA'}
+                                    <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${chapter3Progress.quizCompleted ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : chapter3Unlocked ? 'text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/60 border-purple-200 dark:border-purple-800' : 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400'}`}>
+                                        {chapter3Progress.quizCompleted ? 'CHẶNG 03 • HOÀN THÀNH ✓' : chapter3Unlocked ? 'CHẶNG 03 • ĐÃ MỞ KHÓA 🌱' : 'CHẶNG 03 • ĐANG KHÓA'}
                                     </span>
-                                    <span className="text-xs font-mono text-[#718096] dark:text-gray-400">Tiến độ: 3 / 28 bài học (15%)</span>
+                                    <span className="text-xs font-mono text-[#718096] dark:text-gray-400">Tiến độ: {chapter3Progress.quizCompleted ? '100%' : chapter3Unlocked ? 'Bắt đầu khám phá' : 'Cần hoàn thành chặng 2'}</span>
                                 </div>
 
                                 <h3 className="text-lg font-bold text-[#1A2E22] dark:text-white">
@@ -380,30 +387,34 @@ export const LearningPathPage: React.FC = () => {
 
                                 <div className="mt-4 pt-3 border-t border-[#E6ECE6] dark:border-gray-800 flex items-center justify-between">
                                     <span className="text-xs font-bold text-[#3F49C8] dark:text-indigo-400 flex items-center gap-1">
-                                        {chapter3Unlocked ? 'Xem chi tiết đề cương ›' : 'Hoàn thành quiz chặng 2 để mở khóa'}
+                                        {chapter3Unlocked ? 'Đã đủ điều kiện tham gia chặng này' : 'Hoàn thành quiz chặng 2 để mở khóa'}
                                     </span>
                                     {chapter3Unlocked && (
                                         <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=3`}>
-                                            <Button variant="indigo" size="sm">Vào học ngay &rsaquo;</Button>
+                                            <Button variant={chapter3Progress.quizCompleted ? "outline" : "indigo"} size="sm" className="font-bold cursor-pointer">
+                                                {chapter3Progress.quizCompleted ? 'Ôn lại bài học' : 'Vào học ngay ›'}
+                                            </Button>
                                         </Link>
                                     )}
                                 </div>
                             </Card>
                         </div>
 
-                        {/* Chapter 04 - Locked */}
-                        <div className="relative flex items-start gap-4 opacity-75">
-                            <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 flex items-center justify-center font-bold text-lg ring-4 ring-white dark:ring-gray-900 shadow-xs z-10 shrink-0">
-                                <Lock className="w-5 h-5" />
+                        {/* Chapter 04 - Locked / Unlocked via Chapter 3 */}
+                        <div className={`relative flex items-start gap-4 ${chapter3Progress.quizCompleted ? 'opacity-100' : 'opacity-75'}`}>
+                            <div className={`w-12 h-12 rounded-full ${chapter3Progress.quizCompleted ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500'} flex items-center justify-center font-bold text-lg ring-4 ring-white dark:ring-gray-900 shadow-xs z-10 shrink-0`}>
+                                {chapter3Progress.quizCompleted ? '04' : <Lock className="w-5 h-5" />}
                             </div>
                             <Card className="flex-1 p-5 bg-gray-50/60 dark:bg-gray-900/60 border-gray-200 dark:border-gray-800">
                                 <div className="flex items-center justify-between mb-2">
-                                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-gray-500 dark:text-gray-300 bg-gray-200 dark:bg-gray-800 px-2.5 py-0.5 rounded-md">
-                                        CHẶNG 04 • ĐANG KHÓA
+                                    <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md ${chapter4Progress.quizCompleted ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : chapter3Progress.quizCompleted ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300' : 'bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-300'}`}>
+                                        {chapter4Progress.quizCompleted ? 'CHẶNG 04 • HOÀN THÀNH ✓' : chapter3Progress.quizCompleted ? 'CHẶNG 04 • ĐÃ MỞ KHÓA 🌱' : 'CHẶNG 04 • ĐANG KHÓA'}
                                     </span>
-                                    <span className="text-xs text-amber-700 dark:text-amber-300 font-semibold bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-800">
-                                        🔒 Cần hoàn thành 80% Chặng 2 & 3
-                                    </span>
+                                    {!chapter3Progress.quizCompleted && (
+                                        <span className="text-xs text-amber-700 dark:text-amber-300 font-semibold bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-800">
+                                            🔒 Cần hoàn thành Quiz Chặng 3
+                                        </span>
+                                    )}
                                 </div>
 
                                 <h3 className="text-base font-bold text-gray-800 dark:text-gray-100">
@@ -413,6 +424,16 @@ export const LearningPathPage: React.FC = () => {
                                 <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed mt-1">
                                     Xây dựng hệ thống Type an toàn tuyệt đối với Generics, Mapped Types, Design Patterns (Factory, Strategy, Observer) và quy chuẩn Unit / Integration Testing toàn diện với Vitest & Playwright.
                                 </p>
+
+                                {chapter3Progress.quizCompleted && (
+                                    <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+                                        <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=4`}>
+                                            <Button variant={chapter4Progress.quizCompleted ? "outline" : "indigo"} size="sm" className="font-bold cursor-pointer">
+                                                {chapter4Progress.quizCompleted ? 'Ôn lại bài học' : 'Vào học ngay ›'}
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                )}
                             </Card>
                         </div>
 
