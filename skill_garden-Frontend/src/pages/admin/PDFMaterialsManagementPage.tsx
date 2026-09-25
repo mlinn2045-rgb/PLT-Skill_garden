@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { FileText, Upload, Trash2, RefreshCw, Edit, Link as LinkIcon, HardDrive, FileUp, CheckCircle2 } from 'lucide-react'
+import { FileText, Upload, Trash2, RefreshCw, Edit, Link as LinkIcon, HardDrive, FileUp, CheckCircle2, Tag, Filter } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
-import { adminService, PdfMaterial } from '../../services/adminService'
+import { adminService, PdfMaterial, SkillItem } from '../../services/adminService'
 import { apiClient } from '../../services/apiClient'
 import { useAuthStore } from '../../stores/authStore'
 
@@ -13,6 +13,8 @@ export const PDFMaterialsManagementPage: React.FC = () => {
     ))
 
     const [materials, setMaterials] = useState<PdfMaterial[]>([])
+    const [skills, setSkills] = useState<SkillItem[]>([])
+    const [selectedFilterSkillId, setSelectedFilterSkillId] = useState<number | ''>('')
     const [isLoading, setIsLoading] = useState(true)
     const [errorMsg, setErrorMsg] = useState('')
     const [toastMsg, setToastMsg] = useState('')
@@ -21,6 +23,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
     const [editingMaterial, setEditingMaterial] = useState<PdfMaterial | null>(null)
     const [title, setTitle] = useState('')
     const [fileUrl, setFileUrl] = useState('')
+    const [skillId, setSkillId] = useState<number | ''>('')
     const [uploadType, setUploadType] = useState<'URL' | 'FILE'>('URL')
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [isUploading, setIsUploading] = useState(false)
@@ -29,22 +32,26 @@ export const PDFMaterialsManagementPage: React.FC = () => {
     const [fileSizeBytes, setFileSizeBytes] = useState<number>(2500000)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const fetchMaterials = async () => {
+    const fetchMaterialsAndSkills = async () => {
         setIsLoading(true)
         setErrorMsg('')
         try {
-            const data = await adminService.getMaterials()
-            setMaterials(data)
+            const [matData, skillData] = await Promise.all([
+                adminService.getMaterials(undefined, selectedFilterSkillId ? Number(selectedFilterSkillId) : undefined),
+                adminService.getSkills()
+            ])
+            setMaterials(matData)
+            setSkills(skillData)
         } catch (err: any) {
-            setErrorMsg(err.message || 'Không thể tải danh sách tài liệu.')
+            setErrorMsg(err.message || 'Không thể tải danh sách tài liệu hoặc kỹ năng.')
         } finally {
             setIsLoading(false)
         }
     }
 
     useEffect(() => {
-        fetchMaterials()
-    }, [])
+        fetchMaterialsAndSkills()
+    }, [selectedFilterSkillId])
 
     const showToast = (msg: string) => {
         setToastMsg(msg)
@@ -55,6 +62,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
         setShowModal(false)
         setTitle('')
         setFileUrl('')
+        setSkillId('')
         setEditingMaterial(null)
         setUploadType('URL')
         setSelectedFile(null)
@@ -121,18 +129,24 @@ export const PDFMaterialsManagementPage: React.FC = () => {
         }
         setIsSubmitting(true)
         try {
-            const payload = { title: title.trim(), file_url: fileUrl.trim(), file_type: 'pdf', file_size_bytes: fileSizeBytes }
+            const payload = {
+                title: title.trim(),
+                file_url: fileUrl.trim(),
+                skill_id: skillId ? Number(skillId) : undefined,
+                file_type: 'pdf',
+                file_size_bytes: fileSizeBytes
+            }
             if (editingMaterial) {
                 await adminService.updateMaterial(editingMaterial.id, payload)
-                showToast('Đã cập nhật tài liệu PDF thành công!')
+                showToast('Đã cập nhật tài liệu PDF và phân loại Skill thành công!')
             } else {
                 await adminService.createMaterial(payload)
-                showToast('Đã thêm tài liệu PDF mới thành công!')
+                showToast('Đã thêm tài liệu PDF mới phân loại Skill thành công!')
             }
             resetModalState()
-            fetchMaterials()
+            fetchMaterialsAndSkills()
         } catch (err: any) {
-            alert(err.message || 'Thêm tài liệu thất bại.')
+            alert(err.message || 'Thao tác tài liệu thất bại.')
         } finally {
             setIsSubmitting(false)
         }
@@ -142,6 +156,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
         setEditingMaterial(material)
         setTitle(material.title)
         setFileUrl(material.file_url)
+        setSkillId(material.skill_id || '')
         setUploadType('URL')
         setShowModal(true)
     }
@@ -151,7 +166,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
         try {
             await adminService.deleteMaterial(id)
             showToast('Đã xóa tài liệu thành công.')
-            fetchMaterials()
+            fetchMaterialsAndSkills()
         } catch (err: any) {
             alert(err.message || 'Xóa tài liệu thất bại.')
         }
@@ -162,12 +177,12 @@ export const PDFMaterialsManagementPage: React.FC = () => {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-sm">
                 <div>
                     <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
-                        <FileText className="w-6 h-6 text-[#3C4097] dark:text-indigo-400" /> Quản Lý Tài Liệu PDF & Giáo Trình
+                        <FileText className="w-6 h-6 text-[#3C4097] dark:text-indigo-400" /> Quản Lý Tài Liệu PDF (Phân Loại Skill)
                     </h1>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Upload hoặc liên kết các tài liệu học tập, slide PDF cho học viên tải về.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Upload, liên kết và phân loại tài liệu học tập PDF theo từng Skill cụ thể.</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Button variant="outline" size="sm" onClick={fetchMaterials} disabled={isLoading} className="font-bold flex items-center gap-1 dark:border-gray-700 dark:hover:bg-gray-800">
+                    <Button variant="outline" size="sm" onClick={fetchMaterialsAndSkills} disabled={isLoading} className="font-bold flex items-center gap-1 dark:border-gray-700 dark:hover:bg-gray-800">
                         <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
                     </Button>
                     <Button
@@ -185,6 +200,27 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                     >
                         <Upload className="w-4 h-4" /> {isLmsAdmin ? 'Upload Tài liệu PDF mới' : '🔒 Cần quyền Admin LMS'}
                     </Button>
+                </div>
+            </div>
+
+            {/* Filter Bar */}
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 font-bold">
+                    <Filter className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> Bộ lọc tài liệu PDF:
+                </div>
+                <div className="flex items-center gap-3 w-full md:w-auto">
+                    <select
+                        value={selectedFilterSkillId}
+                        onChange={(e) => setSelectedFilterSkillId(e.target.value ? Number(e.target.value) : '')}
+                        className="p-2.5 rounded-xl border border-[#E2E4EB] dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-bold outline-none"
+                    >
+                        <option value="">-- Tất cả Phân loại Skill --</option>
+                        {skills.map(s => (
+                            <option key={s.id} value={s.id}>
+                                [{s.category}] {s.title}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </div>
 
@@ -217,7 +253,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                     </div>
                 ) : materials.length === 0 ? (
                     <div className="p-12 text-center text-xs text-gray-500 dark:text-gray-400">
-                        Chưa có tài liệu PDF nào trong hệ thống.
+                        Chưa có tài liệu PDF nào phù hợp với bộ lọc.
                     </div>
                 ) : (
                     <table className="w-full text-left text-xs">
@@ -225,6 +261,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                             <tr>
                                 <th className="p-4">STT</th>
                                 <th className="p-4">Tên Tài Liệu</th>
+                                <th className="p-4">Phân Loại Skill</th>
                                 <th className="p-4">Bài Học Liên Kết</th>
                                 <th className="p-4">Đường Dẫn File</th>
                                 <th className="p-4">Ngày Upload</th>
@@ -236,7 +273,18 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                                 <tr key={m.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                                     <td className="p-4 font-bold text-gray-600 dark:text-gray-400">{idx + 1}</td>
                                     <td className="p-4 font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                                        <FileText className="w-4 h-4 text-[#3C4097] dark:text-indigo-400" /> {m.title}
+                                        <FileText className="w-4 h-4 text-[#3C4097] dark:text-indigo-400 shrink-0" />
+                                        <span>{m.title}</span>
+                                    </td>
+                                    <td className="p-4">
+                                        {m.skill_title ? (
+                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-extrabold rounded-lg border border-indigo-200 dark:border-indigo-800">
+                                                <Tag className="w-3 h-3 text-indigo-500" />
+                                                {m.skill_title}
+                                            </span>
+                                        ) : (
+                                            <span className="text-gray-400 font-normal">Chưa phân loại</span>
+                                        )}
                                     </td>
                                     <td className="p-4 text-gray-500 dark:text-gray-400">{m.lesson_title || 'Tất cả bài học'}</td>
                                     <td className="p-4 font-mono text-[#3C4097] dark:text-indigo-400 truncate max-w-xs">{m.file_url}</td>
@@ -271,7 +319,7 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                     <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 max-w-lg w-full space-y-4 shadow-2xl">
                         <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                            <Upload className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" /> {editingMaterial ? 'Sửa Tài Liệu PDF' : 'Upload Tài Liệu PDF Mới'}
+                            <Upload className="w-5 h-5 text-[#3C4097] dark:text-indigo-400" /> {editingMaterial ? 'Sửa Tài Liệu PDF (Phân Loại Skill)' : 'Upload Tài Liệu PDF Mới (Phân Loại Skill)'}
                         </h3>
 
                         {/* Source Type Selector */}
@@ -300,6 +348,24 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                         </div>
 
                         <div className="space-y-4 text-xs">
+                            <div>
+                                <label className="font-bold flex items-center gap-1.5 mb-1 text-[#4A5568] dark:text-gray-300">
+                                    <Tag className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> Gắn thẻ Skill / Kỹ năng học tập *
+                                </label>
+                                <select
+                                    value={skillId}
+                                    onChange={(e) => setSkillId(e.target.value ? Number(e.target.value) : '')}
+                                    className="w-full p-2.5 bg-white dark:bg-gray-800 border border-[#E2E4EB] dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-[#3C4097] outline-none font-bold"
+                                >
+                                    <option value="">-- Chọn Kỹ năng (Skill) cho tài liệu --</option>
+                                    {skills.map(s => (
+                                        <option key={s.id} value={s.id}>
+                                            [{s.category}] {s.title}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
                             <div>
                                 <label className="font-bold block mb-1 text-[#4A5568] dark:text-gray-300">Tiêu đề tài liệu *</label>
                                 <input

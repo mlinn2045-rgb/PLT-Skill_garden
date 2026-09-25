@@ -1,4 +1,5 @@
 import { getChapterProgress, updateChapterProgress } from './learningProgress'
+import { useAuthStore } from '../stores/authStore'
 
 export interface StudentStats {
     xp: number
@@ -38,22 +39,46 @@ export const calculateLevel = (xp: number): number => {
 export const getStudentStats = (userKey = 'guest'): StudentStats => {
     const savedStats = localStorage.getItem(statsKey(userKey))
     const today = getToday()
+
+    let authUserXp: number | null = null
+    let authUserStreak: number | null = null
+    try {
+        const authState = useAuthStore.getState()
+        if (authState.user && (authState.user.email === userKey || userKey === 'guest')) {
+            authUserXp = typeof authState.user.total_xp === 'number' ? authState.user.total_xp : null
+            authUserStreak = typeof authState.user.streak_days === 'number' ? authState.user.streak_days : null
+        }
+    } catch {
+        // ignore if store not initialized
+    }
+
     if (!savedStats) {
-        return { xp: 0, streakDays: 1, lastActivityDate: today, level: calculateLevel(0) }
+        const xp = authUserXp ?? 0
+        const streakDays = Math.max(1, authUserStreak ?? 1)
+        return { xp, streakDays, lastActivityDate: today, level: calculateLevel(xp) }
     }
 
     try {
         const parsedStats = JSON.parse(savedStats) as Partial<StudentStats>
-        const xp = typeof parsedStats.xp === 'number' && parsedStats.xp >= 0 ? parsedStats.xp : 0
+        let xp = typeof parsedStats.xp === 'number' && parsedStats.xp >= 0 ? parsedStats.xp : 0
+        if (authUserXp !== null && authUserXp > xp) {
+            xp = authUserXp
+        }
+        let streakDays = Number(parsedStats.streakDays) || 1
+        if (authUserStreak !== null && authUserStreak > streakDays) {
+            streakDays = authUserStreak
+        }
         return {
             xp,
-            streakDays: Number(parsedStats.streakDays) || 1,
+            streakDays,
             lastActivityDate: parsedStats.lastActivityDate || today,
             level: calculateLevel(xp),
         }
     } catch {
         localStorage.removeItem(statsKey(userKey))
-        return { xp: 0, streakDays: 1, lastActivityDate: today, level: calculateLevel(0) }
+        const xp = authUserXp ?? 0
+        const streakDays = Math.max(1, authUserStreak ?? 1)
+        return { xp, streakDays, lastActivityDate: today, level: calculateLevel(xp) }
     }
 }
 
@@ -76,6 +101,11 @@ export const checkAndUpdateDailyStreak = (userKey = 'guest'): StudentStats => {
     }
 
     localStorage.setItem(statsKey(userKey), JSON.stringify(updated))
+    try {
+        useAuthStore.getState().updateUser({ streak_days: updated.streakDays })
+    } catch {
+        // ignore
+    }
     return updated
 }
 
@@ -103,6 +133,11 @@ export const recordQuizCompletion = (skillId: string, chapterId: string, userKey
     }
 
     localStorage.setItem(statsKey(userKey), JSON.stringify(nextStats))
+    try {
+        useAuthStore.getState().updateUser({ total_xp: nextStats.xp, level: nextStats.level })
+    } catch {
+        // ignore
+    }
     return nextStats
 }
 
@@ -115,6 +150,12 @@ export const addStudentXp = (userKey = 'guest', xpToAdd: number): StudentStats =
         level: calculateLevel(newXp),
     }
     localStorage.setItem(statsKey(userKey), JSON.stringify(nextStats))
+    try {
+        useAuthStore.getState().updateUser({ total_xp: nextStats.xp, level: nextStats.level })
+    } catch {
+        // ignore
+    }
+    window.dispatchEvent(new Event('skillgarden_xp_updated'))
     return nextStats
 }
 
@@ -126,5 +167,10 @@ export const syncStudentXp = (userKey = 'guest', totalXp: number): StudentStats 
         level: calculateLevel(totalXp),
     }
     localStorage.setItem(statsKey(userKey), JSON.stringify(nextStats))
+    try {
+        useAuthStore.getState().updateUser({ total_xp: nextStats.xp, level: nextStats.level })
+    } catch {
+        // ignore
+    }
     return nextStats
 }

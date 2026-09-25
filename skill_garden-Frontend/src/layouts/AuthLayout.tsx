@@ -103,13 +103,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                                         </div>
                                     </div>
 
-                                    <div className="pt-2 border-t border-[#E6ECE6] dark:border-gray-700 flex items-center justify-between text-xs text-[#4A5568] dark:text-gray-400">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-full bg-[#3F49C8] text-white text-[10px] font-bold flex items-center justify-center">
-                                                AK
-                                            </div>
-                                            <span className="font-semibold text-[#1A2E22] dark:text-gray-200">Anh Khoa</span>
-                                        </div>
+                                    <div className="pt-2 border-t border-[#E6ECE6] dark:border-gray-700 flex items-center justify-end text-xs text-[#4A5568] dark:text-gray-400">
                                         <div className="flex items-center gap-1 text-[#E53E3E] font-bold">
                                             <Flame className="w-4 h-4 fill-[#E53E3E]" />
                                             <span>Chuỗi 7 ngày</span>

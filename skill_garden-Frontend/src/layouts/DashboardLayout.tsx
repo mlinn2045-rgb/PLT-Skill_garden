@@ -35,8 +35,35 @@ export const DashboardLayout: React.FC = () => {
     const navigate = useNavigate()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [dismissedWelcomeModal, setDismissedWelcomeModal] = useState(false)
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
     const { user, logout, isDarkMode, toggleDarkMode } = useAuthStore()
     const studentStats = getStudentStats(user?.email || 'guest')
+
+    const displayXP = user?.total_xp ?? user?.xp ?? studentStats.xp
+    const displayStreak = Math.max(user?.streak_days || 1, studentStats.streakDays)
+
+    const notificationsList = [
+        { id: '1', title: 'Chào mừng bạn đến với SkillGarden! 🌸', desc: 'Bạn đã nhận 100 XP khởi tạo hành trình.', time: 'Vừa xong', unread: true },
+        { id: '2', title: 'Streak Ngày Mới ⚡', desc: 'Đăng nhập liên tục để giữ vững ngọn lửa học tập!', time: 'Hôm nay', unread: true },
+        { id: '3', title: 'Hoàn thành bài test 🎯', desc: 'Bạn vừa đạt điểm tuyệt đối 100% bài Quiz.', time: 'Hôm qua', unread: false }
+    ]
+
+    const searchableItems = [
+        { title: 'Frontend React 19 Mastery', category: 'Kỹ Năng', path: '/dashboard/learning-path/1' },
+        { title: 'Backend NestJS & Node.js System', category: 'Kỹ Năng', path: '/dashboard/learning-path/2' },
+        { title: 'Database SQL & MySQL Architect', category: 'Kỹ Năng', path: '/dashboard/learning-path/3' },
+        { title: 'Bài 1: Tổng quan & Cấu trúc React 19', category: 'Bài Học Video', path: '/dashboard/video-learning?skill_id=1' },
+        { title: 'Bài 2: Hooks & Custom Hooks Nâng Cao', category: 'Bài Học Video', path: '/dashboard/video-learning?skill_id=1' },
+        { title: 'Phòng Quiz: Kiểm tra React 19 Core', category: 'Quiz', path: '/dashboard/quiz-room/1' },
+        { title: 'Mục tiêu & Huy hiệu Học tập', category: 'Trang', path: '/dashboard/goals-badges' },
+        { title: 'Khu Vườn Kỹ Năng 3D', category: 'Trang', path: '/dashboard/garden' }
+    ]
+
+    const searchResults = searchQuery.trim() === '' ? [] : searchableItems.filter(item =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.category.toLowerCase().includes(searchQuery.toLowerCase())
+    )
 
     const isSuperAdmin = user?.role === 'SUPER_ADMIN'
     const isAdmin = user?.role === 'ADMIN'
@@ -277,9 +304,33 @@ export const DashboardLayout: React.FC = () => {
                             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#718096] dark:text-gray-400" />
                             <input
                                 type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder={isAdmin ? "Tìm học viên, khóa học, quiz..." : "Tìm bài học, kỹ năng, quiz..."}
                                 className="w-full h-9 pl-9 pr-12 rounded-full bg-[#F7FAF7] dark:bg-gray-800 border border-[#E2E8F0] dark:border-gray-700 text-xs text-[#1A2E22] dark:text-white placeholder:text-[#A0AEC0] focus:outline-none focus:bg-white dark:focus:bg-gray-900 focus:border-[#2D7A4F] transition-all"
                             />
+
+                            {/* Live Search Results Dropdown */}
+                            {searchResults.length > 0 && (
+                                <div className="absolute top-11 left-0 right-0 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-xl p-2 z-50 space-y-1">
+                                    <div className="text-[10px] font-bold text-gray-400 px-3 py-1 uppercase">Kết quả tìm kiếm ({searchResults.length})</div>
+                                    {searchResults.map((item, idx) => (
+                                        <div
+                                            key={idx}
+                                            onClick={() => {
+                                                navigate(item.path)
+                                                setSearchQuery('')
+                                            }}
+                                            className="p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer flex items-center justify-between transition-colors"
+                                        >
+                                            <span className="text-xs font-bold text-[#1A2E22] dark:text-white truncate">{item.title}</span>
+                                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 shrink-0 ml-2">
+                                                {item.category}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -287,23 +338,23 @@ export const DashboardLayout: React.FC = () => {
                     <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
 
                         {isAdmin ? (
-                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 text-xs font-bold">
-                                <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                                <span>Chế độ Quản trị</span>
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 text-xs font-bold leading-none">
+                                <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0" />
+                                <span className="inline-flex items-center">Chế độ Quản trị</span>
                             </div>
                         ) : (
                             <>
                                 {/* Streak Badge */}
-                                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFF5F5] dark:bg-rose-950/60 border border-[#FEB2B2] dark:border-rose-800 text-[#E53E3E] dark:text-rose-300 text-xs font-bold shadow-2xs">
-                                    <Flame className="w-4 h-4 fill-[#E53E3E]" />
-                                    <span className="hidden sm:inline">{studentStats.streakDays} Ngày Streak</span>
-                                    <span className="sm:hidden">{studentStats.streakDays}d</span>
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFF5F5] dark:bg-rose-950/60 border border-[#FEB2B2] dark:border-rose-800 text-[#E53E3E] dark:text-rose-300 text-xs font-bold shadow-2xs leading-none">
+                                    <Flame className="w-4 h-4 fill-[#E53E3E] shrink-0" />
+                                    <span className="hidden sm:inline-flex items-center">{displayStreak} Ngày Streak</span>
+                                    <span className="sm:hidden inline-flex items-center">{displayStreak}d</span>
                                 </div>
 
                                 {/* XP Badge */}
-                                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-xs font-bold shadow-2xs">
-                                    <Zap className="w-4 h-4 fill-amber-500 text-amber-500" />
-                                    <span>{studentStats.xp.toLocaleString('vi-VN')} XP</span>
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-xs font-bold shadow-2xs leading-none">
+                                    <Zap className="w-4 h-4 fill-amber-500 text-amber-500 shrink-0" />
+                                    <span className="inline-flex items-center">{displayXP.toLocaleString('vi-VN')} XP</span>
                                 </div>
                             </>
                         )}
@@ -317,11 +368,51 @@ export const DashboardLayout: React.FC = () => {
                             {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-indigo-600" />}
                         </button>
 
-                        {/* Notifications */}
-                        <button className="relative p-2 rounded-xl text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800 transition-colors">
-                            <Bell className="w-5 h-5" />
-                            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-900" />
-                        </button>
+                        {/* Notifications Bell & Dropdown */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                                className="relative p-2 rounded-xl text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                            >
+                                <Bell className="w-5 h-5" />
+                                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-900" />
+                            </button>
+
+                            {/* Notification Floating Menu */}
+                            {isNotificationOpen && (
+                                <div className="absolute right-0 top-12 w-80 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-2xl p-4 z-50 space-y-3">
+                                    <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-2">
+                                        <span className="text-xs font-black text-[#1A2E22] dark:text-white flex items-center gap-1.5">
+                                            <Bell className="w-4 h-4 text-[#3F49C8]" /> Thông Báo SkillGarden
+                                        </span>
+                                        <button
+                                            onClick={() => setIsNotificationOpen(false)}
+                                            className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
+                                        >
+                                            Đóng
+                                        </button>
+                                    </div>
+
+                                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                                        {notificationsList.map(n => (
+                                            <div
+                                                key={n.id}
+                                                className={`p-3 rounded-2xl border text-xs space-y-1 transition-all ${n.unread
+                                                    ? 'bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900'
+                                                    : 'bg-gray-50 border-gray-200 dark:bg-gray-800/50 dark:border-gray-800'
+                                                    }`}
+                                            >
+                                                <div className="flex items-center justify-between font-bold text-[#1A2E22] dark:text-white">
+                                                    <span>{n.title}</span>
+                                                    <span className="text-[10px] text-gray-400 font-normal">{n.time}</span>
+                                                </div>
+                                                <p className="text-[11px] text-gray-600 dark:text-gray-400">{n.desc}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
 
                         {/* User Profile */}
                         <div

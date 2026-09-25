@@ -5,6 +5,7 @@ import { parseApiResponse } from './apiClient';
 export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 export interface UserProfile {
+    id?: number | string;
     uuid: string;
     email: string;
     full_name: string;
@@ -12,6 +13,7 @@ export interface UserProfile {
     role: 'SUPER_ADMIN' | 'ADMIN' | 'USER';
     is_approved: boolean;
     level?: number;
+    xp?: number;
     total_xp?: number;
     streak_days?: number;
     has_claimed_welcome_xp?: boolean;

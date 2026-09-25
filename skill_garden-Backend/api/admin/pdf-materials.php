@@ -23,11 +23,35 @@ if ($token) {
 try {
     if ($method === 'GET') {
         $lessonId = (int) ($_GET['lesson_id'] ?? 0);
+        $skillId = (int) ($_GET['skill_id'] ?? 0);
         if ($lessonId > 0) {
-            $stmt = $db->prepare("SELECT * FROM lesson_materials WHERE lesson_id = :l_id ORDER BY id DESC");
+            $stmt = $db->prepare("
+                SELECT lm.*, l.title as lesson_title, s.title as skill_title 
+                FROM lesson_materials lm 
+                LEFT JOIN lessons l ON lm.lesson_id = l.id 
+                LEFT JOIN skills s ON lm.skill_id = s.id 
+                WHERE lm.lesson_id = :l_id 
+                ORDER BY lm.id DESC
+            ");
             $stmt->execute(['l_id' => $lessonId]);
+        } elseif ($skillId > 0) {
+            $stmt = $db->prepare("
+                SELECT lm.*, l.title as lesson_title, s.title as skill_title 
+                FROM lesson_materials lm 
+                LEFT JOIN lessons l ON lm.lesson_id = l.id 
+                LEFT JOIN skills s ON lm.skill_id = s.id 
+                WHERE lm.skill_id = :s_id 
+                ORDER BY lm.id DESC
+            ");
+            $stmt->execute(['s_id' => $skillId]);
         } else {
-            $stmt = $db->query("SELECT lm.*, l.title as lesson_title FROM lesson_materials lm LEFT JOIN lessons l ON lm.lesson_id = l.id ORDER BY lm.id DESC");
+            $stmt = $db->query("
+                SELECT lm.*, l.title as lesson_title, s.title as skill_title 
+                FROM lesson_materials lm 
+                LEFT JOIN lessons l ON lm.lesson_id = l.id 
+                LEFT JOIN skills s ON lm.skill_id = s.id 
+                ORDER BY lm.id DESC
+            ");
         }
         $materials = $stmt->fetchAll(PDO::FETCH_ASSOC);
         Response::success($materials, "Lấy danh sách tài liệu thành công.");
@@ -43,6 +67,7 @@ try {
         $title = trim($body['title'] ?? '');
         $fileUrl = trim($body['file_url'] ?? '');
         $lessonId = (int) ($body['lesson_id'] ?? 0);
+        $skillId = (int) ($body['skill_id'] ?? 0);
         $fileType = trim($body['file_type'] ?? 'pdf');
         $fileSizeBytes = (int) ($body['file_size_bytes'] ?? 0);
 
@@ -51,11 +76,12 @@ try {
         }
 
         $stmt = $db->prepare("
-            INSERT INTO lesson_materials (lesson_id, title, file_url, file_type, file_size_bytes)
-            VALUES (:l_id, :title, :file_url, :file_type, :size)
+            INSERT INTO lesson_materials (lesson_id, skill_id, title, file_url, file_type, file_size_bytes)
+            VALUES (:l_id, :s_id, :title, :file_url, :file_type, :size)
         ");
         $stmt->execute([
             'l_id' => $lessonId > 0 ? $lessonId : null,
+            's_id' => $skillId > 0 ? $skillId : null,
             'title' => $title,
             'file_url' => $fileUrl,
             'file_type' => $fileType,
@@ -69,17 +95,31 @@ try {
         $id = (int) ($body['id'] ?? $_GET['id'] ?? 0);
         $title = trim($body['title'] ?? '');
         $fileUrl = trim($body['file_url'] ?? '');
+        $skillId = isset($body['skill_id']) ? (int) $body['skill_id'] : null;
+        $lessonId = isset($body['lesson_id']) ? (int) $body['lesson_id'] : null;
+
         if ($id <= 0 || empty($title) || empty($fileUrl)) {
             Response::error("ID, tiêu đề và đường dẫn file là bắt buộc.", 400);
         }
 
-        $stmt = $db->prepare("UPDATE lesson_materials SET title = :title, file_url = :file_url, file_type = :file_type, file_size_bytes = :size WHERE id = :id");
+        $stmt = $db->prepare("
+            UPDATE lesson_materials 
+            SET title = :title, 
+                file_url = :file_url, 
+                file_type = :file_type, 
+                file_size_bytes = :size,
+                skill_id = :s_id,
+                lesson_id = :l_id 
+            WHERE id = :id
+        ");
         $stmt->execute([
             'id' => $id,
             'title' => $title,
             'file_url' => $fileUrl,
             'file_type' => trim($body['file_type'] ?? 'pdf'),
             'size' => (int) ($body['file_size_bytes'] ?? 0),
+            's_id' => $skillId > 0 ? $skillId : null,
+            'l_id' => $lessonId > 0 ? $lessonId : null,
         ]);
         Response::success(['updated' => true], "Cập nhật tài liệu PDF thành công.");
     }

@@ -80,8 +80,24 @@ class QuizService
     }
 
     // Question Bank
-    public function getQuestions(?int $skillId = null, ?int $quizId = null, ?string $difficulty = null): array
+    public function getQuestions(?int $skillId = null, ?int $quizId = null, ?string $difficulty = null, ?int $userId = null): array
     {
+        // Permission check for end-user if skillId is specified
+        if ($userId && $skillId) {
+            $userCheck = $this->db->prepare("SELECT status FROM user_skills WHERE user_id = :user_id AND skill_id = :skill_id");
+            $userCheck->execute(['user_id' => $userId, 'skill_id' => $skillId]);
+            $enrolled = $userCheck->fetchColumn();
+            if (!$enrolled) {
+                // If user is not enrolled in this skill, throw access denied
+                $userRoleStmt = $this->db->prepare("SELECT role FROM users WHERE id = :u_id");
+                $userRoleStmt->execute(['u_id' => $userId]);
+                $role = $userRoleStmt->fetchColumn();
+                if (!in_array($role, ['ADMIN', 'SUPER_ADMIN'])) {
+                    throw new Exception("Bạn chưa đăng ký theo học Kỹ năng này để truy cập bộ câu hỏi Quiz.", 403);
+                }
+            }
+        }
+
         $where = [];
         $params = [];
 
@@ -100,7 +116,15 @@ class QuizService
 
         $whereSql = !empty($where) ? "WHERE " . implode(' AND ', $where) : "";
 
-        $stmt = $this->db->prepare("SELECT q.* FROM questions q {$whereSql} ORDER BY q.id DESC");
+        $sql = "
+            SELECT q.*, s.title AS skill_title, s.slug AS skill_slug
+            FROM questions q
+            LEFT JOIN skills s ON q.skill_id = s.id
+            {$whereSql}
+            ORDER BY q.id DESC
+        ";
+
+        $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -157,11 +181,12 @@ class QuizService
             throw new Exception("Không tìm thấy câu hỏi.", 404);
         }
 
-        $fields = ['question_text', 'question_type', 'difficulty', 'explanation'];
+        $fields = ['question_text', 'question_type', 'difficulty', 'explanation', 'skill_id', 'quiz_id'];
         $update = [];
         foreach ($fields as $f) {
-            if (isset($data[$f]))
-                $update[$f] = $data[$f];
+            if (array_key_exists($f, $data)) {
+                $update[$f] = $data[$f] !== null && $data[$f] !== '' ? (is_numeric($data[$f]) ? (int) $data[$f] : $data[$f]) : null;
+            }
         }
 
         $this->questionModel->update($questionId, $update);

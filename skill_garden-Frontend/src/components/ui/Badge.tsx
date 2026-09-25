@@ -35,15 +35,15 @@ export const Badge: React.FC<BadgeProps> = ({
     return (
         <span
             className={clsx(
-                'inline-flex items-center rounded-full font-medium tracking-wide transition-colors',
+                'inline-flex items-center justify-center rounded-full font-medium tracking-wide transition-colors leading-none',
                 variants[variant],
                 sizes[size],
                 className
             )}
             {...props}
         >
-            {icon && <span className="shrink-0">{icon}</span>}
-            <span>{children}</span>
+            {icon && <span className="inline-flex items-center justify-center shrink-0">{icon}</span>}
+            <span className="inline-flex items-center justify-center">{children}</span>
         </span>
     )
 }

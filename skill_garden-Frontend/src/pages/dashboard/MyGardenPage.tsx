@@ -6,6 +6,7 @@ import { Badge } from '../../components/ui/Badge'
 import { useAuthStore } from '../../stores/authStore'
 import { gardenService, UserGardenResponse } from '../../services/gardenService'
 import { Tree3DViewer } from '../../components/ui/Tree3DViewer'
+import { getStudentStats } from '../../services/studentStats'
 
 export const MyGardenPage: React.FC = () => {
     const navigate = useNavigate()
@@ -16,6 +17,9 @@ export const MyGardenPage: React.FC = () => {
     const [errorMsg, setErrorMsg] = useState('')
     const [toastMsg, setToastMsg] = useState('')
     const [viewMode3D, setViewMode3D] = useState(true)
+
+    const studentStats = getStudentStats(user?.email || 'guest')
+    const streakDays = Math.max(user?.streak_days || 1, gardenData?.stats.streak_days || 1, studentStats.streakDays)
 
     const fetchGarden = async () => {
         setIsLoading(true)
@@ -76,13 +80,13 @@ export const MyGardenPage: React.FC = () => {
                         </div>
                         <div className="text-center px-3 border-r border-white/10">
                             <div className="text-2xl font-black text-emerald-300">
-                                {gardenData?.stats.total_xp || 0}
+                                {user?.total_xp ?? gardenData?.stats.total_xp ?? 0}
                             </div>
                             <div className="text-[11px] text-emerald-200">XP Tích Lũy</div>
                         </div>
                         <div className="text-center px-3">
                             <div className="text-2xl font-black text-rose-300 flex items-center justify-center gap-1">
-                                <Flame className="w-5 h-5 fill-rose-400" /> {gardenData?.stats.streak_days || 1}
+                                <Flame className="w-5 h-5 fill-rose-400" /> {streakDays}
                             </div>
                             <div className="text-[11px] text-emerald-200">Streak Ngày</div>
                         </div>

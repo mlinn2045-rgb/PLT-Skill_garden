@@ -75,10 +75,16 @@
   }
 
   img,
-  svg,
   video,
   iframe {
     max-width: 100%;
+  }
+
+  svg {
+    max-width: 100%;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
   }
 
   button,

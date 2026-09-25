@@ -47,7 +47,7 @@ class LeaderboardService
                 (SELECT COUNT(*) FROM user_garden_trees ugt WHERE ugt.user_id = u.id AND ugt.status = 'MATURE') as mature_trees_count
             FROM users u
             WHERE u.role = 'USER' AND u.status = 'ACTIVE'
-            ORDER BY u.level DESC, u.total_xp DESC, u.streak_days DESC
+            ORDER BY u.total_xp DESC, u.streak_days DESC
             LIMIT :limit
         ";
         $stmt = $this->db->prepare($sql);

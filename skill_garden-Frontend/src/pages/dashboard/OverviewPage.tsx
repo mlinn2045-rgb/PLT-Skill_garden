@@ -15,10 +15,12 @@ import { ProgressBar } from '../../components/ui/ProgressBar'
 import { useAuthStore } from '../../stores/authStore'
 import { gardenService, UserGardenResponse, GardenTree } from '../../services/gardenService'
 import { getSkillGrowth } from '../../services/learningProgress'
+import { getStudentStats } from '../../services/studentStats'
 
 export const OverviewPage: React.FC = () => {
     const navigate = useNavigate()
     const { user } = useAuthStore()
+    const studentStats = getStudentStats(user?.email || 'guest')
 
     const [gardenData, setGardenData] = useState<UserGardenResponse | null>(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -40,8 +42,8 @@ export const OverviewPage: React.FC = () => {
 
     const trees: GardenTree[] = gardenData?.trees || []
     const totalTrees = gardenData?.stats.total_trees || trees.length || 0
-    const totalXp = gardenData?.stats.total_xp || 0
-    const streakDays = gardenData?.stats.streak_days || 1
+    const totalXp = user?.total_xp ?? gardenData?.stats.total_xp ?? studentStats.xp
+    const streakDays = Math.max(user?.streak_days || 1, gardenData?.stats.streak_days || 1, studentStats.streakDays)
 
     return (
         <div className="space-y-8 pb-12 text-[#1A2E22] dark:text-gray-100">
