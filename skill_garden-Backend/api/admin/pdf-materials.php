@@ -3,22 +3,16 @@
 
 require_once __DIR__ . '/../../config/bootstrap.php';
 
+use App\Middleware\AuthMiddleware;
 use App\Helpers\Response;
-use App\Helpers\JWT;
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
 
 $method = $_SERVER['REQUEST_METHOD'];
 $db = Database::getConnection();
-
-$config = require __DIR__ . '/../../config/config.php';
-$token = $_COOKIE[$config['jwt']['cookie_name'] ?? 'skill_garden_token'] ?? null;
-$userRole = 'GUEST';
-
-if ($token) {
-    $payload = JWT::decode($token, $config['jwt']['secret']);
-    if ($payload && isset($payload['role'])) {
-        $userRole = $payload['role'];
-    }
-}
 
 try {
     if ($method === 'GET') {
@@ -57,9 +51,7 @@ try {
         Response::success($materials, "Lấy danh sách tài liệu thành công.");
     }
 
-    if (!in_array($userRole, ['ADMIN', 'SUPER_ADMIN'])) {
-        Response::error("Bạn không có quyền thực hiện thao tác này.", 403);
-    }
+    AuthMiddleware::requirePermission(['MANAGE_MATERIALS', 'MANAGE_LESSONS']);
 
     $body = json_decode(file_get_contents('php://input'), true) ?? $_POST;
 

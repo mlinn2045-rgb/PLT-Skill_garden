@@ -7,7 +7,7 @@ use App\Helpers\Response;
 use App\Middleware\AuthMiddleware;
 use App\Services\UserService;
 
-AuthMiddleware::requireRole(['ADMIN', 'SUPER_ADMIN']);
+AuthMiddleware::requirePermission('MANAGE_USERS');
 
 $userService = new UserService();
 $method = $_SERVER['REQUEST_METHOD'];
@@ -60,12 +60,34 @@ try {
             Response::success(null, "Đã mở khóa tài khoản người dùng!");
         }
 
+        if ($action === 'update') {
+            $userService->updateUser($userId, $data);
+            Response::success(null, "Cập nhật thông tin người dùng thành công!");
+        }
+
+        if ($action === 'delete') {
+            $userService->deleteUser($userId);
+            Response::success(null, "Đã xóa tài khoản người dùng thành công!");
+        }
+
         Response::error("Hành động không hợp lệ.", 400);
+    }
+
+    if ($method === 'PUT' || $method === 'PATCH') {
+        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        $userId = (int) ($data['user_id'] ?? $data['id'] ?? $_GET['id'] ?? 0);
+
+        if ($userId <= 0) {
+            Response::error("ID người dùng không hợp lệ.", 400);
+        }
+
+        $userService->updateUser($userId, $data);
+        Response::success(null, "Cập nhật thông tin người dùng thành công!");
     }
 
     if ($method === 'DELETE') {
         $data = json_decode(file_get_contents('php://input'), true) ?? [];
-        $userId = (int) ($data['user_id'] ?? $_GET['id'] ?? 0);
+        $userId = (int) ($data['user_id'] ?? $data['id'] ?? $_GET['id'] ?? 0);
 
         if ($userId <= 0) {
             Response::error("ID người dùng không hợp lệ.", 400);

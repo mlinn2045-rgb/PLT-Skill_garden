@@ -379,14 +379,14 @@ INSERT INTO `plant_stages` (`plant_id`, `stage_level`, `stage_name`, `required_p
 ON DUPLICATE KEY UPDATE `id` = `id`;
 
 -- 4. Seed Default Skills
-INSERT INTO `skills` (`id`, `title`, `slug`, `category`, `status`) VALUES
-(1, 'Frontend React 19 Mastery', 'frontend-react-19', 'Frontend', 'ACTIVE'),
-(2, 'Backend Node.js & NestJS', 'backend-nodejs-nestjs', 'Backend', 'ACTIVE'),
-(3, 'Python & Data Science', 'python-data-science', 'Data', 'ACTIVE'),
-(4, 'SQL & Relational Database', 'sql-database', 'Database', 'ACTIVE'),
-(5, 'DevOps & Cloud Infrastructure', 'devops-cloud', 'DevOps', 'ACTIVE'),
-(6, 'Software Testing & QA Mastery', 'software-testing-qa', 'QA', 'ACTIVE')
-ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
+INSERT INTO `skills` (`id`, `title`, `slug`, `category`, `plant_id`, `status`) VALUES
+(1, 'Frontend React 19 Mastery', 'frontend-react-19', 'FRONTEND', 1, 'ACTIVE'),
+(2, 'Backend Node.js & NestJS', 'backend-nodejs-nestjs', 'BACKEND', 2, 'ACTIVE'),
+(3, 'Python & Data Science', 'python-data-science', 'DATA', 4, 'ACTIVE'),
+(4, 'SQL & Relational Database', 'sql-database', 'DATABASE', 3, 'ACTIVE'),
+(5, 'DevOps & Cloud Infrastructure', 'devops-cloud', 'DEVOPS', 6, 'ACTIVE'),
+(6, 'Software Testing & QA Mastery', 'software-testing-qa', 'QA', 5, 'ACTIVE')
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `plant_id` = VALUES(`plant_id`), `category` = VALUES(`category`);
 
 -- 5. Seed Default Learning Paths
 INSERT INTO `learning_paths` (`id`, `skill_id`, `title`, `description`) VALUES
@@ -415,6 +415,8 @@ INSERT INTO `lessons` (`id`, `module_id`, `title`, `slug`, `description`, `conte
 (2, 1, '2. React Components, JSX & Props Deep Dive', 'react-components-props', 'Hướng dẫn xây dựng Functional Component, JSX syntax và giao tiếp dữ liệu qua Props.', 'VIDEO', 'https://www.youtube.com/watch?v=bMknfKXIFA8', 1200, 50, 2, 1),
 (3, 1, '3. State Management với useState & useReducer', 'state-management-usestate', 'Quản lý trạng thái giao diện UI mượt mà với useState và useReducer hook.', 'VIDEO', 'https://www.youtube.com/watch?v=0ZJgOiR4LUs', 1500, 50, 3, 1),
 (4, 2, '4. Side Effects & Lifecycle với useEffect', 'side-effects-useeffect', 'Xử lý bất đồng bộ, call API và giải phóng bộ nhớ với useEffect hook.', 'VIDEO', 'https://www.youtube.com/watch?v=0ZJgOiR4LUs', 1800, 100, 1, 1)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
+
 -- 16. COURSE SYNC LOGS TABLE (Real-Time Synchronization & Rollback Audit)
 CREATE TABLE IF NOT EXISTS `course_sync_logs` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,

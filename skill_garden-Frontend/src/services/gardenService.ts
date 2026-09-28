@@ -7,8 +7,10 @@ export interface GardenTree {
     user_id: number;
     skill_id: number;
     skill_name?: string;
+    skill_title?: string;
     plant_id: number;
     plant_name?: string;
+    plant_code?: string;
     current_stage_id?: number;
     stage_name?: string;
     stage_image_url?: string;
@@ -43,12 +45,15 @@ const repairMojibake = (value?: string): string | undefined => {
 
 const normalizeGardenResponse = (data: UserGardenResponse): UserGardenResponse => ({
     ...data,
-    trees: (data.trees || []).map((tree) => ({
-        ...tree,
-        plant_name: repairMojibake(tree.plant_name),
-        skill_name: repairMojibake(tree.skill_name),
-        stage_name: repairMojibake(tree.stage_name),
-    })),
+    trees: (data.trees || []).map((tree) => {
+        const title = tree.skill_name || tree.skill_title || (tree as any).title;
+        return {
+            ...tree,
+            plant_name: repairMojibake(tree.plant_name),
+            skill_name: repairMojibake(title) || title,
+            stage_name: repairMojibake(tree.stage_name),
+        };
+    }),
 })
 
 export const gardenService = {

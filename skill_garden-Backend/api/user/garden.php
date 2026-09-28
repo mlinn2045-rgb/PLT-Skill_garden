@@ -12,12 +12,31 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 $config = require __DIR__ . '/../../config/config.php';
 $token = $_COOKIE[$config['jwt']['cookie_name'] ?? 'skill_garden_token'] ?? null;
-$userId = null;
 
+if (!$token) {
+    $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
+    if (empty($authHeader) && function_exists('apache_request_headers')) {
+        $headers = apache_request_headers();
+        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+    }
+    if (preg_match('/Bearer\s+(\S+)/i', $authHeader, $matches)) {
+        $token = $matches[1];
+    }
+}
+
+$userId = null;
 if ($token) {
     $payload = JWT::decode($token, $config['jwt']['secret']);
-    if ($payload && isset($payload['id'])) {
-        $userId = (int) $payload['id'];
+    if ($payload) {
+        if (isset($payload['id'])) {
+            $userId = (int) $payload['id'];
+        } elseif (isset($payload['sub'])) {
+            $uModel = new \App\Models\User();
+            $currUser = $uModel->findByUuid($payload['sub']);
+            if ($currUser) {
+                $userId = (int) $currUser['id'];
+            }
+        }
     }
 }
 

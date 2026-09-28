@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { ShieldCheck, UserPlus, Lock, Unlock, Trash2, RefreshCw } from 'lucide-react'
+import { ShieldCheck, UserPlus, Lock, Unlock, Trash2, RefreshCw, Key, Check, X, ShieldAlert } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { superAdminService, AdminUser } from '../../services/superAdminService'
+
+const AVAILABLE_PERMISSIONS = [
+    { key: 'MANAGE_USERS', label: 'Duyệt học viên', desc: 'Duyệt, sửa, khóa, xóa học viên' },
+    { key: 'MANAGE_SKILLS', label: 'Quản lý khóa học', desc: 'Tạo, sửa khóa học & kỹ năng' },
+    { key: 'MANAGE_LESSONS', label: 'Quản lý bài học', desc: 'Tạo bài học, tải video LMS' },
+    { key: 'MANAGE_QUIZZES', label: 'Ngân hàng Quiz', desc: 'Quản lý câu hỏi & đề trắc nghiệm' },
+    { key: 'MANAGE_MATERIALS', label: 'Tài liệu PDF', desc: 'Đăng tải tài liệu học liệu' },
+    { key: 'MANAGE_PLANTS', label: 'Quản lý Loại Cây', desc: 'Cấu hình cây trồng 3D' },
+    { key: 'MANAGE_ACHIEVEMENTS', label: 'Quản lý Thành Tích', desc: 'Thiết lập danh hiệu & huy hiệu' },
+    { key: 'MANAGE_GAMIFICATION', label: 'Cấu hình Gamification', desc: 'Cấu hình điểm XP & streak' },
+]
 
 export const AdminUserManagementPage: React.FC = () => {
     const [admins, setAdmins] = useState<AdminUser[]>([])
@@ -9,12 +20,31 @@ export const AdminUserManagementPage: React.FC = () => {
     const [errorMsg, setErrorMsg] = useState('')
     const [toastMsg, setToastMsg] = useState('')
 
+    // Create Admin State
     const [showModal, setShowModal] = useState(false)
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [createPermissions, setCreatePermissions] = useState<string[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
+
+    // Edit Permissions Modal State
+    const [permissionModalAdmin, setPermissionModalAdmin] = useState<AdminUser | null>(null)
+    const [editPermissions, setEditPermissions] = useState<string[]>([])
+    const [isSavingPerms, setIsSavingPerms] = useState(false)
+
+    const notifySync = () => {
+        try {
+            if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+                const bc = new BroadcastChannel('skillgarden_auth_sync')
+                bc.postMessage({ type: 'PERMISSIONS_UPDATED', timestamp: Date.now() })
+                bc.close()
+            }
+        } catch {
+            // Ignore channel error
+        }
+    }
 
     const fetchAdmins = async () => {
         setIsLoading(true)
@@ -50,13 +80,16 @@ export const AdminUserManagementPage: React.FC = () => {
                 email,
                 username,
                 password,
+                permissions: createPermissions,
             })
-            showToast('Đã tạo tài khoản Admin mới thành công!')
+            notifySync()
+            showToast('Đã tạo tài khoản Admin mới và cấp quyền thành công!')
             setShowModal(false)
             setFullName('')
             setEmail('')
             setUsername('')
             setPassword('')
+            setCreatePermissions([])
             fetchAdmins()
         } catch (err: any) {
             alert(err.message || 'Tạo tài khoản Admin thất bại.')
@@ -87,21 +120,44 @@ export const AdminUserManagementPage: React.FC = () => {
         }
     }
 
+    const openPermissionModal = (adm: AdminUser) => {
+        setPermissionModalAdmin(adm)
+        setEditPermissions(adm.permissions || [])
+    }
+
+    const handleSavePermissions = async () => {
+        if (!permissionModalAdmin) return
+        setIsSavingPerms(true)
+        try {
+            await superAdminService.setAdminPermissions(permissionModalAdmin.id, editPermissions)
+            notifySync()
+            showToast(`Đã cập nhật phân quyền cho ${permissionModalAdmin.email} thành công!`)
+            setPermissionModalAdmin(null)
+            fetchAdmins()
+        } catch (err: any) {
+            alert(err.message || 'Cập nhật phân quyền thất bại.')
+        } finally {
+            setIsSavingPerms(false)
+        }
+    }
+
     return (
         <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-7xl mx-auto space-y-6">
             {/* Header */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs">
                 <div>
                     <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
-                        <ShieldCheck className="w-6 h-6 text-purple-600 dark:text-purple-400" /> Quản Lý Tài Khoản Quản Trị Viên (Admin) (API Thật)
+                        <ShieldCheck className="w-6 h-6 text-purple-600 dark:text-purple-400" /> Quản Lý Tài Khoản Quản Trị Viên (Admin LMS)
                     </h1>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Tạo mới tài khoản Admin, cấp quyền quản lý nội dung và khóa/mở khóa tài khoản từ CSDL MySQL.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Tạo mới tài khoản Admin, phân quyền trực tiếp vào MySQL và quản lý trạng thái tài khoản.
+                    </p>
                 </div>
                 <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" onClick={fetchAdmins} disabled={isLoading} className="font-bold flex items-center gap-1 dark:border-gray-700 dark:hover:bg-gray-800">
                         <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
                     </Button>
-                    <Button variant="indigo" onClick={() => setShowModal(true)} className="font-bold flex items-center gap-2 bg-purple-700 hover:bg-purple-800 border-none">
+                    <Button variant="indigo" onClick={() => setShowModal(true)} className="font-bold flex items-center gap-2 bg-purple-700 hover:bg-purple-800 border-none shadow-md">
                         <UserPlus className="w-4 h-4" /> Thêm Admin mới
                     </Button>
                 </div>
@@ -137,7 +193,7 @@ export const AdminUserManagementPage: React.FC = () => {
                                 <th className="p-4">Họ Và Tên</th>
                                 <th className="p-4">Email</th>
                                 <th className="p-4">Vai Trò</th>
-                                <th className="p-4">Phân Quyền</th>
+                                <th className="p-4">Quyền Hạn CSDL</th>
                                 <th className="p-4">Trạng Thái</th>
                                 <th className="p-4 text-right">Thao Tác</th>
                             </tr>
@@ -150,8 +206,21 @@ export const AdminUserManagementPage: React.FC = () => {
                                         {adm.full_name || adm.username}
                                     </td>
                                     <td className="p-4 font-medium text-gray-600 dark:text-gray-300 font-mono">{adm.email}</td>
-                                    <td className="p-4"><span className="px-2 py-0.5 bg-purple-50 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 rounded font-bold">{adm.role}</span></td>
-                                    <td className="p-4 font-bold text-[#3C4097] dark:text-indigo-400">{(adm.permissions || []).length} quyền được cấp</td>
+                                    <td className="p-4">
+                                        <span className="px-2 py-0.5 bg-purple-50 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 rounded font-bold">
+                                            {adm.role}
+                                        </span>
+                                    </td>
+                                    <td className="p-4">
+                                        <button
+                                            onClick={() => openPermissionModal(adm)}
+                                            className="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 rounded-lg font-bold flex items-center gap-1.5 transition-colors border border-indigo-200 dark:border-indigo-800"
+                                            title="Bấm để xem và sửa phân quyền"
+                                        >
+                                            <Key className="w-3.5 h-3.5 text-indigo-600" />
+                                            <span>{(adm.permissions || []).length} quyền được cấp</span>
+                                        </button>
+                                    </td>
                                     <td className="p-4">
                                         <button onClick={() => toggleLock(adm)} className="flex items-center gap-1.5 font-bold cursor-pointer">
                                             {adm.status === 'ACTIVE' ? (
@@ -161,12 +230,22 @@ export const AdminUserManagementPage: React.FC = () => {
                                             )}
                                         </button>
                                     </td>
-                                    <td className="p-4 text-right">
+                                    <td className="p-4 text-right space-x-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => openPermissionModal(adm)}
+                                            className="text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-950/30 font-bold"
+                                            title="Phân quyền chi tiết"
+                                        >
+                                            <Key className="w-3.5 h-3.5" />
+                                        </Button>
                                         <Button
                                             variant="outline"
                                             size="sm"
                                             onClick={() => handleDelete(adm.id)}
                                             className="text-red-600 dark:text-red-400 border-red-200 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/30 font-bold"
+                                            title="Xóa tài khoản"
                                         >
                                             <Trash2 className="w-3.5 h-3.5" />
                                         </Button>
@@ -180,10 +259,10 @@ export const AdminUserManagementPage: React.FC = () => {
 
             {/* Create Admin Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 max-w-md w-full space-y-4 shadow-2xl">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 max-w-lg w-full space-y-4 shadow-2xl my-8">
                         <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                            <UserPlus className="w-5 h-5 text-purple-600 dark:text-purple-400" /> Tạo Tài Khoản Admin Mới
+                            <UserPlus className="w-5 h-5 text-purple-600 dark:text-purple-400" /> Tạo Tài Khoản Admin LMS Mới
                         </h3>
 
                         <div className="space-y-3 text-xs">
@@ -227,12 +306,118 @@ export const AdminUserManagementPage: React.FC = () => {
                                     className="w-full p-2.5 bg-white dark:bg-gray-800 border border-[#E2E4EB] dark:border-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 rounded-xl focus:ring-2 focus:ring-purple-600 outline-none"
                                 />
                             </div>
+
+                            {/* Initial Permissions Selection */}
+                            <div className="pt-2">
+                                <label className="font-bold block mb-2 text-gray-700 dark:text-gray-300 flex items-center justify-between">
+                                    <span>Cấp quyền ban đầu:</span>
+                                    <span className="text-[11px] font-normal text-purple-600 cursor-pointer" onClick={() => setCreatePermissions(AVAILABLE_PERMISSIONS.map(p => p.key))}>
+                                        Chọn tất cả
+                                    </span>
+                                </label>
+                                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800/50">
+                                    {AVAILABLE_PERMISSIONS.map(p => {
+                                        const checked = createPermissions.includes(p.key)
+                                        return (
+                                            <label key={p.key} className="flex items-center gap-2 p-1.5 rounded hover:bg-white dark:hover:bg-gray-700 cursor-pointer text-[11px]">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={checked}
+                                                    onChange={() => {
+                                                        setCreatePermissions(prev =>
+                                                            checked ? prev.filter(k => k !== p.key) : [...prev, p.key]
+                                                        )
+                                                    }}
+                                                    className="w-3.5 h-3.5 rounded text-purple-600 focus:ring-purple-500"
+                                                />
+                                                <span className="font-medium text-gray-800 dark:text-gray-200">{p.label}</span>
+                                            </label>
+                                        )
+                                    })}
+                                </div>
+                            </div>
                         </div>
 
                         <div className="flex justify-end gap-2 pt-2 border-t border-[#E2E4EB] dark:border-gray-800">
                             <Button variant="outline" disabled={isSubmitting} onClick={() => setShowModal(false)} className="dark:border-gray-700 dark:hover:bg-gray-800">Hủy</Button>
                             <Button variant="indigo" disabled={isSubmitting} onClick={handleCreateAdmin} className="font-bold bg-purple-700 hover:bg-purple-800">
                                 {isSubmitting ? 'Đang tạo...' : 'Tạo mới'}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Quick Edit Permissions Modal */}
+            {permissionModalAdmin && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 max-w-md w-full space-y-4 shadow-2xl my-8">
+                        <div className="flex items-center justify-between border-b pb-3 border-gray-100 dark:border-gray-800">
+                            <div>
+                                <h3 className="text-base font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+                                    <Key className="w-5 h-5 text-purple-600 dark:text-purple-400" /> Phân Quyền Tài Khoản
+                                </h3>
+                                <p className="text-xs text-gray-500 font-mono mt-0.5">{permissionModalAdmin.email}</p>
+                            </div>
+                            <button onClick={() => setPermissionModalAdmin(null)} className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                                <X className="w-5 h-5 text-gray-400" />
+                            </button>
+                        </div>
+
+                        <div className="flex items-center justify-between text-xs pb-1">
+                            <span className="font-bold text-gray-600 dark:text-gray-400">Danh sách quyền:</span>
+                            <div className="space-x-2">
+                                <button
+                                    onClick={() => setEditPermissions(AVAILABLE_PERMISSIONS.map(p => p.key))}
+                                    className="font-bold text-purple-600 dark:text-purple-400 hover:underline"
+                                >
+                                    Chọn tất cả
+                                </button>
+                                <span className="text-gray-300">|</span>
+                                <button
+                                    onClick={() => setEditPermissions([])}
+                                    className="font-bold text-gray-500 hover:underline"
+                                >
+                                    Bỏ chọn
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2 max-h-64 overflow-y-auto p-1 text-xs">
+                            {AVAILABLE_PERMISSIONS.map(p => {
+                                const isChecked = editPermissions.includes(p.key)
+                                return (
+                                    <div
+                                        key={p.key}
+                                        onClick={() => {
+                                            setEditPermissions(prev =>
+                                                isChecked ? prev.filter(k => k !== p.key) : [...prev, p.key]
+                                            )
+                                        }}
+                                        className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-colors ${isChecked
+                                            ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-300 dark:border-purple-800'
+                                            : 'bg-gray-50 dark:bg-gray-800/40 border-gray-200 dark:border-gray-700'
+                                            }`}
+                                    >
+                                        <div>
+                                            <div className="font-bold text-gray-900 dark:text-gray-100">{p.label}</div>
+                                            <div className="text-[10px] text-gray-500 dark:text-gray-400">{p.desc}</div>
+                                        </div>
+                                        <div className={`w-5 h-5 rounded flex items-center justify-center ${isChecked ? 'bg-purple-600 text-white' : 'border border-gray-300 dark:border-gray-600'
+                                            }`}>
+                                            {isChecked && <Check className="w-3.5 h-3.5" />}
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+
+                        <div className="flex justify-end gap-2 pt-3 border-t border-[#E2E4EB] dark:border-gray-800">
+                            <Button variant="outline" disabled={isSavingPerms} onClick={() => setPermissionModalAdmin(null)} className="dark:border-gray-700 dark:hover:bg-gray-800">
+                                Hủy
+                            </Button>
+                            <Button variant="indigo" disabled={isSavingPerms} onClick={handleSavePermissions} className="font-bold bg-purple-700 hover:bg-purple-800 shadow-sm">
+                                {isSavingPerms ? 'Đang lưu CSDL...' : 'Lưu Phân Quyền'}
                             </Button>
                         </div>
                     </div>

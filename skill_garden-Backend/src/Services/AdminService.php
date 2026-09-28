@@ -108,7 +108,11 @@ class AdminService
             $this->setAdminPermissions($adminId, $permissions);
         }
 
-        return $this->userModel->findById($adminId);
+        $res = $this->userModel->findById($adminId);
+        if ($res) {
+            $res['permissions'] = $this->getAdminPermissions($adminId);
+        }
+        return $res;
     }
 
     public function updateAdmin(int $adminId, array $data): bool

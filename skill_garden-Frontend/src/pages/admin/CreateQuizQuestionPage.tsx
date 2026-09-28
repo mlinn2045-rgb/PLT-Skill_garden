@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ArrowLeft, CheckCircle, HelpCircle, Plus, Save, Trash2, Tag, RefreshCw } from 'lucide-react'
+import { ArrowLeft, CheckCircle, HelpCircle, Plus, Save, Trash2, Tag, RefreshCw, BookOpen } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
@@ -10,9 +10,12 @@ export const CreateQuizQuestionPage: React.FC = () => {
     const [question, setQuestion] = useState('')
     const [difficulty, setDifficulty] = useState('MEDIUM')
     const [skillId, setSkillId] = useState<number | ''>('')
+    const [lessonId, setLessonId] = useState<number | ''>('')
     const [explanation, setExplanation] = useState('')
     const [skills, setSkills] = useState<SkillItem[]>([])
+    const [lessons, setLessons] = useState<any[]>([])
     const [isLoadingSkills, setIsLoadingSkills] = useState(true)
+    const [isLoadingLessons, setIsLoadingLessons] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [options, setOptions] = useState([
         { text: '', correct: true },
@@ -36,6 +39,36 @@ export const CreateQuizQuestionPage: React.FC = () => {
         }
         fetchSkills()
     }, [])
+
+    useEffect(() => {
+        if (!skillId) {
+            setLessons([])
+            setLessonId('')
+            return
+        }
+
+        const fetchLessons = async () => {
+            setIsLoadingLessons(true)
+            try {
+                const data = await adminService.getLessons(Number(skillId))
+                const list = Array.isArray(data) ? data : []
+                setLessons(list)
+                if (list.length > 0) {
+                    setLessonId(list[0].id)
+                } else {
+                    setLessonId('')
+                }
+            } catch (err) {
+                console.error('Lỗi khi tải danh sách bài học:', err)
+                setLessons([])
+                setLessonId('')
+            } finally {
+                setIsLoadingLessons(false)
+            }
+        }
+
+        fetchLessons()
+    }, [skillId])
 
     const updateOption = (index: number, text: string) => {
         setOptions(current => current.map((option, optionIndex) => optionIndex === index ? { ...option, text } : option))
@@ -71,6 +104,7 @@ export const CreateQuizQuestionPage: React.FC = () => {
         try {
             await adminService.createQuestion({
                 skill_id: skillId ? Number(skillId) : undefined,
+                lesson_id: lessonId ? Number(lessonId) : undefined,
                 question_text: question.trim(),
                 difficulty,
                 explanation: explanation.trim() || undefined,
@@ -80,7 +114,7 @@ export const CreateQuizQuestionPage: React.FC = () => {
                     order_index: idx + 1
                 }))
             })
-            alert('Tạo mới câu hỏi vào Ngân hàng Quiz phân loại Skill thành công!')
+            alert('Tạo mới câu hỏi Quiz gắn với bài học thành công!')
             navigate('/dashboard/admin/quiz-bank')
         } catch (err: any) {
             alert(err.message || 'Không thể tạo câu hỏi Quiz.')
@@ -97,18 +131,18 @@ export const CreateQuizQuestionPage: React.FC = () => {
                 </Button>
                 <div>
                     <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
-                        <HelpCircle className="w-6 h-6 text-[#3C4097] dark:text-indigo-400" /> Tạo câu hỏi Quiz mới (Phân Loại Skill)
+                        <HelpCircle className="w-6 h-6 text-[#3C4097] dark:text-indigo-400" /> Tạo câu hỏi Quiz mới (Liên kết Bài học)
                     </h1>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Gắn thẻ Skill, thiết lập nội dung, đáp án đúng và mức độ khó cho ngân hàng câu hỏi.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Gắn thẻ Skill và chọn bài học cụ thể, thiết lập nội dung, đáp án đúng và mức độ khó.</p>
                 </div>
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-sm space-y-5">
-                {/* Skill Selection Dropdown */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Skill & Lesson Selection Dropdowns */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label htmlFor="skill" className="text-sm font-bold flex items-center gap-1.5 mb-2 text-gray-900 dark:text-gray-100">
-                            <Tag className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> Phân loại Skill / Kỹ năng học phần *
+                            <Tag className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> Phân loại Skill *
                         </label>
                         {isLoadingSkills ? (
                             <div className="p-2.5 text-xs text-gray-500 flex items-center gap-2 border border-[#E2E4EB] dark:border-gray-700 rounded-xl">
@@ -121,12 +155,40 @@ export const CreateQuizQuestionPage: React.FC = () => {
                                 onChange={event => setSkillId(event.target.value ? Number(event.target.value) : '')}
                                 className="w-full rounded-xl border border-[#E2E4EB] dark:border-gray-700 px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 outline-none focus:border-[#3C4097] dark:focus:border-indigo-500 font-bold"
                             >
-                                <option value="">-- Chọn Skill cho câu hỏi --</option>
+                                <option value="">-- Chọn Skill --</option>
                                 {skills.map(s => (
                                     <option key={s.id} value={s.id}>
                                         [{s.category}] {s.title}
                                     </option>
                                 ))}
+                            </select>
+                        )}
+                    </div>
+
+                    <div>
+                        <label htmlFor="lesson" className="text-sm font-bold flex items-center gap-1.5 mb-2 text-gray-900 dark:text-gray-100">
+                            <BookOpen className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Bài học tương ứng *
+                        </label>
+                        {isLoadingLessons ? (
+                            <div className="p-2.5 text-xs text-gray-500 flex items-center gap-2 border border-[#E2E4EB] dark:border-gray-700 rounded-xl">
+                                <RefreshCw className="w-4 h-4 animate-spin text-emerald-600" /> Đang tải bài học...
+                            </div>
+                        ) : (
+                            <select
+                                id="lesson"
+                                value={lessonId}
+                                onChange={event => setLessonId(event.target.value ? Number(event.target.value) : '')}
+                                className="w-full rounded-xl border border-[#E2E4EB] dark:border-gray-700 px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 outline-none focus:border-[#3C4097] dark:focus:border-indigo-500 font-bold"
+                            >
+                                <option value="">-- Chọn bài học áp dụng --</option>
+                                {lessons.map(l => (
+                                    <option key={l.id} value={l.id}>
+                                        Bài {l.order_index}: {l.title}
+                                    </option>
+                                ))}
+                                {lessons.length === 0 && (
+                                    <option value="" disabled>Chưa có bài học nào trong Skill này</option>
+                                )}
                             </select>
                         )}
                     </div>

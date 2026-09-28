@@ -6,6 +6,11 @@ require_once __DIR__ . '/../config/bootstrap.php';
 use App\Helpers\Response;
 use App\Services\AuthService;
 
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     Response::error("Method not allowed", 405);
 }

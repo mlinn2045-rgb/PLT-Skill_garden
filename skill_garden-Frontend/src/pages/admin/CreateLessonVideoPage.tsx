@@ -48,8 +48,8 @@ export const CreateLessonVideoPage: React.FC = () => {
     const { user } = useAuthStore()
 
     const isLmsAdmin = user?.role === 'SUPER_ADMIN' || (user?.role === 'ADMIN' && (
-        (user.email || '').toLowerCase().includes('lms') ||
-        (user.full_name || '').toLowerCase().includes('lms')
+        (user.permissions || []).includes('MANAGE_LESSONS') ||
+        (user.email || '').toLowerCase().includes('lms')
     ))
     const [selectedSkillId, setSelectedSkillId] = useState('1')
     const [title, setTitle] = useState('')

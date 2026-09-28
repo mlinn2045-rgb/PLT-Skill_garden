@@ -130,12 +130,28 @@ class AuthService
         // Success - Reset failure counters
         $this->userModel->resetFailedAttempts($userId);
 
+        // Fetch fresh permissions if ADMIN or SUPER_ADMIN
+        $permissions = [];
+        if ($user['role'] === 'ADMIN') {
+            $db = \Database::getConnection();
+            $stmt = $db->prepare("SELECT permission_key FROM admin_permissions WHERE admin_id = :admin_id");
+            $stmt->execute(['admin_id' => $user['id']]);
+            $permissions = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+        } elseif ($user['role'] === 'SUPER_ADMIN') {
+            $permissions = [
+                'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_LEARNING_PATHS',
+                'MANAGE_QUIZZES', 'MANAGE_MATERIALS', 'MANAGE_PLANTS', 'MANAGE_ACHIEVEMENTS',
+                'MANAGE_GAMIFICATION'
+            ];
+        }
+
         // Issue JWT Token
         $payload = [
             'sub' => $user['uuid'],
-            'id' => $user['id'],
+            'id' => (int) $user['id'],
             'email' => $user['email'],
             'role' => $user['role'],
+            'permissions' => $permissions,
         ];
 
         $jwtConfig = $this->config['jwt'];
@@ -147,12 +163,14 @@ class AuthService
         return [
             'token' => $token,
             'user' => [
+                'id' => (int) $user['id'],
                 'uuid' => $user['uuid'],
                 'email' => $user['email'],
                 'full_name' => $user['full_name'],
                 'avatar_url' => $user['avatar_url'] ?? $user['avatar'] ?? null,
                 'role' => $user['role'],
                 'is_approved' => true,
+                'permissions' => $permissions,
                 'level' => (int) ($user['level'] ?? 1),
                 'total_xp' => (int) ($user['total_xp'] ?? 0),
                 'streak_days' => (int) ($user['streak_days'] ?? 0),
@@ -201,13 +219,30 @@ class AuthService
             return null;
         }
 
+        // Real-time query permissions directly from database to avoid stale cache on Ctrl+F5 refresh
+        $permissions = [];
+        if ($user['role'] === 'ADMIN') {
+            $db = \Database::getConnection();
+            $stmt = $db->prepare("SELECT permission_key FROM admin_permissions WHERE admin_id = :admin_id");
+            $stmt->execute(['admin_id' => $user['id']]);
+            $permissions = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+        } elseif ($user['role'] === 'SUPER_ADMIN') {
+            $permissions = [
+                'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_LEARNING_PATHS',
+                'MANAGE_QUIZZES', 'MANAGE_MATERIALS', 'MANAGE_PLANTS', 'MANAGE_ACHIEVEMENTS',
+                'MANAGE_GAMIFICATION'
+            ];
+        }
+
         return [
+            'id' => (int) $user['id'],
             'uuid' => $user['uuid'],
             'email' => $user['email'],
             'full_name' => $user['full_name'],
             'avatar_url' => $user['avatar_url'] ?? $user['avatar'] ?? null,
             'role' => $user['role'],
             'is_approved' => (bool) $user['is_approved'],
+            'permissions' => $permissions,
             'level' => (int) ($user['level'] ?? 1),
             'total_xp' => (int) ($user['total_xp'] ?? 0),
             'streak_days' => (int) ($user['streak_days'] ?? 0),
@@ -234,7 +269,7 @@ class AuthService
         }
 
         // Also check Authorization: Bearer <token> header
-        $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
         if (empty($authHeader) && function_exists('apache_request_headers')) {
             $headers = apache_request_headers();
             $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';

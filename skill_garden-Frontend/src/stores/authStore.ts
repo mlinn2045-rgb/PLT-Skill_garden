@@ -21,6 +21,7 @@ interface AuthState {
     isDarkMode: boolean;
 
     checkAuth: () => Promise<void>;
+    refreshUser: () => Promise<void>;
     login: (email: string, password: string) => Promise<boolean>;
     register: (fullName: string, email: string, password: string) => Promise<{ success: boolean; message: string }>;
     logout: () => Promise<void>;
@@ -54,6 +55,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             }
         } catch {
             set({ user: null, isAuthenticated: false, isInitialized: true, isLoading: false });
+        }
+    },
+
+    refreshUser: async () => {
+        try {
+            const user = await authService.getMe();
+            if (user) {
+                const localAvatar = localStorage.getItem('skillgarden_avatar_' + user.email);
+                if (localAvatar) {
+                    user.avatar_url = localAvatar;
+                }
+                set({ user, isAuthenticated: true });
+            }
+        } catch {
+            // Ignore error on background refresh
         }
     },
 

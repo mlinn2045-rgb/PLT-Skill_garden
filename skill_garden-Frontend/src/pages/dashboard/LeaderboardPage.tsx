@@ -4,7 +4,7 @@ import { Badge } from '../../components/ui/Badge'
 import { Button } from '../../components/ui/Button'
 import { useAuthStore } from '../../stores/authStore'
 import { courseService, LeaderboardUser } from '../../services/courseService'
-import { calculateLevel, getStudentStats } from '../../services/studentStats'
+import { calculateLevel } from '../../services/studentStats'
 
 export const LeaderboardPage: React.FC = () => {
     const { user } = useAuthStore()
@@ -18,55 +18,16 @@ export const LeaderboardPage: React.FC = () => {
         setErrorMsg('')
         try {
             const data = await courseService.getLeaderboard()
-            const userKey = user?.email || 'guest'
-            const localStats = getStudentStats(userKey)
+            const list = Array.isArray(data) ? data : []
 
-            let list = Array.isArray(data) ? data : []
+            // Đồng bộ trực tiếp 100% từ Database Backend API, không dùng mock riêng lẻ
+            const syncedRankings = list.map((u, idx) => ({
+                ...u,
+                level: u.level || calculateLevel(u.total_xp || 0),
+                rank: idx + 1
+            }))
 
-            // If user is logged in, ensure their entry is present or synchronized
-            const userEmail = user?.email?.toLowerCase().trim()
-            const userId = user?.id ? String(user.id) : null
-
-            let userFound = false
-            let updatedList = list.map(u => {
-                const uEmail = (u.username || u.email || '').toLowerCase().trim()
-                const uId = u.id ? String(u.id) : null
-                const isCurrentUser = Boolean(userEmail && (uEmail === userEmail || (userId && uId === userId)))
-                if (isCurrentUser) userFound = true
-                const xp = isCurrentUser ? Math.max(u.total_xp || 0, user?.total_xp || 0, localStats.xp) : (u.total_xp || 0)
-                const level = calculateLevel(xp)
-                const streak_days = isCurrentUser ? Math.max(u.streak_days || 0, user?.streak_days || 0, localStats.streakDays) : (u.streak_days || 0)
-                return {
-                    ...u,
-                    total_xp: xp,
-                    level,
-                    streak_days,
-                }
-            })
-
-            if (!userFound && user && userEmail) {
-                const userXp = Math.max(user.total_xp || 0, localStats.xp)
-                updatedList.push({
-                    id: typeof user.id === 'number' ? user.id : 9999,
-                    username: user.email,
-                    full_name: user.full_name || user.email.split('@')[0],
-                    total_xp: userXp,
-                    level: calculateLevel(userXp),
-                    streak_days: Math.max(user.streak_days || 1, localStats.streakDays),
-                    rank: 1,
-                })
-            }
-
-            // Sort primarily by total_xp DESC, then streak_days DESC
-            updatedList.sort((a, b) => {
-                if (b.total_xp !== a.total_xp) return b.total_xp - a.total_xp
-                return b.streak_days - a.streak_days
-            })
-
-            // Assign ranks
-            updatedList = updatedList.map((u, idx) => ({ ...u, rank: idx + 1 }))
-
-            setRankings(updatedList)
+            setRankings(syncedRankings)
         } catch (err: any) {
             setErrorMsg(err.message || 'Không thể tải bảng xếp hạng.')
         } finally {
@@ -191,7 +152,7 @@ export const LeaderboardPage: React.FC = () => {
                 ) : (
                     <div className="divide-y divide-[#E6ECE6] dark:divide-gray-800">
                         {rankings.map(u => {
-                            const isCurrentUser = user?.email && u.username === user.email
+                            const isCurrentUser = Boolean(user && ((user.id && u.id === user.id) || (user.email && (u.username === user.email || (u as any).email === user.email))))
                             return (
                                 <div
                                     key={u.id}

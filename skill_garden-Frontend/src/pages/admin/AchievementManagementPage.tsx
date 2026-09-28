@@ -110,9 +110,15 @@ export const AchievementManagementPage: React.FC = () => {
                                         {ach.status}
                                     </span>
                                 </td>
-                                <td className="p-4 text-right space-x-2">
-                                    <Button variant="outline" size="sm" className="font-bold dark:border-gray-700 dark:hover:bg-gray-800"><Edit className="w-3.5 h-3.5 mr-1" /> Chỉnh sửa</Button>
-                                    <Button variant="outline" size="sm" className="text-red-600 dark:text-red-400 border-red-200 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/30 font-bold"><Trash2 className="w-3.5 h-3.5" /></Button>
+                                <td className="p-4 text-right whitespace-nowrap">
+                                    <div className="flex items-center justify-end gap-2">
+                                        <Button variant="outline" size="sm" className="font-bold dark:border-gray-700 dark:hover:bg-gray-800 cursor-pointer">
+                                            <Edit className="w-3.5 h-3.5 mr-1" /> Chỉnh sửa
+                                        </Button>
+                                        <Button variant="outline" size="sm" className="text-red-600 dark:text-red-400 border-red-200 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/30 font-bold cursor-pointer">
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                        </Button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

@@ -7,7 +7,7 @@ use App\Helpers\Response;
 use App\Middleware\AuthMiddleware;
 use App\Services\LearningPathService;
 
-AuthMiddleware::requirePermission('MANAGE_LEARNING_PATHS');
+AuthMiddleware::requirePermission(['MANAGE_LEARNING_PATHS', 'MANAGE_LESSONS', 'MANAGE_SKILLS']);
 
 $lpService = new LearningPathService();
 $method = $_SERVER['REQUEST_METHOD'];

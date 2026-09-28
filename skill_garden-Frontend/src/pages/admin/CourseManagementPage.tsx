@@ -20,7 +20,7 @@ export const CourseManagementPage: React.FC = () => {
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
-        category: 'Development',
+        category: 'FRONTEND',
         description: '',
         icon_url: '',
         plant_id: '',
@@ -79,7 +79,7 @@ export const CourseManagementPage: React.FC = () => {
         setFormData({
             title: '',
             slug: '',
-            category: 'Frontend',
+            category: 'FRONTEND',
             description: '',
             icon_url: '',
             plant_id: plants[0]?.id ? String(plants[0].id) : '',
@@ -90,10 +90,14 @@ export const CourseManagementPage: React.FC = () => {
 
     const handleOpenEditModal = (course: SkillItem) => {
         setEditingCourse(course)
+        let cat = (course.category || '').toUpperCase();
+        if (cat === 'DEVELOPMENT' || cat === 'FRONTEND' || course.title.toLowerCase().includes('frontend')) {
+            cat = 'FRONTEND';
+        }
         setFormData({
             title: course.title || '',
             slug: course.slug || '',
-            category: course.category || 'Development',
+            category: cat || 'FRONTEND',
             description: course.description || '',
             icon_url: course.icon_url || '',
             plant_id: (course as any).plant_id ? String((course as any).plant_id) : '',
@@ -168,7 +172,13 @@ export const CourseManagementPage: React.FC = () => {
         }
     }
 
-    const filteredCourses = courses.filter(c => {
+    const filteredCourses = courses.map(c => {
+        let cat = (c.category || '').toUpperCase();
+        if (cat === 'DEVELOPMENT' || cat.includes('FRONTEND') || c.title.toLowerCase().includes('frontend')) {
+            cat = 'FRONTEND';
+        }
+        return { ...c, category: cat };
+    }).filter(c => {
         const matchesSearch = c.title.toLowerCase().includes(searchQuery.toLowerCase()) || c.category.toLowerCase().includes(searchQuery.toLowerCase())
         const matchesCat = categoryFilter === 'ALL' || c.category.toUpperCase() === categoryFilter.toUpperCase()
         return matchesSearch && matchesCat
@@ -365,11 +375,11 @@ export const CourseManagementPage: React.FC = () => {
                                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                         className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[#3C4097] dark:text-white"
                                     >
-                                        <option value="Frontend">Frontend</option>
-                                        <option value="Backend">Backend</option>
-                                        <option value="Database">Database</option>
-                                        <option value="Data">Data / AI</option>
-                                        <option value="DevOps">DevOps</option>
+                                        <option value="FRONTEND">FRONTEND</option>
+                                        <option value="BACKEND">BACKEND</option>
+                                        <option value="DATABASE">DATABASE</option>
+                                        <option value="DATA">DATA / AI</option>
+                                        <option value="DEVOPS">DEVOPS</option>
                                         <option value="QA">QA & Testing</option>
                                     </select>
                                 </div>

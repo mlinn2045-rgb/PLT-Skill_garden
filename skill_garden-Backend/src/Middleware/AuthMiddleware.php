@@ -99,8 +99,9 @@ class AuthMiddleware
 
     /**
      * Require a specific permission for ADMIN role (SUPER_ADMIN gets bypass)
+     * Supports single key or array of allowed alternative keys.
      */
-    public static function requirePermission(string $permissionKey): array
+    public static function requirePermission(string|array $permissionKeys): array
     {
         $user = self::authenticate();
 
@@ -113,8 +114,19 @@ class AuthMiddleware
         }
 
         $permissions = $user['permissions'] ?? [];
-        if (!in_array($permissionKey, $permissions, true)) {
-            Response::error("Tài khoản Admin của bạn chưa được cấp quyền '{$permissionKey}'.", 403);
+        $keys = is_array($permissionKeys) ? $permissionKeys : [$permissionKeys];
+
+        $hasAny = false;
+        foreach ($keys as $k) {
+            if (in_array($k, $permissions, true)) {
+                $hasAny = true;
+                break;
+            }
+        }
+
+        if (!$hasAny) {
+            $keyStr = implode(' hoặc ', $keys);
+            Response::error("Tài khoản Admin của bạn chưa được cấp quyền '{$keyStr}'.", 403);
         }
 
         return $user;

@@ -55,7 +55,16 @@ const DashboardRedirect: React.FC = () => {
         return <Navigate to="/dashboard/superadmin" replace />
     }
     if (user?.role === 'ADMIN') {
-        return <Navigate to="/dashboard/admin/approvals" replace />
+        const perms = user?.permissions || []
+        if (perms.includes('MANAGE_USERS')) return <Navigate to="/dashboard/admin/approvals" replace />
+        if (perms.includes('MANAGE_QUIZZES')) return <Navigate to="/dashboard/admin/quiz-bank" replace />
+        if (perms.includes('MANAGE_SKILLS')) return <Navigate to="/dashboard/admin/courses" replace />
+        if (perms.includes('MANAGE_LESSONS')) return <Navigate to="/dashboard/admin/lessons" replace />
+        if (perms.includes('MANAGE_MATERIALS')) return <Navigate to="/dashboard/admin/pdf-materials" replace />
+        if (perms.includes('MANAGE_PLANTS')) return <Navigate to="/dashboard/admin/plants" replace />
+        if (perms.includes('MANAGE_ACHIEVEMENTS')) return <Navigate to="/dashboard/admin/achievements" replace />
+        if (perms.includes('MANAGE_GAMIFICATION')) return <Navigate to="/dashboard/admin/gamification" replace />
+        return <Navigate to="/dashboard/profile" replace />
     }
     return <OverviewPage />
 }

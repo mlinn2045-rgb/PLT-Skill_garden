@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
     GitBranch,
@@ -37,8 +37,35 @@ export const DashboardLayout: React.FC = () => {
     const [dismissedWelcomeModal, setDismissedWelcomeModal] = useState(false)
     const [isNotificationOpen, setIsNotificationOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
-    const { user, logout, isDarkMode, toggleDarkMode } = useAuthStore()
+    const { user, logout, isDarkMode, toggleDarkMode, refreshUser } = useAuthStore()
     const studentStats = getStudentStats(user?.email || 'guest')
+
+    // Real-time synchronization of permissions for Admin LMS
+    useEffect(() => {
+        if (user?.role === 'ADMIN') {
+            refreshUser()
+
+            // BroadcastChannel listener across browser tabs/windows
+            if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+                const bc = new BroadcastChannel('skillgarden_auth_sync')
+                bc.onmessage = (event) => {
+                    if (event.data?.type === 'PERMISSIONS_UPDATED') {
+                        refreshUser()
+                    }
+                }
+                return () => bc.close()
+            }
+        }
+    }, [user?.role, refreshUser])
+
+    // Refresh permissions on window focus so admin instantly gets new permissions
+    useEffect(() => {
+        if (user?.role === 'ADMIN') {
+            const onFocus = () => refreshUser()
+            window.addEventListener('focus', onFocus)
+            return () => window.removeEventListener('focus', onFocus)
+        }
+    }, [user?.role, refreshUser])
 
     const displayXP = user?.total_xp ?? user?.xp ?? studentStats.xp
     const displayStreak = Math.max(user?.streak_days || 1, studentStats.streakDays)
@@ -82,17 +109,28 @@ export const DashboardLayout: React.FC = () => {
         { label: 'Mục tiêu & Huy hiệu', path: '/dashboard/goals-badges', icon: <Award className="w-5 h-5 text-purple-600" /> },
     ]
 
-    const adminNavItems = [
-        { label: 'Duyệt học viên', path: '/dashboard/admin/approvals', icon: <ShieldCheck className="w-5 h-5" /> },
-        { label: 'Quản lý khóa học', path: '/dashboard/admin/courses', icon: <BookOpen className="w-5 h-5" /> },
-        { label: 'Quản lý bài học', path: '/dashboard/admin/lessons', icon: <Layers className="w-5 h-5" /> },
-        { label: 'Tạo bài học & Video', path: '/dashboard/admin/create-video-lesson', icon: <Video className="w-5 h-5" /> },
-        { label: 'Ngân hàng Quiz', path: '/dashboard/admin/quiz-bank', icon: <HelpCircle className="w-5 h-5" /> },
-        { label: 'Tài liệu PDF', path: '/dashboard/admin/pdf-materials', icon: <FileText className="w-5 h-5" /> },
-        { label: 'Quản lý Loại Cây', path: '/dashboard/admin/plants', icon: <Sprout className="w-5 h-5 text-emerald-600" /> },
-        { label: 'Quản lý Thành Tích', path: '/dashboard/admin/achievements', icon: <Award className="w-5 h-5 text-yellow-600" /> },
-        { label: 'Cấu hình Gamification', path: '/dashboard/admin/gamification', icon: <Settings className="w-5 h-5 text-purple-600" /> },
+    const allAdminNavItems = [
+        { label: 'Duyệt học viên', path: '/dashboard/admin/approvals', icon: <ShieldCheck className="w-5 h-5" />, permission: 'MANAGE_USERS' },
+        { label: 'Quản lý khóa học', path: '/dashboard/admin/courses', icon: <BookOpen className="w-5 h-5" />, permission: 'MANAGE_SKILLS' },
+        { label: 'Quản lý bài học', path: '/dashboard/admin/lessons', icon: <Layers className="w-5 h-5" />, permission: 'MANAGE_LESSONS' },
+        { label: 'Tạo bài học & Video', path: '/dashboard/admin/create-video-lesson', icon: <Video className="w-5 h-5" />, permission: 'MANAGE_LESSONS' },
+        { label: 'Ngân hàng Quiz', path: '/dashboard/admin/quiz-bank', icon: <HelpCircle className="w-5 h-5" />, permission: 'MANAGE_QUIZZES' },
+        { label: 'Tài liệu PDF', path: '/dashboard/admin/pdf-materials', icon: <FileText className="w-5 h-5" />, permission: 'MANAGE_MATERIALS' },
+        { label: 'Quản lý Loại Cây', path: '/dashboard/admin/plants', icon: <Sprout className="w-5 h-5 text-emerald-600" />, permission: 'MANAGE_PLANTS' },
+        { label: 'Quản lý Thành Tích', path: '/dashboard/admin/achievements', icon: <Award className="w-5 h-5 text-yellow-600" />, permission: 'MANAGE_ACHIEVEMENTS' },
+        { label: 'Cấu hình Gamification', path: '/dashboard/admin/gamification', icon: <Settings className="w-5 h-5 text-purple-600" />, permission: 'MANAGE_GAMIFICATION' },
     ]
+
+    const userPermissions = user?.permissions || []
+
+    // For ADMIN role: filter items by granted permissions. If SUPER_ADMIN, show all.
+    const filteredAdminNavItems = isSuperAdmin
+        ? allAdminNavItems
+        : allAdminNavItems.filter(item => !item.permission || userPermissions.includes(item.permission))
+
+    const adminNavItems = filteredAdminNavItems.length > 0
+        ? filteredAdminNavItems
+        : [{ label: 'Hồ sơ Admin (Chờ cấp quyền)', path: '/dashboard/profile', icon: <User className="w-5 h-5 text-amber-500" /> }]
 
     const superAdminNavItems = [
         { label: 'Super Admin Overview', path: '/dashboard/superadmin', icon: <ShieldCheck className="w-5 h-5 text-purple-600" /> },

@@ -117,9 +117,12 @@ class QuizService
         $whereSql = !empty($where) ? "WHERE " . implode(' AND ', $where) : "";
 
         $sql = "
-            SELECT q.*, s.title AS skill_title, s.slug AS skill_slug
+            SELECT q.*, s.title AS skill_title, s.slug AS skill_slug,
+                   qz.lesson_id, qz.title AS quiz_title, l.title AS lesson_title, l.order_index AS lesson_order_index
             FROM questions q
             LEFT JOIN skills s ON q.skill_id = s.id
+            LEFT JOIN quizzes qz ON q.quiz_id = qz.id
+            LEFT JOIN lessons l ON qz.lesson_id = l.id
             {$whereSql}
             ORDER BY q.id DESC
         ";
@@ -146,9 +149,55 @@ class QuizService
             throw new Exception("Nội dung câu hỏi và danh sách đáp án là bắt buộc.", 400);
         }
 
+        $quizId = !empty($data['quiz_id']) ? (int) $data['quiz_id'] : null;
+        $lessonId = !empty($data['lesson_id']) ? (int) $data['lesson_id'] : null;
+        $skillId = !empty($data['skill_id']) ? (int) $data['skill_id'] : null;
+
+        if ($lessonId && !$quizId) {
+            // Find existing quiz for this lesson
+            $qStmt = $this->db->prepare("SELECT id, skill_id FROM quizzes WHERE lesson_id = :lesson_id LIMIT 1");
+            $qStmt->execute(['lesson_id' => $lessonId]);
+            $existingQuiz = $qStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($existingQuiz) {
+                $quizId = (int) $existingQuiz['id'];
+                if (!$skillId && !empty($existingQuiz['skill_id'])) {
+                    $skillId = (int) $existingQuiz['skill_id'];
+                }
+            } else {
+                // Find lesson details
+                $lStmt = $this->db->prepare("
+                    SELECT l.title as lesson_title, l.order_index, lp.skill_id
+                    FROM lessons l
+                    JOIN modules m ON l.module_id = m.id
+                    JOIN learning_paths lp ON m.learning_path_id = lp.id
+                    WHERE l.id = :lesson_id LIMIT 1
+                ");
+                $lStmt->execute(['lesson_id' => $lessonId]);
+                $lessonRow = $lStmt->fetch(PDO::FETCH_ASSOC);
+
+                $quizTitle = $lessonRow ? "Quiz ôn tập: Bài {$lessonRow['order_index']} - {$lessonRow['lesson_title']}" : "Quiz bài học #{$lessonId}";
+                if (!$skillId && !empty($lessonRow['skill_id'])) {
+                    $skillId = (int) $lessonRow['skill_id'];
+                }
+
+                $createdQuiz = $this->quizModel->create([
+                    'lesson_id' => $lessonId,
+                    'skill_id' => $skillId,
+                    'title' => $quizTitle,
+                    'description' => "Bộ câu hỏi kiểm tra kiến thức cho bài học",
+                    'passing_score_percent' => 80,
+                    'time_limit_minutes' => 15,
+                    'xp_reward' => 50,
+                    'is_published' => 1,
+                ]);
+                $quizId = (int) $createdQuiz['id'];
+            }
+        }
+
         $question = $this->questionModel->create([
-            'quiz_id' => !empty($data['quiz_id']) ? (int) $data['quiz_id'] : null,
-            'skill_id' => !empty($data['skill_id']) ? (int) $data['skill_id'] : null,
+            'quiz_id' => $quizId,
+            'skill_id' => $skillId,
             'question_text' => $questionText,
             'question_type' => $data['question_type'] ?? 'SINGLE_CHOICE',
             'difficulty' => $data['difficulty'] ?? 'MEDIUM',

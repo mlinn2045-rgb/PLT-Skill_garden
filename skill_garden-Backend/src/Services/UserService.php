@@ -133,6 +133,32 @@ class UserService
         ]);
     }
 
+    public function updateUser(int $userId, array $data): bool
+    {
+        $user = $this->userModel->findById($userId);
+        if (!$user) {
+            throw new Exception("Không tìm thấy người dùng.", 404);
+        }
+
+        if ($user['role'] === 'SUPER_ADMIN' && isset($data['role']) && $data['role'] !== 'SUPER_ADMIN') {
+            throw new Exception("Không thể thay đổi vai trò của Super Admin.", 400);
+        }
+
+        $fields = ['full_name', 'email', 'username', 'role', 'status', 'is_approved', 'bio', 'tag_id'];
+        $update = [];
+        foreach ($fields as $f) {
+            if (array_key_exists($f, $data)) {
+                $update[$f] = $data[$f];
+            }
+        }
+
+        if (empty($update)) {
+            return true;
+        }
+
+        return $this->userModel->update($userId, $update);
+    }
+
     public function deleteUser(int $userId): bool
     {
         $user = $this->userModel->findById($userId);

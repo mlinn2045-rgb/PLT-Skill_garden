@@ -13,6 +13,7 @@ class Garden extends BaseModel
             SELECT 
                 ugt.*,
                 s.title as skill_title,
+                s.title as skill_name,
                 s.slug as skill_slug,
                 s.category as skill_category,
                 p.name as plant_name,

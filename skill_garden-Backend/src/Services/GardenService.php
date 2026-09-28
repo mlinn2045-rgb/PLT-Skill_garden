@@ -66,8 +66,15 @@ class GardenService
         ]);
     }
 
-    public function plantSeed(int $userId, int $skillId, int $plantId): array
+    public function plantSeed(int $userId, int $skillId, int $plantId = 0): array
     {
+        if ($plantId <= 0) {
+            $skillStmt = $this->db->prepare("SELECT plant_id FROM skills WHERE id = :skill_id");
+            $skillStmt->execute(['skill_id' => $skillId]);
+            $resolvedPlantId = (int) $skillStmt->fetchColumn();
+            $plantId = $resolvedPlantId > 0 ? $resolvedPlantId : 1;
+        }
+
         // Get initial stage
         $stageStmt = $this->db->prepare("
             SELECT id FROM plant_stages WHERE plant_id = :plant_id ORDER BY stage_level ASC LIMIT 1

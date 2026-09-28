@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { ShieldCheck, Sparkles, Flame, Sprout } from 'lucide-react'
+import { ShieldCheck, Sparkles, Flame, Sprout, Sun, Moon } from 'lucide-react'
 import { PltLogo } from '../components/ui/PltLogo'
+import { useAuthStore } from '../stores/authStore'
 
 interface AuthLayoutProps {
     children: React.ReactNode
@@ -20,11 +21,12 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
 }) => {
     const location = useLocation()
     const isLoginPage = location.pathname === '/login'
+    const { isDarkMode, toggleDarkMode } = useAuthStore()
 
     return (
-        <div className="min-h-screen bg-[#F7F9F7] dark:bg-gray-950 flex flex-col font-sans">
+        <div className="min-h-screen bg-[#F7F9F7] dark:bg-gray-950 flex flex-col font-sans transition-colors duration-200">
             {/* Top Header */}
-            <header className="w-full px-6 lg:px-12 py-3.5 flex items-center justify-between bg-white dark:bg-gray-900 border-b border-[#E6ECE6] dark:border-gray-800">
+            <header className="w-full px-6 lg:px-12 py-3.5 flex items-center justify-between bg-white dark:bg-gray-900 border-b border-[#E6ECE6] dark:border-gray-800 transition-colors duration-200">
                 <Link to="/" className="flex items-center gap-3 group hover:opacity-90 transition-opacity">
                     <PltLogo height={42} />
                     <div className="h-8 w-px bg-[#E2E8F0] dark:bg-gray-700 mx-0.5" />
@@ -34,7 +36,19 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                     </div>
                 </Link>
 
-                <div className="text-sm font-medium text-[#4A5568] dark:text-gray-300">
+                <div className="flex items-center gap-4 text-sm font-medium text-[#4A5568] dark:text-gray-300">
+                    {/* Nút bật/tắt chế độ Sáng / Tối */}
+                    <button
+                        onClick={toggleDarkMode}
+                        title={isDarkMode ? "Chuyển sang giao diện Sáng" : "Chuyển sang giao diện Tối"}
+                        className="p-2 rounded-xl text-[#4A5568] dark:text-amber-400 hover:bg-[#F3F6F3] dark:hover:bg-gray-800 transition-colors cursor-pointer flex items-center justify-center"
+                        aria-label="Đổi giao diện Sáng/Tối"
+                    >
+                        {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-indigo-600" />}
+                    </button>
+
+                    <div className="h-4 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
+
                     {isLoginPage ? (
                         <span>
                             Chưa có tài khoản?{' '}
@@ -159,7 +173,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                     </div>
 
                     {/* Right Form Area */}
-                    <div className="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-center bg-white dark:bg-gray-900">
+                    <div className="lg:col-span-7 p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center bg-white dark:bg-gray-900">
                         <div className="max-w-md mx-auto w-full">
                             {children}
                         </div>

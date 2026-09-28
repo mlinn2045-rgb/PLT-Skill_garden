@@ -8,6 +8,18 @@ import { gardenService, UserGardenResponse } from '../../services/gardenService'
 import { Tree3DViewer } from '../../components/ui/Tree3DViewer'
 import { getStudentStats } from '../../services/studentStats'
 
+const getPlantEmoji = (code?: string, name?: string) => {
+    const c = (code || '').toUpperCase()
+    const n = (name || '').toLowerCase()
+    if (c === 'FLOWER' || n.includes('hoa') || n.includes('anh đào')) return '🌸'
+    if (c === 'TREE' || n.includes('cổ thụ')) return '🌳'
+    if (c === 'BAMBOO' || n.includes('tre')) return '🎋'
+    if (c === 'CACTUS' || n.includes('xương rồng')) return '🌵'
+    if (c === 'PINE' || n.includes('thông')) return '🌲'
+    if (c === 'BONSAI' || n.includes('bonsai')) return '🪴'
+    return '🌱'
+}
+
 export const MyGardenPage: React.FC = () => {
     const navigate = useNavigate()
     const { user } = useAuthStore()
@@ -168,14 +180,14 @@ export const MyGardenPage: React.FC = () => {
                             <div className="flex items-start justify-between gap-4">
                                 <div className="flex items-center gap-3">
                                     <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-3xl shadow-md shrink-0">
-                                        🌸
+                                        {getPlantEmoji(tree.plant_code, tree.plant_name)}
                                     </div>
                                     <div>
                                         <span className="text-[11px] font-bold text-[#3F49C8] dark:text-indigo-400 uppercase tracking-wider">
                                             {tree.plant_name || 'Cây kỹ năng'}
                                         </span>
                                         <h3 className="text-base font-extrabold text-[#1A2E22] dark:text-white group-hover:text-[#3F49C8] dark:group-hover:text-indigo-400 transition-colors">
-                                            {tree.skill_name || `Kỹ năng #${tree.skill_id}`}
+                                            {tree.skill_name || tree.skill_title || `Kỹ năng #${tree.skill_id}`}
                                         </h3>
                                     </div>
                                 </div>

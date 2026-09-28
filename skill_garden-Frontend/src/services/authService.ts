@@ -1,6 +1,6 @@
 // skill_garden-Frontend/src/services/authService.ts
 
-import { parseApiResponse } from './apiClient';
+import { request, parseApiResponse } from './apiClient';
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -12,6 +12,7 @@ export interface UserProfile {
     avatar_url?: string;
     role: 'SUPER_ADMIN' | 'ADMIN' | 'USER';
     is_approved: boolean;
+    permissions?: string[];
     level?: number;
     xp?: number;
     total_xp?: number;
@@ -76,18 +77,8 @@ export const authService = {
 
     async getMe(): Promise<UserProfile | null> {
         try {
-            const response = await fetch(`${API_BASE_URL}/me.php`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
-            if (!response.ok) {
-                return null;
-            }
-            const data = await parseApiResponse<UserProfile>(response);
-            return data.data || null;
+            const response = await request<UserProfile>('/me.php');
+            return response.data || null;
         } catch {
             return null;
         }

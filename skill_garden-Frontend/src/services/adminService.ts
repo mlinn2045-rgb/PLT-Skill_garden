@@ -65,6 +65,8 @@ export interface QuizOption {
 export interface QuizQuestion {
     id: number;
     quiz_id?: number;
+    lesson_id?: number;
+    lesson_title?: string;
     skill_id?: number;
     skill_title?: string;
     question_text: string;
@@ -234,8 +236,15 @@ export const adminService = {
         return response.data || [];
     },
 
+    async getLessons(skillId?: number): Promise<any[]> {
+        const url = skillId ? `/lessons.php?skill_id=${skillId}` : '/lessons.php';
+        const response = await request<any[]>(url);
+        return response.data || [];
+    },
+
     async createQuestion(data: {
         skill_id?: number;
+        lesson_id?: number;
         quiz_id?: number;
         question_text: string;
         question_type?: string;

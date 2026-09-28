@@ -129,6 +129,15 @@ export const SkillCatalogPage: React.FC = () => {
         isEnrolled: plantedSkillIds.includes(skill.id) || isSkillGrowing(skill.id, userKey)
     }))
 
+    const defaultPlantMap: Record<number, number> = {
+        1: 1, // Frontend -> Hoa Anh Đào (FLOWER)
+        2: 2, // Backend -> Cổ Thụ (TREE)
+        3: 4, // Python -> Xương Rồng (CACTUS)
+        4: 3, // SQL -> Tre (BAMBOO)
+        5: 6, // DevOps -> Bonsai (BONSAI)
+        6: 5, // QA -> Thông (PINE)
+    }
+
     const handlePlantOrLearn = async (skill: SkillItem) => {
         setLoadingSkillId(skill.id)
         try {
@@ -138,8 +147,9 @@ export const SkillCatalogPage: React.FC = () => {
                 localStorage.setItem('skillgarden_planted_skills', JSON.stringify(updatedPlanted))
                 setPlantedSkillIds(updatedPlanted)
 
-                // Plant tree in backend
-                await gardenService.plantSeed(Number(skill.id), 1)
+                // Plant tree in backend with correct plantId
+                const plantId = (skill as any).plant_id || defaultPlantMap[Number(skill.id)] || 1
+                await gardenService.plantSeed(Number(skill.id), plantId)
             }
             // Navigate to lesson 1 / learning path for the selected skill
             navigate(`/dashboard/learning-path/${skill.id}`)
@@ -153,7 +163,12 @@ export const SkillCatalogPage: React.FC = () => {
     const filteredSkills = skills.filter(skill => {
         const matchesSearch = skill.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             skill.description.toLowerCase().includes(searchQuery.toLowerCase())
-        const matchesCat = selectedCategory === 'ALL' || skill.category === selectedCategory
+        const skillCat = (skill.category || '').toUpperCase()
+        const targetCat = selectedCategory.toUpperCase()
+        const matchesCat = selectedCategory === 'ALL' ||
+            skillCat === targetCat ||
+            (targetCat === 'AI/PYTHON' && (skillCat === 'DATA' || skillCat === 'AI')) ||
+            (targetCat === 'TESTING' && skillCat === 'QA')
         return matchesSearch && matchesCat
     })
 

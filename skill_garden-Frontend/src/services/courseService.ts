@@ -13,6 +13,7 @@ export interface SkillItem {
     total_lessons?: number;
     icon_url?: string;
     plant_name?: string;
+    plant_id?: number;
 }
 
 export interface LeaderboardUser {
