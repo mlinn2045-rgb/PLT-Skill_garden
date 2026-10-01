@@ -72,10 +72,17 @@ export const gardenService = {
         });
     },
 
-    async plantSeed(skillId: number, plantId: number): Promise<ApiResponse> {
+    async plantSeed(skillId: number, plantId: number = 0, treeName?: string): Promise<ApiResponse> {
         return request('/user/garden.php?action=plant', {
             method: 'POST',
-            body: JSON.stringify({ skill_id: skillId, plant_id: plantId }),
+            body: JSON.stringify({ skill_id: skillId, plant_id: plantId, tree_name: treeName }),
+        });
+    },
+
+    async addGrowth(skillId: number, growthPercent: number, xp: number): Promise<ApiResponse> {
+        return request('/user/garden.php?action=add_growth', {
+            method: 'POST',
+            body: JSON.stringify({ skill_id: skillId, growth_percent: growthPercent, xp }),
         });
     }
 };

@@ -109,13 +109,30 @@ export const checkAndUpdateDailyStreak = (userKey = 'guest'): StudentStats => {
     return updated
 }
 
-export const recordQuizCompletion = (skillId: string, chapterId: string, userKey = 'guest') => {
+export const recordQuizCompletion = (
+    skillId: string, 
+    chapterId: string, 
+    userKey = 'guest',
+    correctCount = 0
+) => {
     const progress = getChapterProgress(skillId, chapterId, userKey)
     const currentStats = getStudentStats(userKey)
 
-    if (progress.quizCompleted) return currentStats
+    // Mỗi câu đúng + 30 XP & +5% sinh trưởng cây, câu sai không tính điểm
+    const earnedXp = Math.max(0, correctCount) * 30
+    const earnedGrowth = Math.max(0, correctCount) * 5
 
-    updateChapterProgress(skillId, { quizCompleted: true }, chapterId, userKey)
+    const previousEarnedXp = progress.quizXpEarned ?? (progress.quizCompleted ? 100 : 0)
+    const isFirstTime = !progress.quizCompleted
+    const xpToAdd = isFirstTime ? earnedXp : Math.max(0, earnedXp - previousEarnedXp)
+
+    updateChapterProgress(skillId, { 
+        quizCompleted: true,
+        quizScore: Math.max(progress.quizScore ?? 0, correctCount),
+        quizXpEarned: isFirstTime ? earnedXp : Math.max(previousEarnedXp, earnedXp),
+        quizGrowthEarned: isFirstTime ? earnedGrowth : Math.max(progress.quizGrowthEarned ?? 0, earnedGrowth)
+    }, chapterId, userKey)
+
     const today = getToday()
     const yesterday = getYesterday()
     const streakDays = currentStats.lastActivityDate === today
@@ -124,7 +141,7 @@ export const recordQuizCompletion = (skillId: string, chapterId: string, userKey
             ? currentStats.streakDays + 1
             : 1
 
-    const newXp = currentStats.xp + 100
+    const newXp = currentStats.xp + xpToAdd
     const nextStats: StudentStats = {
         xp: newXp,
         streakDays,
@@ -138,6 +155,8 @@ export const recordQuizCompletion = (skillId: string, chapterId: string, userKey
     } catch {
         // ignore
     }
+    window.dispatchEvent(new Event('skillgarden_xp_updated'))
+    window.dispatchEvent(new Event('skillgarden_tree_planted'))
     return nextStats
 }
 
