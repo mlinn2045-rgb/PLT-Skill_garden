@@ -1,5 +1,5 @@
 <?php
-// api/user/lessons/complete.php
+// api/user/lessons/progress.php
 
 require_once __DIR__ . '/../../../config/bootstrap.php';
 
@@ -15,14 +15,21 @@ try {
     if ($method === 'POST') {
         $data = json_decode(file_get_contents('php://input'), true) ?? [];
         $lessonId = (int) ($data['lesson_id'] ?? 0);
-        $watchSeconds = (int) ($data['watch_seconds'] ?? $data['video_watch_seconds'] ?? 0);
+        $seconds = (int) ($data['watch_seconds'] ?? $data['seconds'] ?? 0);
+        $duration = (int) ($data['duration_seconds'] ?? $data['duration'] ?? 0);
+        $isCompleted = !empty($data['is_completed']);
 
         if ($lessonId <= 0) {
             Response::error("ID bài học không hợp lệ.", 400);
         }
 
-        $result = $lessonService->completeLesson($user['id'], $lessonId, $watchSeconds);
-        Response::success($result, $result['already_completed'] ? "Bài học đã được hoàn thành trước đó." : "Hoàn thành bài học thành công!");
+        $result = $lessonService->updateWatchProgress($user['id'], $lessonId, $seconds, $isCompleted, $duration);
+        Response::success(
+            $result,
+            !empty($result['is_completed'])
+                ? "Hoàn thành bài học video 100%!"
+                : "Cập nhật tiến độ xem video thành công."
+        );
     }
 
     Response::error("Method not allowed", 405);

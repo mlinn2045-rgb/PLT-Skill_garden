@@ -13,12 +13,30 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Optional user context
 $config = require __DIR__ . '/../config/config.php';
 $token = $_COOKIE[$config['jwt']['cookie_name'] ?? 'skill_garden_token'] ?? null;
-$userId = null;
+if (!$token) {
+    $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
+    if (empty($authHeader) && function_exists('apache_request_headers')) {
+        $headers = apache_request_headers();
+        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+    }
+    if (preg_match('/Bearer\s+(\S+)/i', $authHeader, $matches)) {
+        $token = $matches[1];
+    }
+}
 
+$userId = null;
 if ($token) {
     $payload = JWT::decode($token, $config['jwt']['secret']);
-    if ($payload && isset($payload['id'])) {
-        $userId = (int) $payload['id'];
+    if ($payload) {
+        if (isset($payload['id'])) {
+            $userId = (int) $payload['id'];
+        } elseif (isset($payload['sub'])) {
+            $userModel = new \App\Models\User();
+            $foundUser = $userModel->findByUuid($payload['sub']);
+            if ($foundUser) {
+                $userId = (int) $foundUser['id'];
+            }
+        }
     }
 }
 
@@ -33,7 +51,7 @@ try {
             }
 
             Response::success(
-                $lessonService->getPublishedLessonsBySkillId($skillId),
+                $lessonService->getPublishedLessonsBySkillId($skillId, $userId),
                 "Lấy danh sách bài học thành công."
             );
         }
