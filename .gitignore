@@ -36,3 +36,15 @@ Thumbs.db
 # Large media uploads in Backend
 skill_garden-Backend/public/uploads/videos/*
 !skill_garden-Backend/public/uploads/videos/.gitkeep
+
+# Temporary test files & scratch scripts
+scratch/
+**/scratch/
+**/__tests__/
+skill_garden-Backend/tests/LessonSequentialUnlockTest.php
+skill_garden-Backend/api/seed_runner.php
+coverage/
+**/coverage/
+.phpunit.cache/
+test-results/
+
