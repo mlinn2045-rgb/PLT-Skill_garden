@@ -227,16 +227,6 @@ Truy cập giao diện học tập tại: `http://localhost:5173`.
 
 ---
 
-### Khởi tạo & Nạp dữ liệu mẫu (Database Seed)
-
-Khi sử dụng Docker, database `schema.sql` sẽ được tự động import. Để khởi tạo đầy đủ dữ liệu người dùng mẫu và cấu trúc phân quyền, bạn chạy lệnh:
-
-```bash
-# Nạp dữ liệu tài khoản và phân quyền
-cd skill_garden-Backend
-php bin/seed_users.php
-php bin/grant_all_admin_perms.php
-```
 
 
 
