@@ -9,7 +9,7 @@ describe('AI LMS Admin Quiz Generator & Integration Suite', () => {
         vi.restoreAllMocks();
         // Mock getSkills
         vi.spyOn(adminService, 'getSkills').mockResolvedValue([
-            { id: 1, title: 'React 19 Core', category: 'Frontend', plant_id: 1, slug: 'react-19' }
+            { id: 1, title: 'React 19 Core', category: 'Frontend', slug: 'react-19', status: 'ACTIVE' }
         ]);
         // Mock getLessons
         vi.spyOn(adminService, 'getLessons').mockResolvedValue([

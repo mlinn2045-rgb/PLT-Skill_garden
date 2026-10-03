@@ -25,7 +25,6 @@ interface AIQuizGeneratorModalProps {
     initialSkillId?: number | '';
     initialLessonId?: number | '';
     initialContent?: string;
-    initialTitle?: string;
 }
 
 const SAMPLE_LECTURE_NOTE = `Mô hình kiến trúc Component và Luồng dữ liệu trong React 19:
@@ -41,8 +40,7 @@ export const AIQuizGeneratorModal: React.FC<AIQuizGeneratorModalProps> = ({
     onSuccess,
     initialSkillId = '',
     initialLessonId = '',
-    initialContent = '',
-    initialTitle = ''
+    initialContent = ''
 }) => {
     // Skills & Lessons
     const [skills, setSkills] = useState<SkillItem[]>([])
