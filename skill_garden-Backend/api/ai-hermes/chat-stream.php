@@ -5,6 +5,7 @@
 require_once __DIR__ . '/../../config/bootstrap.php';
 
 use App\Helpers\Response;
+use App\Helpers\ContentModerator;
 use App\Middleware\AuthMiddleware;
 use App\Services\AIService;
 
@@ -40,6 +41,33 @@ $aiService = new AIService();
 // 3. Rate limiter check (Protects server from spam)
 if (!$aiService->checkRateLimit($userId)) {
     Response::error("Bạn đã gửi quá nhiều yêu cầu. Vui lòng đợi 1 phút trước khi hỏi tiếp.", 429);
+}
+
+// 3.1 Content Moderation Guardrail: Protect students & avoid deducting credits for inappropriate input
+$moderation = ContentModerator::check($userMessage);
+if (!$moderation['is_safe']) {
+    header('Content-Type: text/event-stream; charset=utf-8');
+    header('Cache-Control: no-cache, no-transform');
+    header('Connection: keep-alive');
+    header('X-Accel-Buffering: no');
+    while (ob_get_level() > 0) ob_end_flush();
+    
+    $warningText = $moderation['warning_message'];
+    $convId = $aiService->getOrCreateConversation($userId, $conversationId, $context, 'HERMES', $preferredModel);
+    $aiService->saveMessage($convId, 'user', $userMessage, 0, $preferredModel);
+
+    $words = preg_split('/(\s+)/u', $warningText, -1, PREG_SPLIT_DELIM_CAPTURE);
+    foreach ($words as $w) {
+        echo "data: " . json_encode(['type' => 'delta', 'delta' => $w], JSON_UNESCAPED_UNICODE) . "\n\n";
+        if (ob_get_level() > 0) ob_flush();
+        flush();
+        usleep(6000);
+    }
+    $aiService->saveMessage($convId, 'assistant', $warningText, 50, $preferredModel);
+    echo "data: " . json_encode(['type' => 'done', 'conversationId' => $convId], JSON_UNESCAPED_UNICODE) . "\n\n";
+    echo "data: [DONE]\n\n";
+    flush();
+    exit;
 }
 
 // 4. Check Credit Balance: Hermes costs 5 credits

@@ -5,6 +5,7 @@
 require_once __DIR__ . '/../../config/bootstrap.php';
 
 use App\Helpers\Response;
+use App\Helpers\ContentModerator;
 use App\Middleware\AuthMiddleware;
 use App\Services\AIService;
 
@@ -67,6 +68,23 @@ try {
 
     // Save user message to database
     $aiService->saveMessage($convId, 'user', $userMessage);
+
+    // 5.1 Layer 1.5: Content Moderation & Pedagogical Safety Guardrail
+    $moderation = ContentModerator::check($userMessage);
+    if (!$moderation['is_safe']) {
+        $warningText = $moderation['warning_message'];
+        $words = preg_split('/(\s+)/u', $warningText, -1, PREG_SPLIT_DELIM_CAPTURE);
+        foreach ($words as $w) {
+            $sendEvent(['type' => 'delta', 'delta' => $w]);
+            usleep(6000);
+        }
+        $durationMs = (int)((microtime(true) - $startTime) * 1000);
+        $aiService->saveMessage($convId, 'assistant', $warningText, $durationMs);
+        $sendEvent(['type' => 'done', 'conversationId' => $convId]);
+        echo "data: [DONE]\n\n";
+        flush();
+        exit;
+    }
 
     // 6. Layer 6: ReAct DB Tools check
     $toolResult = $aiService->executeReActTools($userId, $userMessage);

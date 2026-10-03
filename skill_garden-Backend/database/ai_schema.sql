@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS `ai_conversations` (
   `context_skill_id` INT NULL DEFAULT NULL,
   `context_lesson_id` INT NULL DEFAULT NULL,
   `model_used` VARCHAR(100) NOT NULL DEFAULT 'google/gemini-2.5-flash',
+  `mode` ENUM('TUTOR', 'HERMES') NOT NULL DEFAULT 'TUTOR',
+  `credits_spent` INT NOT NULL DEFAULT 0,
   `is_pinned` TINYINT(1) NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
