@@ -83,6 +83,13 @@ class AIService
     public function getCachedResponse(string $prompt): ?string
     {
         $normalized = mb_strtolower(trim($prompt));
+
+        // Never cache short greetings or conversational filler words so AI responds dynamically & personalized
+        $greetings = ['chào', 'chào bạn', 'chào em', 'chào thầy', 'chào cô', 'hello', 'hi', 'alo', 'ê', 'ơi', 'test'];
+        if (in_array($normalized, $greetings) || mb_strlen($normalized) < 8) {
+            return null;
+        }
+
         $hash = hash('sha256', $normalized);
 
         $stmt = $this->db->prepare("
@@ -112,6 +119,11 @@ class AIService
     public function saveToCache(string $prompt, string $response): void
     {
         $normalized = mb_strtolower(trim($prompt));
+        $greetings = ['chào', 'chào bạn', 'chào em', 'chào thầy', 'chào cô', 'hello', 'hi', 'alo', 'ê', 'ơi', 'test'];
+        if (in_array($normalized, $greetings) || mb_strlen($normalized) < 15) {
+            return; // Don't cache short greetings or trivial chit-chat
+        }
+
         $hash = hash('sha256', $normalized);
 
         $stmt = $this->db->prepare("
@@ -636,9 +648,7 @@ class AIService
      */
     private function streamFromGeminiDirect(string $apiKey, array $messages, callable $onDelta): string
     {
-        $model = $this->config['gemini_model'] ?? 'gemini-3.5-flash-lite';
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':streamGenerateContent?alt=sse&key=' . $apiKey;
-        $ch = curl_init($url);
+        $model = $this->config['gemini_model'] ?? 'gemini-flash-latest';
 
         $contents = [];
         $systemInstruction = null;
@@ -670,46 +680,48 @@ class AIService
         }
 
         $payload = json_encode($bodyData);
-        $fullContent = '';
 
-        curl_setopt_array($ch, [
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $payload,
-            CURLOPT_HTTPHEADER => [
-                'Content-Type: application/json'
-            ],
-            CURLOPT_RETURNTRANSFER => false,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_WRITEFUNCTION => function($ch, $chunk) use (&$fullContent, $onDelta) {
-                $lines = explode("\n", $chunk);
-                foreach ($lines as $line) {
-                    $clean = trim($line);
-                    if (str_starts_with($clean, 'data:')) {
-                        $dataStr = trim(substr($clean, 5));
-                        $json = json_decode($dataStr, true);
-                        $delta = $json['candidates'][0]['content']['parts'][0]['text'] ?? '';
-                        if (!empty($delta)) {
-                            $fullContent .= $delta;
-                            $onDelta($delta);
-                        }
+        $candidateModels = array_unique([$model, 'gemini-3.1-flash-lite', 'gemini-3.5-flash', 'gemini-flash-lite-latest']);
+        $lastCode = 0;
+        $lastErr = '';
+
+        foreach ($candidateModels as $candidate) {
+            $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . $candidate . ':generateContent?key=' . $apiKey;
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $payload,
+                CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false,
+                CURLOPT_TIMEOUT => 20
+            ]);
+
+            $resp = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $err = curl_error($ch);
+            curl_close($ch);
+
+            if ($httpCode === 200 && !empty($resp)) {
+                $json = json_decode($resp, true);
+                $genText = $json['candidates'][0]['content']['parts'][0]['text'] ?? '';
+                if (!empty($genText)) {
+                    $words = preg_split('/(\s+)/u', $genText, -1, PREG_SPLIT_DELIM_CAPTURE);
+                    foreach ($words as $w) {
+                        $onDelta($w);
+                        usleep(6000);
                     }
+                    return $genText;
                 }
-                return strlen($chunk);
-            },
-            CURLOPT_TIMEOUT => 30
-        ]);
+            }
 
-        $success = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $err = curl_error($ch);
-        curl_close($ch);
-
-        if (!$success || $httpCode >= 400) {
-            throw new Exception("Direct Gemini API Failed with code {$httpCode}: {$err}");
+            $lastCode = $httpCode;
+            $lastErr = $err;
+            error_log("Gemini model {$candidate} failed with {$httpCode}, trying next model...");
         }
 
-        return $fullContent;
+        throw new Exception("Direct Gemini API Failed with code {$lastCode}: {$lastErr}");
     }
 
     /**

@@ -47,7 +47,7 @@ return [
         'openrouter_api_key' => getenv('OPENROUTER_API_KEY') ?: '',
         'gemini_api_key' => getenv('GEMINI_API_KEY') ?: '',
         'groq_api_key' => getenv('GROQ_API_KEY') ?: '',
-        'gemini_model' => getenv('GEMINI_MODEL') ?: 'gemini-2.0-flash',
+        'gemini_model' => getenv('GEMINI_MODEL') ?: 'gemini-3.1-flash-lite',
         'rate_limit_per_minute' => (int) (getenv('AI_RATE_LIMIT_PER_MINUTE') ?: 20),
 
         // Phân hệ 1: AI Tutor (Hỏi đáp nhanh bài học - 100% Miễn phí)
