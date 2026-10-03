@@ -99,7 +99,7 @@ Mình là **AI Hermes** – Siêu trợ lý giải bài tập khó, phân tích 
     fetchWallet: async () => {
         set({ isLoadingWallet: true });
         try {
-            const token = localStorage.getItem('token') || undefined;
+            const token = localStorage.getItem('skill_garden_token') || localStorage.getItem('token') || undefined;
             const data = await aiService.getWalletInfo(token);
             set({
                 userCredits: data.credits,
@@ -149,7 +149,7 @@ Mình là **AI Hermes** – Siêu trợ lý giải bài tập khó, phân tích 
     createDepositOrder: async (packageId: string) => {
         set({ isCreatingDeposit: true });
         try {
-            const token = localStorage.getItem('token') || undefined;
+            const token = localStorage.getItem('skill_garden_token') || localStorage.getItem('token') || undefined;
             const order = await aiService.createDepositOrder(packageId, token);
             set({ depositOrder: order });
         } finally {
@@ -163,7 +163,7 @@ Mình là **AI Hermes** – Siêu trợ lý giải bài tập khó, phân tích 
 
         set({ isConfirmingDeposit: true });
         try {
-            const token = localStorage.getItem('token') || undefined;
+            const token = localStorage.getItem('skill_garden_token') || localStorage.getItem('token') || undefined;
             const res = await aiService.confirmDeposit(order.orderCode, order.package.id, token);
             set({
                 userCredits: res.newBalance,
@@ -232,9 +232,10 @@ Mình là **AI Hermes** – Siêu trợ lý giải bài tập khó, phân tích 
         }));
 
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('skill_garden_token') || localStorage.getItem('token') || '';
             const res = await fetch(`${API_BASE_URL}/ai-hermes/chat-stream.php`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     ...(token ? { Authorization: `Bearer ${token}` } : {})

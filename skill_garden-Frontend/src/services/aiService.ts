@@ -81,9 +81,11 @@ export const aiService = {
      */
     async getWalletInfo(token?: string): Promise<AICreditWalletInfo> {
         try {
+            const authToken = token || localStorage.getItem('skill_garden_token') || localStorage.getItem('token') || undefined;
             const res = await fetch(`${API_BASE_URL}/ai-hermes/wallet.php`, {
+                credentials: 'include',
                 headers: {
-                    ...(token ? { Authorization: `Bearer ${token}` } : {})
+                    ...(authToken ? { Authorization: `Bearer ${authToken}` } : {})
                 }
             });
 
@@ -156,11 +158,13 @@ export const aiService = {
      */
     async createDepositOrder(packageId: string, token?: string): Promise<AIDepositOrder> {
         try {
+            const authToken = token || localStorage.getItem('skill_garden_token') || localStorage.getItem('token') || undefined;
             const res = await fetch(`${API_BASE_URL}/ai-hermes/deposit-order.php`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    ...(token ? { Authorization: `Bearer ${token}` } : {})
+                    ...(authToken ? { Authorization: `Bearer ${authToken}` } : {})
                 },
                 body: JSON.stringify({ packageId })
             });
@@ -216,11 +220,13 @@ export const aiService = {
      */
     async confirmDeposit(orderCode: number, packageId: string, token?: string): Promise<{ newBalance: number; creditsAdded: number }> {
         try {
+            const authToken = token || localStorage.getItem('skill_garden_token') || localStorage.getItem('token') || undefined;
             const res = await fetch(`${API_BASE_URL}/ai-hermes/deposit-confirm.php`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    ...(token ? { Authorization: `Bearer ${token}` } : {})
+                    ...(authToken ? { Authorization: `Bearer ${authToken}` } : {})
                 },
                 body: JSON.stringify({ orderCode, packageId })
             });
