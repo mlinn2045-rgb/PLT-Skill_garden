@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { ArrowLeft, CheckCircle, HelpCircle, Plus, Save, Trash2, Tag, RefreshCw, BookOpen } from 'lucide-react'
+import { ArrowLeft, CheckCircle, HelpCircle, Plus, Save, Trash2, Tag, RefreshCw, BookOpen, Sparkles } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { adminService, SkillItem } from '../../services/adminService'
+import { AIQuizGeneratorModal } from '../../components/admin/AIQuizGeneratorModal'
 
 export const CreateQuizQuestionPage: React.FC = () => {
     const navigate = useNavigate()
@@ -17,6 +18,7 @@ export const CreateQuizQuestionPage: React.FC = () => {
     const [isLoadingSkills, setIsLoadingSkills] = useState(true)
     const [isLoadingLessons, setIsLoadingLessons] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isAIOpen, setIsAIOpen] = useState(false)
     const [options, setOptions] = useState([
         { text: '', correct: true },
         { text: '', correct: false },
@@ -125,16 +127,26 @@ export const CreateQuizQuestionPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 pb-12 pt-6 px-6 max-w-4xl mx-auto space-y-6">
-            <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/admin/quiz-bank')} aria-label="Quay lại ngân hàng câu hỏi" className="dark:border-gray-700 dark:hover:bg-gray-800">
-                    <ArrowLeft className="w-4 h-4" />
-                </Button>
-                <div>
-                    <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
-                        <HelpCircle className="w-6 h-6 text-[#3C4097] dark:text-indigo-400" /> Tạo câu hỏi Quiz mới (Liên kết Bài học)
-                    </h1>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Gắn thẻ Skill và chọn bài học cụ thể, thiết lập nội dung, đáp án đúng và mức độ khó.</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                    <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/admin/quiz-bank')} aria-label="Quay lại ngân hàng câu hỏi" className="dark:border-gray-700 dark:hover:bg-gray-800">
+                        <ArrowLeft className="w-4 h-4" />
+                    </Button>
+                    <div>
+                        <h1 className="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
+                            <HelpCircle className="w-6 h-6 text-[#3C4097] dark:text-indigo-400" /> Tạo câu hỏi Quiz mới (Liên kết Bài học)
+                        </h1>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Gắn thẻ Skill và chọn bài học cụ thể, thiết lập nội dung, đáp án đúng và mức độ khó.</p>
+                    </div>
                 </div>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsAIOpen(true)}
+                    className="bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-purple-500/5 hover:from-purple-500/20 hover:to-indigo-500/20 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700 font-extrabold flex items-center gap-2 shadow-xs py-2 px-4 self-start md:self-auto"
+                >
+                    <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400 animate-pulse" /> Sinh đề tự động bằng AI
+                </Button>
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-sm space-y-5">
@@ -255,6 +267,16 @@ export const CreateQuizQuestionPage: React.FC = () => {
                     </Button>
                 </div>
             </form>
+
+            <AIQuizGeneratorModal
+                isOpen={isAIOpen}
+                onClose={() => setIsAIOpen(false)}
+                onSuccess={() => {
+                    navigate('/dashboard/admin/quiz-bank')
+                }}
+                initialSkillId={skillId}
+                initialLessonId={lessonId}
+            />
         </div>
     )
 }

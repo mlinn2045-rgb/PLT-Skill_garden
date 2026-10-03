@@ -8,7 +8,7 @@ import {
     GenerateQuizResponse
 } from '../types/ai';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * Top Free-Tier Supported Models for AI Hermes Studio
@@ -259,12 +259,14 @@ export const aiService = {
         token?: string
     ): Promise<GenerateQuizResponse> {
         try {
+            const tokenToUse = token || localStorage.getItem('skill_garden_token') || localStorage.getItem('token') || '';
             const res = await fetch(`${API_BASE_URL}/ai-admin/generate-quiz.php`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    ...(token ? { Authorization: `Bearer ${token}` } : {})
+                    ...(tokenToUse ? { Authorization: `Bearer ${tokenToUse}` } : {})
                 },
+                credentials: 'include',
                 body: JSON.stringify({ content, numQuestions, difficulty })
             });
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Settings, Save, Globe, Lock, RefreshCw } from 'lucide-react'
+import { Settings, Save, Globe, Lock, RefreshCw, Sparkles, Cpu, Key, ShieldCheck } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { superAdminService } from '../../services/superAdminService'
@@ -10,6 +10,13 @@ export const SystemConfigPage: React.FC = () => {
     const [requireApproval, setRequireApproval] = useState(true)
     const [maxLoginAttempts, setMaxLoginAttempts] = useState('5')
     const [sessionTimeout, setSessionTimeout] = useState('120')
+
+    // AI Platform Configurations
+    const [aiGeminiKey, setAiGeminiKey] = useState('')
+    const [aiGroqKey, setAiGroqKey] = useState('')
+    const [aiOpenRouterKey, setAiOpenRouterKey] = useState('')
+    const [aiPrimaryModel, setAiPrimaryModel] = useState('google/gemini-2.0-flash')
+    const [aiRateLimit, setAiRateLimit] = useState('20')
 
     const [isLoading, setIsLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
@@ -25,6 +32,13 @@ export const SystemConfigPage: React.FC = () => {
                 if (item.config_key === 'require_approval') setRequireApproval(item.config_value === '1' || item.config_value === 'true')
                 if (item.config_key === 'max_login_attempts') setMaxLoginAttempts(item.config_value)
                 if (item.config_key === 'session_timeout') setSessionTimeout(item.config_value)
+
+                // AI Keys
+                if (item.config_key === 'ai_gemini_api_key') setAiGeminiKey(item.config_value)
+                if (item.config_key === 'ai_groq_api_key') setAiGroqKey(item.config_value)
+                if (item.config_key === 'ai_openrouter_api_key') setAiOpenRouterKey(item.config_value)
+                if (item.config_key === 'ai_primary_model') setAiPrimaryModel(item.config_value)
+                if (item.config_key === 'ai_rate_limit') setAiRateLimit(item.config_value)
             })
         } catch {
             // Keep default fallback values if empty
@@ -47,8 +61,15 @@ export const SystemConfigPage: React.FC = () => {
                 require_approval: requireApproval ? '1' : '0',
                 max_login_attempts: maxLoginAttempts,
                 session_timeout: sessionTimeout,
+
+                // AI Platform
+                ai_gemini_api_key: aiGeminiKey.trim(),
+                ai_groq_api_key: aiGroqKey.trim(),
+                ai_openrouter_api_key: aiOpenRouterKey.trim(),
+                ai_primary_model: aiPrimaryModel.trim(),
+                ai_rate_limit: aiRateLimit.trim()
             })
-            setToastMsg('Đã cập nhật cấu hình hệ thống thành công vào MySQL Database!')
+            setToastMsg('Đã cập nhật cấu hình hệ thống & API Keys AI thành công vào MySQL Database!')
             setTimeout(() => setToastMsg(''), 4000)
         } catch (err: any) {
             alert(err.message || 'Lưu cấu hình thất bại.')
@@ -139,6 +160,111 @@ export const SystemConfigPage: React.FC = () => {
                     <Button type="submit" variant="indigo" disabled={isSaving} fullWidth className="font-bold flex items-center justify-center gap-2 bg-purple-700 hover:bg-purple-800 border-none mt-4">
                         <Save className="w-4 h-4" /> {isSaving ? 'Đang lưu...' : 'Lưu Cấu Hình Hệ Thống'}
                     </Button>
+                </div>
+
+                {/* AI Platform & LLM Providers (Multi-Model Fallback Engine) */}
+                <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-5 md:col-span-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E2E4EB] dark:border-gray-800 pb-3">
+                        <h2 className="text-sm font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                            <span>Cấu Hình Nền Tảng AI Hermes & AI Tutor (8-Layer Multi-LLM Engine)</span>
+                        </h2>
+                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 self-start">
+                            AI Specification 2026
+                        </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* Gemini Key */}
+                        <div className="space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-1">
+                                    <Key className="w-3.5 h-3.5 text-blue-500" /> Google Gemini API Key
+                                </label>
+                                <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400">AI Tutor Mặc định</span>
+                            </div>
+                            <input
+                                type="password"
+                                value={aiGeminiKey}
+                                onChange={(e) => setAiGeminiKey(e.target.value)}
+                                placeholder="AIzaSy..."
+                                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-xs font-mono outline-none focus:ring-2 focus:ring-purple-500"
+                            />
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400">Miễn phí 15 RPM, phản hồi siêu tốc độ cho AI Tutor bài học.</p>
+                        </div>
+
+                        {/* Groq Cloud Key */}
+                        <div className="space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-1">
+                                    <Cpu className="w-3.5 h-3.5 text-orange-500" /> Groq Cloud API Key
+                                </label>
+                                <span className="text-[10px] font-bold text-orange-600 dark:text-orange-400">DeepSeek R1 LPU</span>
+                            </div>
+                            <input
+                                type="password"
+                                value={aiGroqKey}
+                                onChange={(e) => setAiGroqKey(e.target.value)}
+                                placeholder="gsk_..."
+                                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-xs font-mono outline-none focus:ring-2 focus:ring-purple-500"
+                            />
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400">Tăng tốc suy luận LPU 500 tokens/s cho mô hình tư duy Hermes.</p>
+                        </div>
+
+                        {/* OpenRouter Key */}
+                        <div className="space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-1">
+                                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> OpenRouter API Key
+                                </label>
+                                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">Fallback & Qwen</span>
+                            </div>
+                            <input
+                                type="password"
+                                value={aiOpenRouterKey}
+                                onChange={(e) => setAiOpenRouterKey(e.target.value)}
+                                placeholder="sk-or-v1-..."
+                                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-xs font-mono outline-none focus:ring-2 focus:ring-purple-500"
+                            />
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400">Dự phòng chống sập 100% khi nhà cung cấp chính gặp lỗi.</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        {/* Primary Model */}
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">
+                                Mô Hình LLM Ưu Tiên (Primary Model)
+                            </label>
+                            <input
+                                type="text"
+                                value={aiPrimaryModel}
+                                onChange={(e) => setAiPrimaryModel(e.target.value)}
+                                placeholder="google/gemini-2.0-flash"
+                                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-xs font-bold outline-none focus:ring-2 focus:ring-purple-500"
+                            />
+                        </div>
+
+                        {/* Rate Limit */}
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">
+                                Giới Hạn Gọi AI (Request Quota / Phút / User)
+                            </label>
+                            <input
+                                type="number"
+                                value={aiRateLimit}
+                                onChange={(e) => setAiRateLimit(e.target.value)}
+                                placeholder="20"
+                                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-xs font-bold outline-none focus:ring-2 focus:ring-purple-500"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="pt-2 flex justify-end">
+                        <Button type="submit" variant="indigo" disabled={isSaving} className="font-extrabold flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/20 px-6 py-2.5">
+                            <Save className="w-4 h-4" /> {isSaving ? 'Đang lưu cấu hình...' : 'Lưu Toàn Bộ Cấu Hình Hệ Thống & AI'}
+                        </Button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { FileText, Upload, Trash2, RefreshCw, Edit, Link as LinkIcon, HardDrive, FileUp, CheckCircle2, Tag, Filter } from 'lucide-react'
+import { FileText, Upload, Trash2, RefreshCw, Edit, Link as LinkIcon, HardDrive, FileUp, CheckCircle2, Tag, Filter, Sparkles } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { adminService, PdfMaterial, SkillItem } from '../../services/adminService'
 import { apiClient } from '../../services/apiClient'
 import { useAuthStore } from '../../stores/authStore'
+import { AIQuizGeneratorModal } from '../../components/admin/AIQuizGeneratorModal'
 
 export const PDFMaterialsManagementPage: React.FC = () => {
     const { user } = useAuthStore()
@@ -32,6 +33,19 @@ export const PDFMaterialsManagementPage: React.FC = () => {
     const [uploadSuccess, setUploadSuccess] = useState(false)
     const [fileSizeBytes, setFileSizeBytes] = useState<number>(2500000)
     const [isSubmitting, setIsSubmitting] = useState(false)
+
+    // AI Quiz Generator states
+    const [isAIQuizModalOpen, setIsAIQuizModalOpen] = useState(false)
+    const [aiModalSkillId, setAiModalSkillId] = useState<number | ''>('')
+    const [aiModalLessonId, setAiModalLessonId] = useState<number | ''>('')
+    const [aiModalContent, setAiModalContent] = useState<string>('')
+
+    const handleOpenAIFromMaterial = (m: PdfMaterial) => {
+        setAiModalSkillId(m.skill_id || '')
+        setAiModalLessonId(m.lesson_id || '')
+        setAiModalContent(`Tài liệu PDF: ${m.title}\nKhóa học / Kỹ năng: ${m.skill_title || ''}\nBài học: ${m.lesson_title || ''}\nURL tài liệu: ${m.file_url}`)
+        setIsAIQuizModalOpen(true)
+    }
 
     const fetchMaterialsAndSkills = async () => {
         setIsLoading(true)
@@ -182,7 +196,19 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                     </h1>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Upload, liên kết và phân loại tài liệu học tập PDF theo từng Skill cụ thể.</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2.5">
+                    <Button
+                        variant="outline"
+                        onClick={() => {
+                            setAiModalSkillId(selectedFilterSkillId || '')
+                            setAiModalLessonId('')
+                            setAiModalContent('')
+                            setIsAIQuizModalOpen(true)
+                        }}
+                        className="bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-purple-500/5 hover:from-purple-500/20 hover:to-indigo-500/20 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700 font-extrabold flex items-center gap-2 shadow-xs py-2 px-3.5"
+                    >
+                        <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400 animate-pulse" /> Sinh Quiz bằng AI
+                    </Button>
                     <Button variant="outline" size="sm" onClick={fetchMaterialsAndSkills} disabled={isLoading} className="font-bold flex items-center gap-1 dark:border-gray-700 dark:hover:bg-gray-800">
                         <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
                     </Button>
@@ -291,6 +317,16 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                                     <td className="p-4 font-mono text-[#3C4097] dark:text-indigo-400 truncate max-w-xs">{m.file_url}</td>
                                     <td className="p-4 text-gray-500 dark:text-gray-400">{m.created_at ? new Date(m.created_at).toLocaleDateString('vi-VN') : 'Vừa tạo'}</td>
                                     <td className="p-4 text-right">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handleOpenAIFromMaterial(m)}
+                                            className="text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-950/30 font-bold mr-2 inline-flex items-center gap-1"
+                                            title="Sinh câu hỏi Quiz bằng AI từ tài liệu này"
+                                        >
+                                            <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                                            <span>AI Quiz</span>
+                                        </Button>
                                         <Button
                                             variant="outline"
                                             size="sm"
@@ -451,6 +487,18 @@ export const PDFMaterialsManagementPage: React.FC = () => {
                     </div>
                 </div>
             )}
+
+            {/* AI Quiz Generator Modal */}
+            <AIQuizGeneratorModal
+                isOpen={isAIQuizModalOpen}
+                onClose={() => setIsAIQuizModalOpen(false)}
+                onSuccess={() => {
+                    showToast('Đã tạo và lưu các câu hỏi Quiz bằng AI thành công!')
+                }}
+                initialSkillId={aiModalSkillId}
+                initialLessonId={aiModalLessonId}
+                initialContent={aiModalContent}
+            />
         </div>
     )
 }

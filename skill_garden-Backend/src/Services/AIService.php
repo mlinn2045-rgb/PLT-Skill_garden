@@ -18,6 +18,31 @@ class AIService
         $this->db = $db ?? Database::getConnection();
         $allConfig = require __DIR__ . '/../../config/config.php';
         $this->config = $allConfig['ai'] ?? [];
+
+        // Dynamic overrides from system_configs table (managed by SuperAdmin)
+        try {
+            $stmt = $this->db->query("SELECT config_key, config_value FROM system_configs WHERE config_key LIKE 'ai_%'");
+            if ($stmt) {
+                $dbConfigs = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+                if (!empty($dbConfigs['ai_gemini_api_key'])) {
+                    $this->config['gemini_api_key'] = trim($dbConfigs['ai_gemini_api_key']);
+                }
+                if (!empty($dbConfigs['ai_groq_api_key'])) {
+                    $this->config['groq_api_key'] = trim($dbConfigs['ai_groq_api_key']);
+                }
+                if (!empty($dbConfigs['ai_openrouter_api_key'])) {
+                    $this->config['openrouter_api_key'] = trim($dbConfigs['ai_openrouter_api_key']);
+                }
+                if (!empty($dbConfigs['ai_primary_model'])) {
+                    $this->config['primary_model'] = trim($dbConfigs['ai_primary_model']);
+                }
+                if (!empty($dbConfigs['ai_rate_limit'])) {
+                    $this->config['rate_limit_per_minute'] = (int)$dbConfigs['ai_rate_limit'];
+                }
+            }
+        } catch (\Throwable $e) {
+            // Table might not exist or error during migration, continue with static config
+        }
     }
 
     /**

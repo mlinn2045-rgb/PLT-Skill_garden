@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { HelpCircle, Plus, Edit, Trash2, CheckCircle, Tag, RefreshCw, Filter } from 'lucide-react'
+import { HelpCircle, Plus, Edit, Trash2, CheckCircle, Tag, RefreshCw, Filter, Sparkles } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { adminService, QuizQuestion, SkillItem } from '../../services/adminService'
+import { AIQuizGeneratorModal } from '../../components/admin/AIQuizGeneratorModal'
 
 export const QuizBankManagementPage: React.FC = () => {
     const navigate = useNavigate()
@@ -12,6 +13,7 @@ export const QuizBankManagementPage: React.FC = () => {
     const [selectedDifficulty, setSelectedDifficulty] = useState<string>('')
     const [isLoading, setIsLoading] = useState(true)
     const [errorMsg, setErrorMsg] = useState('')
+    const [isAIGeneratorOpen, setIsAIGeneratorOpen] = useState(false)
 
     const fetchData = async () => {
         setIsLoading(true)
@@ -58,7 +60,14 @@ export const QuizBankManagementPage: React.FC = () => {
                     </h1>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Tạo và phân loại bộ câu hỏi trắc nghiệm theo từng Skill kỹ năng cụ thể cho học viên.</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2.5">
+                    <Button
+                        variant="outline"
+                        onClick={() => setIsAIGeneratorOpen(true)}
+                        className="bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-purple-500/5 hover:from-purple-500/20 hover:to-indigo-500/20 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700 font-extrabold flex items-center gap-2 shadow-xs py-2 px-3.5"
+                    >
+                        <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400 animate-pulse" /> Tạo đề bằng AI
+                    </Button>
                     <Button variant="outline" size="sm" onClick={fetchData} disabled={isLoading} className="font-bold flex items-center gap-1 dark:border-gray-700 dark:hover:bg-gray-800">
                         <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Tải lại
                     </Button>
@@ -174,6 +183,15 @@ export const QuizBankManagementPage: React.FC = () => {
                     ))}
                 </div>
             )}
+
+            <AIQuizGeneratorModal
+                isOpen={isAIGeneratorOpen}
+                onClose={() => setIsAIGeneratorOpen(false)}
+                onSuccess={() => {
+                    fetchData()
+                }}
+                initialSkillId={selectedSkillId}
+            />
         </div>
     )
 }
