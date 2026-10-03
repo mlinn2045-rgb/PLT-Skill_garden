@@ -14,11 +14,10 @@ yarn-debug.log*
 yarn-error.log*
 /tmp/
 
-# Environment files
+# Environment / secrets
 .env
-.env.local
-.env.development.local
-.env.production.local
+.env.*
+!.env.example
 
 # IDE & Editor files
 .vscode/
@@ -33,9 +32,16 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Large media uploads in Backend
-skill_garden-Backend/public/uploads/videos/*
-!skill_garden-Backend/public/uploads/videos/.gitkeep
+# Database / user data
+skill_garden-Backend/database/users.json
+docs/danh sách tk sv.md
+
+# Runtime uploads
+skill_garden-Backend/public/uploads/
+
+# Local runtime data
+skill_garden-Backend/storage/
+skill_garden-Backend/cache/
 
 # Temporary test files & scratch scripts
 scratch/
@@ -47,4 +53,3 @@ coverage/
 **/coverage/
 .phpunit.cache/
 test-results/
-

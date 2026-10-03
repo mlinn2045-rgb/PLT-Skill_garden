@@ -19,3 +19,8 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.swp
+
+# Secrets
+.env
+.env.*
+!.env.example
