@@ -97,8 +97,8 @@ export const SkillCatalogPage: React.FC = () => {
             id: '5',
             title: 'Manual & Automation Testing',
             category: 'Testing',
-            plantType: 'Cây Hoa Hướng Dương 🌻',
-            plantIcon: '🌻',
+            plantType: 'Cây Thông Bền Bỉ 🌲',
+            plantIcon: '🌲',
             description: 'Quy trình kiểm thử phần mềm, viết Test Cases, Automation test với Playwright & Jest.',
             lessonsCount: 12,
             totalXp: 600,
@@ -110,8 +110,8 @@ export const SkillCatalogPage: React.FC = () => {
             id: '6',
             title: 'Flutter & React Native Mobile',
             category: 'Mobile',
-            plantType: 'Cây Dừa Nhiệt Đới 🌴',
-            plantIcon: '🌴',
+            plantType: 'Cây Cảnh Bonsai 🪴',
+            plantIcon: '🪴',
             description: 'Phát triển ứng dụng di động đa nền tảng iOS & Android với UI/UX hiện đại.',
             lessonsCount: 20,
             totalXp: 1000,
@@ -132,26 +132,31 @@ export const SkillCatalogPage: React.FC = () => {
     const defaultPlantMap: Record<number, number> = {
         1: 1, // Frontend -> Hoa Anh Đào (FLOWER)
         2: 2, // Backend -> Cổ Thụ (TREE)
-        3: 4, // Python -> Xương Rồng (CACTUS)
-        4: 3, // SQL -> Tre (BAMBOO)
-        5: 6, // DevOps -> Bonsai (BONSAI)
-        6: 5, // QA -> Thông (PINE)
+        3: 3, // SQL -> Tre Trăm Đốt (BAMBOO)
+        4: 4, // Python -> Xương Rồng Sa Mạc (CACTUS)
+        5: 5, // Testing -> Thông Bền Bỉ (PINE)
+        6: 6, // Mobile -> Cây Cảnh Bonsai (BONSAI)
     }
 
     const handlePlantOrLearn = async (skill: SkillItem) => {
         setLoadingSkillId(skill.id)
         try {
-            if (!skill.isEnrolled) {
-                // Save to localStorage
+            // Set active skill in localStorage so Garden 3D & cards immediately focus on it
+            localStorage.setItem('skillgarden_active_skill_id', skill.id)
+            localStorage.setItem('skillgarden_active_skill_name', skill.title)
+
+            // Save to localStorage planted list
+            if (!plantedSkillIds.includes(skill.id)) {
                 const updatedPlanted = [...plantedSkillIds, skill.id]
                 localStorage.setItem('skillgarden_planted_skills', JSON.stringify(updatedPlanted))
                 setPlantedSkillIds(updatedPlanted)
-
-                // Plant tree in backend with correct plantId
-                const plantId = (skill as any).plant_id || defaultPlantMap[Number(skill.id)] || 1
-                await gardenService.plantSeed(Number(skill.id), plantId)
             }
-            // Navigate to lesson 1 / learning path for the selected skill
+
+            // Always ensure plantSeed is recorded in database
+            const plantId = (skill as any).plant_id || defaultPlantMap[Number(skill.id)] || Number(skill.id)
+            await gardenService.plantSeed(Number(skill.id), plantId, skill.title)
+
+            window.dispatchEvent(new CustomEvent('skillgarden_tree_planted', { detail: { skillId: skill.id } }))
             navigate(`/dashboard/learning-path/${skill.id}`)
         } catch {
             navigate(`/dashboard/learning-path/${skill.id}`)

@@ -164,4 +164,10 @@ class User
 
         return $this->findById($id);
     }
+
+    public function delete(int $id): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
+        return $stmt->execute(['id' => $id]);
+    }
 }

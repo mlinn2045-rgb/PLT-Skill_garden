@@ -319,14 +319,39 @@ class QuizService
         $passingScore = (int) ($quiz['passing_score_percent'] ?? 80);
         $passed = ($scorePercent >= $passingScore);
 
-        $xpEarned = 0;
-        if ($passed) {
-            $xpEarned = (int) ($quiz['xp_reward'] ?? 100);
+        // Quy tắc Quiz: Mỗi câu đúng: +30 XP & +5% tăng trưởng cho cây, câu sai không tính điểm
+        $xpEarned = $correctCount * 30;
+        $growthEarned = (float) ($correctCount * 5.0);
+
+        if ($xpEarned > 0) {
             $xpService = new XPService($this->db);
-            $xpService->awardXP($userId, $xpEarned, 'QUIZ_PASS', "Đạt bài kiểm tra: " . $quiz['title']);
+            $xpService->awardXP($userId, $xpEarned, 'QUIZ_CORRECT_ANSWERS', "Hoàn thành bài Quiz ({$correctCount} câu đúng: +{$xpEarned} XP)");
 
             if (!empty($quiz['skill_id'])) {
-                $xpService->updateSkillProgress($userId, (int) $quiz['skill_id']);
+                $skillId = (int) $quiz['skill_id'];
+                // Tăng 5% tăng trưởng cho cây với mỗi câu đúng
+                $uSkillStmt = $this->db->prepare("
+                    UPDATE user_skills 
+                    SET progress_percent = LEAST(100.0, progress_percent + :growth)
+                    WHERE user_id = :user_id AND skill_id = :skill_id
+                ");
+                $uSkillStmt->execute([
+                    'growth' => $growthEarned,
+                    'user_id' => $userId,
+                    'skill_id' => $skillId
+                ]);
+
+                $treeStmt = $this->db->prepare("
+                    UPDATE user_garden_trees 
+                    SET xp_accumulated = xp_accumulated + :xp,
+                        updated_at = NOW()
+                    WHERE user_id = :user_id AND skill_id = :skill_id
+                ");
+                $treeStmt->execute([
+                    'xp' => $xpEarned,
+                    'user_id' => $userId,
+                    'skill_id' => $skillId
+                ]);
             }
         }
 

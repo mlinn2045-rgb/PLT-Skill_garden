@@ -4,39 +4,100 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 
+import { gardenService } from '../../services/gardenService'
+
 const skills = {
+    '1': {
+        title: 'Frontend React 19 Mastery',
+        category: 'Frontend',
+        description: 'Làm chủ React 19, Hooks, State Management, Server Components & Tailwind CSS.',
+        plant: 'Cây Hoa Anh Đào',
+        icon: '🌸',
+        plantId: 1,
+    },
+    '2': {
+        title: 'Backend NestJS & Node.js System',
+        category: 'Backend',
+        description: 'Xây dựng RESTful API, Microservices, Dependency Injection và Authentication chuẩn enterprise.',
+        plant: 'Cây Cổ Thụ',
+        icon: '🌳',
+        plantId: 2,
+    },
+    '3': {
+        title: 'Database SQL & MySQL Architect',
+        category: 'Database',
+        description: 'Thiết kế cơ sở dữ liệu quan hệ, viết SQL query phức tạp, tối ưu Index & Transaction.',
+        plant: 'Cây Tre Trăm Đốt',
+        icon: '🎋',
+        plantId: 3,
+    },
+    '4': {
+        title: 'Python & Data Analysis Core',
+        category: 'AI/Python',
+        description: 'Lập trình Python từ cơ bản đến nâng cao, xử lý dữ liệu với Pandas, NumPy & Matplotlib.',
+        plant: 'Cây Xương Rồng Sa Mạc',
+        icon: '🌵',
+        plantId: 4,
+    },
     '5': {
         title: 'Manual & Automation Testing',
         category: 'Testing',
         description: 'Quy trình kiểm thử phần mềm, viết Test Cases và Automation test với Playwright & Jest.',
-        plant: 'Cây Hoa Hướng Dương',
-        icon: '🌻',
+        plant: 'Cây Thông Bền Bỉ',
+        icon: '🌲',
+        plantId: 5,
     },
     '6': {
         title: 'Flutter & React Native Mobile',
         category: 'Mobile',
         description: 'Phát triển ứng dụng di động đa nền tảng iOS & Android với UI/UX hiện đại.',
-        plant: 'Cây Dừa Nhiệt Đới',
-        icon: '🌴',
+        plant: 'Cây Cảnh Bonsai',
+        icon: '🪴',
+        plantId: 6,
     },
 } as const
 
 const plantChoices = [
-    { name: 'Cây Hoa Hướng Dương', icon: '🌻' },
-    { name: 'Cây Dừa Nhiệt Đới', icon: '🌴' },
-    { name: 'Cây Tre Trăm Đốt', icon: '🎋' },
+    { name: 'Cây Hoa Anh Đào', icon: '🌸', plantId: 1 },
+    { name: 'Cây Cổ Thụ', icon: '🌳', plantId: 2 },
+    { name: 'Cây Tre Trăm Đốt', icon: '🎋', plantId: 3 },
+    { name: 'Cây Xương Rồng Sa Mạc', icon: '🌵', plantId: 4 },
+    { name: 'Cây Thông Bền Bỉ', icon: '🌲', plantId: 5 },
+    { name: 'Cây Cảnh Bonsai', icon: '🪴', plantId: 6 },
 ]
 
 export const PlantSkillPage: React.FC = () => {
     const navigate = useNavigate()
-    const { id = '5' } = useParams<{ id: string }>()
-    const skill = skills[id as keyof typeof skills] ?? skills['5']
+    const { id = '1' } = useParams<{ id: string }>()
+    const skill = skills[id as keyof typeof skills] ?? skills['1']
     const [plantName, setPlantName] = useState<string>(skill.plant)
     const [selectedPlant, setSelectedPlant] = useState<string>(skill.plant)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
-        navigate(`/dashboard/learning-path/${id}`)
+        setIsSubmitting(true)
+        try {
+            localStorage.setItem('skillgarden_active_skill_id', String(id))
+            localStorage.setItem('skillgarden_active_skill_name', skill.title)
+
+            const saved = localStorage.getItem('skillgarden_planted_skills')
+            const planted = saved ? JSON.parse(saved) : []
+            if (!planted.includes(String(id))) {
+                planted.push(String(id))
+                localStorage.setItem('skillgarden_planted_skills', JSON.stringify(planted))
+            }
+
+            const chosen = plantChoices.find(p => p.name === selectedPlant)
+            const plantId = chosen?.plantId || (skill as any).plantId || Number(id)
+            await gardenService.plantSeed(Number(id), plantId, plantName || skill.title)
+            window.dispatchEvent(new CustomEvent('skillgarden_tree_planted', { detail: { skillId: id } }))
+        } catch (e) {
+            console.error('Error planting seed:', e)
+        } finally {
+            setIsSubmitting(false)
+            navigate(`/dashboard/garden`)
+        }
     }
 
     return (

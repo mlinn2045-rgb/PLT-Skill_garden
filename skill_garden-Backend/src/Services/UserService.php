@@ -22,7 +22,7 @@ class UserService
     public function getUsers(int $page = 1, int $perPage = 10, ?string $search = null, ?string $role = null, ?string $status = null): array
     {
         $page = max(1, $page);
-        $perPage = max(1, min(100, $perPage));
+        $perPage = max(1, min(500, $perPage));
         $offset = ($page - 1) * $perPage;
 
         $whereClauses = ["role != 'SUPER_ADMIN'"];
@@ -159,15 +159,29 @@ class UserService
         return $this->userModel->update($userId, $update);
     }
 
-    public function deleteUser(int $userId): bool
+    public function deleteUser(int $userId, ?array $currentUser = null): bool
     {
         $user = $this->userModel->findById($userId);
         if (!$user) {
-            throw new Exception("Không tìm thấy người dùng.", 404);
+            throw new Exception("Không tìm thấy tài khoản người dùng cần xóa.", 404);
         }
 
         if ($user['role'] === 'SUPER_ADMIN') {
-            throw new Exception("Không thể xóa tài khoản Super Admin.", 400);
+            throw new Exception("Không thể xóa tài khoản cấp cao Super Admin.", 403);
+        }
+
+        // Khóa tính năng xóa tài khoản người dùng (USER / học viên) tạm thời trên hệ thống
+        if ($user['role'] === 'USER') {
+            throw new Exception("Chức năng xóa tài khoản học viên (USER) hiện đang bị khóa tạm thời trên hệ thống.", 403);
+        }
+
+        // Khóa chức năng xóa đối với nhóm tài khoản Admin LMS
+        if ($currentUser && $currentUser['role'] === 'ADMIN') {
+            throw new Exception("Tài khoản thuộc nhóm Admin LMS hiện đang bị khóa chức năng xóa tài khoản trên hệ thống.", 403);
+        }
+
+        if ($user['role'] === 'ADMIN') {
+            throw new Exception("Không thể xóa tài khoản Quản trị viên trên trang này.", 403);
         }
 
         return $this->userModel->delete($userId);

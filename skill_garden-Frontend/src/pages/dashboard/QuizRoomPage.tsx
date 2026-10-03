@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { Timer, CheckCircle, HelpCircle, Award, Sparkles, ArrowRight, Lock, PlayCircle, FileText } from 'lucide-react'
+import { Timer, CheckCircle, HelpCircle, Award, Sparkles, ArrowRight, Lock, PlayCircle, FileText, Sprout } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { getChapterProgress, isChapterUnlocked } from '../../services/learningProgress'
 import { recordQuizCompletion } from '../../services/studentStats'
+import { gardenService } from '../../services/gardenService'
 import { useAuthStore } from '../../stores/authStore'
 
 export const QuizRoomPage: React.FC = () => {
@@ -99,7 +100,11 @@ export const QuizRoomPage: React.FC = () => {
     }
 
     const submitQuiz = () => {
-        recordQuizCompletion(id, chapterId, userKey)
+        const correctCount = calculateScore()
+        recordQuizCompletion(id, chapterId, userKey, correctCount)
+        if (user && user.id) {
+            gardenService.addGrowth(Number(id), correctCount * 5, correctCount * 30).catch(() => {})
+        }
         setIsSubmitted(true)
     }
 
@@ -159,7 +164,7 @@ export const QuizRoomPage: React.FC = () => {
             <div className="bg-white dark:bg-gray-900 border-b border-[#E2E4EB] dark:border-gray-800 px-6 py-4 flex items-center justify-between shadow-sm">
                 <div>
                     <h1 className="text-lg font-bold text-[#20223A] dark:text-white">Quiz Đánh Giá Năng Lực React Core</h1>
-                    <p className="text-xs text-[#6B6D7A] dark:text-gray-400">Thời gian làm bài: 10 phút | Thưởng: 100 XP + Tăng trưởng mầm cây</p>
+                    <p className="text-xs text-[#6B6D7A] dark:text-gray-400">Thời gian làm bài: 10 phút | Thưởng: <strong className="text-emerald-600 dark:text-emerald-400">+30 XP &amp; +5% sinh trưởng cây / câu đúng</strong> (sai không tính)</p>
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2 bg-[#FFFBEB] dark:bg-amber-950/80 text-[#D97706] dark:text-amber-300 px-4 py-1.5 rounded-full font-mono text-sm font-bold border border-[#FEF3C7] dark:border-amber-800">
@@ -236,49 +241,67 @@ export const QuizRoomPage: React.FC = () => {
                             )}
                         </div>
                     </div>
-                ) : (
-                    /* Results Card */
-                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-[#E2E4EB] dark:border-gray-800 shadow-xl text-center space-y-6">
-                        <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 rounded-full mx-auto flex items-center justify-center shadow-lg animate-bounce">
-                            <Sparkles className="w-10 h-10 text-yellow-500" />
-                        </div>
+                ) : (() => {
+                    const score = calculateScore()
+                    const totalQuestions = questions.length
+                    const wrongCount = totalQuestions - score
+                    const earnedXp = score * 30
+                    const earnedGrowth = score * 5
 
-                        <div className="space-y-2">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-black rounded-full border border-emerald-300 dark:border-emerald-800">
-                                🔓 CHẶNG BÀI HỌC #{Number(chapterId) + 1} ĐÃ ĐƯỢC MỞ KHÓA!
-                            </span>
-                            <h2 className="text-2xl font-extrabold text-[#20223A] dark:text-white">Xuất sắc! Bạn đã vượt qua bài Quiz</h2>
-                            <p className="text-sm text-[#6B6D7A] dark:text-gray-300">
-                                Kết quả: <span className="font-bold text-[#3C4097] dark:text-indigo-400">{calculateScore()} / {questions.length} câu đúng</span>
-                            </p>
-                        </div>
-
-                        <div className="bg-[#FAFAF7] dark:bg-gray-800/80 border border-[#E2E4EB] dark:border-gray-700 rounded-2xl p-6 grid grid-cols-2 gap-4 max-w-md mx-auto">
-                            <div className="text-center">
-                                <p className="text-xs text-[#6B6D7A] dark:text-gray-400">XP Tích lũy</p>
-                                <p className="text-2xl font-extrabold text-[#3C4097] dark:text-indigo-400">+100 XP</p>
+                    return (
+                        /* Results Card */
+                        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-[#E2E4EB] dark:border-gray-800 shadow-xl text-center space-y-6">
+                            <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 rounded-full mx-auto flex items-center justify-center shadow-lg animate-bounce">
+                                <Sparkles className="w-10 h-10 text-yellow-500" />
                             </div>
-                            <div className="text-center">
-                                <p className="text-xs text-[#6B6D7A] dark:text-gray-400">Tăng trưởng Cây</p>
-                                <p className="text-2xl font-extrabold text-[#6FAF7B] dark:text-emerald-400">+15% Mầm</p>
+
+                            <div className="space-y-2">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-black rounded-full border border-emerald-300 dark:border-emerald-800">
+                                    🔓 CHẶNG BÀI HỌC #{Number(chapterId) + 1} ĐÃ ĐƯỢC MỞ KHÓA!
+                                </span>
+                                <h2 className="text-2xl font-extrabold text-[#20223A] dark:text-white">
+                                    {score > 0 ? 'Xuất sắc! Bạn đã vượt qua bài Quiz' : 'Bạn đã hoàn thành bài Quiz'}
+                                </h2>
+                                <p className="text-sm text-[#6B6D7A] dark:text-gray-300">
+                                    Kết quả: <span className="font-bold text-emerald-600 dark:text-emerald-400">{score} / {totalQuestions} câu đúng</span>
+                                    {wrongCount > 0 && <span className="text-rose-500 ml-2">({wrongCount} câu sai - không tính điểm)</span>}
+                                </p>
+                            </div>
+
+                            <div className="bg-[#FAFAF7] dark:bg-gray-800/80 border border-[#E2E4EB] dark:border-gray-700 rounded-2xl p-6 grid grid-cols-2 gap-4 max-w-md mx-auto">
+                                <div className="text-center p-3 rounded-xl bg-white dark:bg-gray-900 border border-indigo-100 dark:border-indigo-900/50 shadow-xs">
+                                    <p className="text-xs font-bold text-[#6B6D7A] dark:text-gray-400">XP Nhận Được</p>
+                                    <p className="text-2xl font-extrabold text-[#3C4097] dark:text-indigo-400">+{earnedXp} XP</p>
+                                    <span className="text-[10px] text-gray-500 font-medium block mt-1">({score} câu đúng × 30 XP)</span>
+                                </div>
+                                <div className="text-center p-3 rounded-xl bg-white dark:bg-gray-900 border border-emerald-100 dark:border-emerald-900/50 shadow-xs">
+                                    <p className="text-xs font-bold text-[#6B6D7A] dark:text-gray-400">Tăng Trưởng Cây</p>
+                                    <p className="text-2xl font-extrabold text-[#6FAF7B] dark:text-emerald-400">+{earnedGrowth}% Sinh Trưởng</p>
+                                    <span className="text-[10px] text-gray-500 font-medium block mt-1">({score} câu đúng × 5%)</span>
+                                </div>
+                            </div>
+
+                            <div className="max-w-md mx-auto p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-900/50 text-xs text-emerald-800 dark:text-emerald-300 font-semibold flex items-center justify-center gap-2">
+                                <Sprout className="w-4 h-4 text-emerald-600 shrink-0" />
+                                <span>Mỗi câu đúng: <strong>+30 XP &amp; +5% tăng trưởng</strong> cho cây. Câu sai: <strong>không tính điểm</strong>.</span>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+                                <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=${Number(chapterId) + 1}`}>
+                                    <Button variant="indigo" size="lg" className="font-black flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 shadow-lg cursor-pointer">
+                                        <PlayCircle className="w-5 h-5 text-yellow-300" />
+                                        <span>Học Video Chặng #{Number(chapterId) + 1} Mới 🎬</span>
+                                    </Button>
+                                </Link>
+                                <Link to={`/dashboard/learning-path/${id}`}>
+                                    <Button variant="outline" size="lg" className="font-bold cursor-pointer">
+                                        Xem Cây Kỹ Năng & Lộ Trình 🌱
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
-
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-                            <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=${Number(chapterId) + 1}`}>
-                                <Button variant="indigo" size="lg" className="font-black flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 shadow-lg cursor-pointer">
-                                    <PlayCircle className="w-5 h-5 text-yellow-300" />
-                                    <span>Học Video Chặng #{Number(chapterId) + 1} Mới 🎬</span>
-                                </Button>
-                            </Link>
-                            <Link to={`/dashboard/learning-path/${id}`}>
-                                <Button variant="outline" size="lg" className="font-bold cursor-pointer">
-                                    Xem Cây Kỹ Năng & Lộ Trình 🌱
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                )}
+                    )
+                })()}
             </div>
         </div>
     )

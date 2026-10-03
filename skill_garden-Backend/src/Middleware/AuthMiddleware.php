@@ -70,10 +70,29 @@ class AuthMiddleware
         // Fetch permissions if ADMIN
         $permissions = [];
         if ($user['role'] === 'ADMIN') {
-            $db = Database::getConnection();
-            $stmt = $db->prepare("SELECT permission_key FROM admin_permissions WHERE admin_id = :admin_id");
-            $stmt->execute(['admin_id' => $user['id']]);
-            $permissions = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            try {
+                $db = Database::getConnection();
+                $stmt = $db->prepare("SELECT permission_key FROM admin_permissions WHERE admin_id = :admin_id");
+                $stmt->execute(['admin_id' => $user['id']]);
+                $permissions = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+                if (empty($permissions)) {
+                    $defaultPermissions = [
+                        'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_QUIZZES',
+                        'MANAGE_MATERIALS', 'MANAGE_PLANTS', 'MANAGE_ACHIEVEMENTS', 'MANAGE_GAMIFICATION'
+                    ];
+                    $stmtIns = $db->prepare("INSERT IGNORE INTO admin_permissions (admin_id, permission_key) VALUES (:admin_id, :perm_key)");
+                    foreach ($defaultPermissions as $perm) {
+                        $stmtIns->execute(['admin_id' => $user['id'], 'perm_key' => $perm]);
+                    }
+                    $permissions = $defaultPermissions;
+                }
+            } catch (\Throwable $e) {
+                $permissions = [
+                    'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_QUIZZES',
+                    'MANAGE_MATERIALS', 'MANAGE_PLANTS', 'MANAGE_ACHIEVEMENTS', 'MANAGE_GAMIFICATION'
+                ];
+            }
         }
 
         $user['permissions'] = $permissions;

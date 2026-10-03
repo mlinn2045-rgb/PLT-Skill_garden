@@ -40,7 +40,7 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({ allowedR
     const { user } = useAuthStore();
 
     if (!user || !allowedRoles.includes(user.role)) {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate to="/403" replace />;
     }
 
     return <>{children}</>;

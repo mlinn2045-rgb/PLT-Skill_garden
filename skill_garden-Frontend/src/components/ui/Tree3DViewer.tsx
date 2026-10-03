@@ -5,7 +5,7 @@ import { RotateCw, Sparkles, Droplets, Maximize2 } from 'lucide-react'
 
 interface Tree3DProps {
     stageLevel?: number // 1 to 5
-    treeType?: 'CHERRY_BLOSSOM' | 'OAK_TREE' | 'BAMBOO' | 'CACTUS'
+    treeType?: 'CHERRY_BLOSSOM' | 'OAK_TREE' | 'BAMBOO' | 'CACTUS' | 'PINE' | 'BONSAI'
     treeName?: string
     growthProgress?: number // 0 - 100%
     onWaterSuccess?: () => void
@@ -92,48 +92,189 @@ export const Tree3DViewer: React.FC<Tree3DProps> = ({
 
         // 7. Procedural 3D Tree Group based on stageLevel & treeType
         const treeGroup = new THREE.Group()
-
-        // Colors per type
-        let foliageColor = 0xffa7c4 // Default Pink Cherry Blossom
-        if (treeType === 'OAK_TREE') foliageColor = 0x2e8b57
-        if (treeType === 'BAMBOO') foliageColor = 0x3cb371
-        if (treeType === 'CACTUS') foliageColor = 0x20b2aa
-
-        // Scale factor based on Growth Stage (1 to 5)
-        const scaleFactor = 0.4 + stageLevel * 0.25
+        const scaleFactor = 0.45 + stageLevel * 0.22
         treeGroup.scale.set(scaleFactor, scaleFactor, scaleFactor)
 
-        // Trunk
-        const trunkGeo = new THREE.CylinderGeometry(0.18, 0.35, 2.2, 12)
         const trunkMat = new THREE.MeshStandardMaterial({ color: 0x6e473b, roughness: 0.9 })
-        const trunkMesh = new THREE.Mesh(trunkGeo, trunkMat)
-        trunkMesh.position.y = 1.1
-        trunkMesh.castShadow = true
-        trunkMesh.receiveShadow = true
-        treeGroup.add(trunkMesh)
 
-        // Foliage / Leaves Clusters (Multiple spheres for 3D canopy)
-        const leafMat = new THREE.MeshStandardMaterial({
-            color: foliageColor,
-            roughness: 0.6,
-            metalness: 0.1
-        })
+        if (treeType === 'PINE') {
+            // === CÂY THÔNG (PINE) ===
+            const trunkGeo = new THREE.CylinderGeometry(0.14, 0.25, 2.2, 12)
+            const trunkMesh = new THREE.Mesh(trunkGeo, trunkMat)
+            trunkMesh.position.y = 1.1
+            trunkMesh.castShadow = true
+            treeGroup.add(trunkMesh)
 
-        const leafClusters = [
-            { pos: [0, 2.4, 0], size: 1.1 },
-            { pos: [-0.6, 2.0, 0.4], size: 0.85 },
-            { pos: [0.6, 2.1, -0.3], size: 0.8 },
-            { pos: [0.3, 2.6, 0.4], size: 0.75 },
-            { pos: [-0.4, 2.5, -0.4], size: 0.7 }
-        ]
+            const pineMat = new THREE.MeshStandardMaterial({ color: 0x1b4d3e, roughness: 0.7 })
+            const tiers = [
+                { y: 1.5, r: 1.2, h: 1.1 },
+                { y: 2.1, r: 0.95, h: 1.0 },
+                { y: 2.65, r: 0.7, h: 0.9 },
+                { y: 3.1, r: 0.45, h: 0.7 }
+            ]
+            tiers.forEach(t => {
+                const coneGeo = new THREE.ConeGeometry(t.r, t.h, 10)
+                const coneMesh = new THREE.Mesh(coneGeo, pineMat)
+                coneMesh.position.y = t.y
+                coneMesh.castShadow = true
+                treeGroup.add(coneMesh)
+            })
+        } else if (treeType === 'CACTUS') {
+            // === CÂY XƯƠNG RỒNG (CACTUS) ===
+            const cactusMat = new THREE.MeshStandardMaterial({ color: 0x2e7d32, roughness: 0.6 })
+            // Main trunk column
+            const mainStemGeo = new THREE.CylinderGeometry(0.32, 0.32, 2.4, 16)
+            const mainStemMesh = new THREE.Mesh(mainStemGeo, cactusMat)
+            mainStemMesh.position.y = 1.2
+            mainStemMesh.castShadow = true
+            treeGroup.add(mainStemMesh)
 
-        leafClusters.forEach(c => {
-            const leafGeo = new THREE.DodecahedronGeometry(c.size, 1)
-            const leafMesh = new THREE.Mesh(leafGeo, leafMat)
-            leafMesh.position.set(c.pos[0], c.pos[1], c.pos[2])
-            leafMesh.castShadow = true
-            treeGroup.add(leafMesh)
-        })
+            // Top dome
+            const domeGeo = new THREE.SphereGeometry(0.32, 16, 16)
+            const domeMesh = new THREE.Mesh(domeGeo, cactusMat)
+            domeMesh.position.y = 2.4
+            treeGroup.add(domeMesh)
+
+            // Left branch
+            const leftArmH = new THREE.CylinderGeometry(0.18, 0.18, 0.55, 10)
+            const leftArmHMesh = new THREE.Mesh(leftArmH, cactusMat)
+            leftArmHMesh.rotation.z = Math.PI / 2
+            leftArmHMesh.position.set(-0.45, 1.3, 0)
+            treeGroup.add(leftArmHMesh)
+
+            const leftArmV = new THREE.CylinderGeometry(0.18, 0.18, 0.85, 10)
+            const leftArmVMesh = new THREE.Mesh(leftArmV, cactusMat)
+            leftArmVMesh.position.set(-0.65, 1.7, 0)
+            treeGroup.add(leftArmVMesh)
+
+            // Right branch
+            const rightArmH = new THREE.CylinderGeometry(0.18, 0.18, 0.55, 10)
+            const rightArmHMesh = new THREE.Mesh(rightArmH, cactusMat)
+            rightArmHMesh.rotation.z = Math.PI / 2
+            rightArmHMesh.position.set(0.45, 1.6, 0)
+            treeGroup.add(rightArmHMesh)
+
+            const rightArmV = new THREE.CylinderGeometry(0.18, 0.18, 0.85, 10)
+            const rightArmVMesh = new THREE.Mesh(rightArmV, cactusMat)
+            rightArmVMesh.position.set(0.65, 2.0, 0)
+            treeGroup.add(rightArmVMesh)
+
+            // Flower blossom on top
+            const flowerGeo = new THREE.DodecahedronGeometry(0.2, 0)
+            const flowerMat = new THREE.MeshStandardMaterial({ color: 0xff3b5c, roughness: 0.3, emissive: 0xaa1122 })
+            const flowerMesh = new THREE.Mesh(flowerGeo, flowerMat)
+            flowerMesh.position.y = 2.75
+            treeGroup.add(flowerMesh)
+        } else if (treeType === 'BAMBOO') {
+            // === CÂY TRE (BAMBOO) ===
+            const bambooMat = new THREE.MeshStandardMaterial({ color: 0x43a047, roughness: 0.6 })
+            const nodeMat = new THREE.MeshStandardMaterial({ color: 0x2e7d32, roughness: 0.5 })
+            const leafMat = new THREE.MeshStandardMaterial({ color: 0x66bb6a, roughness: 0.5 })
+
+            const stalks = [
+                { x: 0, z: 0, height: 2.8, segs: 5 },
+                { x: -0.35, z: 0.25, height: 2.3, segs: 4 },
+                { x: 0.35, z: -0.2, height: 2.5, segs: 4 }
+            ]
+
+            stalks.forEach(s => {
+                const segLen = s.height / s.segs
+                for (let i = 0; i < s.segs; i++) {
+                    const segGeo = new THREE.CylinderGeometry(0.1, 0.11, segLen * 0.95, 10)
+                    const segMesh = new THREE.Mesh(segGeo, bambooMat)
+                    segMesh.position.set(s.x, i * segLen + segLen / 2, s.z)
+                    segMesh.castShadow = true
+                    treeGroup.add(segMesh)
+
+                    // Node ring
+                    const nodeGeo = new THREE.TorusGeometry(0.115, 0.02, 6, 12)
+                    const nodeMesh = new THREE.Mesh(nodeGeo, nodeMat)
+                    nodeMesh.rotation.x = Math.PI / 2
+                    nodeMesh.position.set(s.x, (i + 1) * segLen, s.z)
+                    treeGroup.add(nodeMesh)
+                }
+
+                // Bamboo leaves near top
+                for (let k = 0; k < 3; k++) {
+                    const leafGeo = new THREE.ConeGeometry(0.2, 0.7, 5)
+                    const leafMesh = new THREE.Mesh(leafGeo, leafMat)
+                    leafMesh.position.set(s.x + (k % 2 === 0 ? 0.25 : -0.25), s.height - 0.2 * k, s.z)
+                    leafMesh.rotation.z = k % 2 === 0 ? 0.7 : -0.7
+                    treeGroup.add(leafMesh)
+                }
+            })
+        } else if (treeType === 'BONSAI') {
+            // === CÂY CẢNH BONSAI ===
+            // Bonsai pot
+            const potGeo = new THREE.CylinderGeometry(0.9, 0.7, 0.35, 20)
+            const potMat = new THREE.MeshStandardMaterial({ color: 0x374151, roughness: 0.8 })
+            const potMesh = new THREE.Mesh(potGeo, potMat)
+            potMesh.position.y = 0.15
+            potMesh.castShadow = true
+            treeGroup.add(potMesh)
+
+            // Curved trunk segments
+            const bTrunkMat = new THREE.MeshStandardMaterial({ color: 0x543d2b, roughness: 0.9 })
+            const seg1 = new THREE.CylinderGeometry(0.18, 0.28, 1.1, 10)
+            const seg1Mesh = new THREE.Mesh(seg1, bTrunkMat)
+            seg1Mesh.position.set(-0.1, 0.8, 0)
+            seg1Mesh.rotation.z = -0.2
+            treeGroup.add(seg1Mesh)
+
+            const seg2 = new THREE.CylinderGeometry(0.13, 0.18, 1.0, 10)
+            const seg2Mesh = new THREE.Mesh(seg2, bTrunkMat)
+            seg2Mesh.position.set(0.15, 1.6, 0)
+            seg2Mesh.rotation.z = 0.35
+            treeGroup.add(seg2Mesh)
+
+            // Cloud foliage pads
+            const cloudMat = new THREE.MeshStandardMaterial({ color: 0x4a5d23, roughness: 0.7 })
+            const clouds = [
+                { x: 0.5, y: 2.1, z: 0, sx: 0.85, sy: 0.3, sz: 0.7 },
+                { x: -0.4, y: 1.5, z: 0.2, sx: 0.7, sy: 0.25, sz: 0.6 },
+                { x: 0.1, y: 2.45, z: -0.1, sx: 0.75, sy: 0.3, sz: 0.65 }
+            ]
+            clouds.forEach(c => {
+                const cGeo = new THREE.SphereGeometry(1, 12, 10)
+                const cMesh = new THREE.Mesh(cGeo, cloudMat)
+                cMesh.scale.set(c.sx, c.sy, c.sz)
+                cMesh.position.set(c.x, c.y, c.z)
+                cMesh.castShadow = true
+                treeGroup.add(cMesh)
+            })
+        } else {
+            // === CHERRY BLOSSOM OR OAK TREE ===
+            const isOak = treeType === 'OAK_TREE'
+            const trunkGeo = new THREE.CylinderGeometry(isOak ? 0.25 : 0.18, isOak ? 0.45 : 0.35, 2.2, 12)
+            const trunkMesh = new THREE.Mesh(trunkGeo, trunkMat)
+            trunkMesh.position.y = 1.1
+            trunkMesh.castShadow = true
+            trunkMesh.receiveShadow = true
+            treeGroup.add(trunkMesh)
+
+            const foliageColor = isOak ? 0x2e8b57 : 0xffa7c4
+            const leafMat = new THREE.MeshStandardMaterial({
+                color: foliageColor,
+                roughness: 0.6,
+                metalness: 0.1
+            })
+
+            const leafClusters = [
+                { pos: [0, 2.4, 0], size: isOak ? 1.3 : 1.1 },
+                { pos: [-0.6, 2.0, 0.4], size: isOak ? 1.0 : 0.85 },
+                { pos: [0.6, 2.1, -0.3], size: isOak ? 0.95 : 0.8 },
+                { pos: [0.3, 2.6, 0.4], size: isOak ? 0.9 : 0.75 },
+                { pos: [-0.4, 2.5, -0.4], size: isOak ? 0.85 : 0.7 }
+            ]
+
+            leafClusters.forEach(c => {
+                const leafGeo = new THREE.DodecahedronGeometry(c.size, 1)
+                const leafMesh = new THREE.Mesh(leafGeo, leafMat)
+                leafMesh.position.set(c.pos[0], c.pos[1], c.pos[2])
+                leafMesh.castShadow = true
+                treeGroup.add(leafMesh)
+            })
+        }
 
         scene.add(treeGroup)
 

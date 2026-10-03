@@ -64,6 +64,35 @@ try {
         // Log/ignore if already applied
     }
 
+    // Execute AI Hermes Schema
+    try {
+        $aiSchemaFile = __DIR__ . '/database/ai_schema.sql';
+        if (!file_exists($aiSchemaFile)) {
+            $aiSchemaFile = __DIR__ . '/../database/ai_schema.sql';
+        }
+        if (file_exists($aiSchemaFile)) {
+            echo "<p>⏳ Executing <code>ai_schema.sql</code> script...</p>";
+            $aiSql = file_get_contents($aiSchemaFile);
+            $pdo->exec($aiSql);
+            echo "<p style='color:green;'>✅ AI Hermes tables created successfully!</p>";
+        }
+
+        // Alter users table to add ai_credits if not exists
+        $colCheck = $pdo->query("SHOW COLUMNS FROM users LIKE 'ai_credits'");
+        if ($colCheck->rowCount() === 0) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN ai_credits INT NOT NULL DEFAULT 50 AFTER total_xp");
+        }
+
+        // Alter ai_conversations table to add mode and credits_spent if not exists
+        $convColCheck = $pdo->query("SHOW COLUMNS FROM ai_conversations LIKE 'mode'");
+        if ($convColCheck->rowCount() === 0) {
+            $pdo->exec("ALTER TABLE ai_conversations ADD COLUMN mode ENUM('TUTOR', 'HERMES') NOT NULL DEFAULT 'TUTOR' AFTER model_used");
+            $pdo->exec("ALTER TABLE ai_conversations ADD COLUMN credits_spent INT NOT NULL DEFAULT 0 AFTER mode");
+        }
+    } catch (Exception $ex) {
+        echo "<p style='color:orange;'>⚠️ AI Schema notice: " . htmlspecialchars($ex->getMessage()) . "</p>";
+    }
+
     // Now seed all accounts from users.json with valid bcrypt hashes
     $usersJsonFile = __DIR__ . '/database/users.json';
     if (!file_exists($usersJsonFile)) {

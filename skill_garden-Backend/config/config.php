@@ -41,6 +41,34 @@ return [
     'auth' => [
         'max_login_attempts' => (int) (getenv('MAX_LOGIN_ATTEMPTS') ?: 5),
         'lockout_duration_seconds' => (int) (getenv('LOCKOUT_DURATION_SECONDS') ?: 900),
+    ],
+
+    'ai' => [
+        'openrouter_api_key' => getenv('OPENROUTER_API_KEY') ?: '',
+        'gemini_api_key' => getenv('GEMINI_API_KEY') ?: '',
+        'groq_api_key' => getenv('GROQ_API_KEY') ?: '',
+        'gemini_model' => getenv('GEMINI_MODEL') ?: 'gemini-2.0-flash',
+        'rate_limit_per_minute' => (int) (getenv('AI_RATE_LIMIT_PER_MINUTE') ?: 20),
+
+        // Phân hệ 1: AI Tutor (Hỏi đáp nhanh bài học - 100% Miễn phí)
+        'tutor' => [
+            'primary_model' => getenv('AI_TUTOR_PRIMARY_MODEL') ?: 'google/gemini-2.0-flash',
+            'fallback_model' => getenv('AI_TUTOR_FALLBACK_MODEL') ?: 'meta-llama/llama-3.3-70b-instruct:free',
+            'max_tokens' => 1200,
+            'temperature' => 0.7,
+            'is_free' => true
+        ],
+
+        // Phân hệ 2: AI Hermes (Chuyên sâu bài khó, giải thuật toán, coding - Trừ Credits)
+        'hermes' => [
+            'default_model' => getenv('AI_HERMES_DEFAULT_MODEL') ?: 'deepseek/deepseek-r1:free',
+            'reasoning_model' => 'deepseek/deepseek-r1-distill-llama-70b:free',
+            'coding_model' => 'qwen/qwen-2.5-coder-32b-instruct:free',
+            'analysis_model' => 'google/gemini-2.0-flash-thinking-exp:free',
+            'cost_per_query' => 5, // Trừ 5 credits mỗi câu hỏi
+            'max_tokens' => 2500,
+            'temperature' => 0.6
+        ]
     ]
 ];
 

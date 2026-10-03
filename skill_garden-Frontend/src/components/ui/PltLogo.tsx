@@ -61,13 +61,13 @@ export const PltLogo: React.FC<PltLogoProps> = ({
 
     // Default 'full' stacked version matching image
     return (
-        <div className={`inline-flex flex-col items-center select-none ${className}`}>
+        <div className={`inline-flex flex-col items-center select-none shrink-0 ${className}`}>
             <svg
                 viewBox="0 0 340 160"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-full h-auto"
-                style={{ maxHeight: height }}
+                className="w-auto max-w-full block shrink-0"
+                style={{ height: typeof height === 'number' ? `${height}px` : height, maxHeight: height }}
             >
                 {/* PLT Main Letters */}
                 <text

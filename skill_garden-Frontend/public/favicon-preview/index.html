@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SkillGarden • Bộ Thiết Kế Favicon & Logo Icon Chính Thức</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            sg: {
+              indigo: '#3C4097',
+              primary: '#2D7A4F',
+              mint: '#68D391',
+              dark: '#0B1510',
+              card: '#111A15',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .checkerboard {
+      background-image: 
+        linear-gradient(45deg, #e5e7eb 25%, transparent 25%), 
+        linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #e5e7eb 75%), 
+        linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    }
+    .dark .checkerboard {
+      background-image: 
+        linear-gradient(45deg, #1f2937 25%, transparent 25%), 
+        linear-gradient(-45deg, #1f2937 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #1f2937 75%), 
+        linear-gradient(-45deg, transparent 75%, #1f2937 75%);
+    }
+  </style>
+</head>
+<body class="bg-[#FBFDFB] dark:bg-[#070D09] text-[#1A2E22] dark:text-[#E2E8F0] min-h-screen transition-colors duration-200 p-4 sm:p-8">
+
+  <div class="max-w-7xl mx-auto space-y-8">
+    
+    <!-- Header -->
+    <header class="bg-white dark:bg-[#111A15] p-6 sm:p-8 rounded-3xl border border-[#E6ECE6] dark:border-[#1E2E24] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 text-xs font-bold border border-[#68D391]/40 mb-2">
+          <span>🌿 BỘ 6 BIẾN THỂ FAVICON & BRAND MARK CHÍNH THỨC</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#1A2E22] dark:text-white tracking-tight">
+          Hệ Thống Biểu Tượng SkillGarden (Digital Garden Learning)
+        </h1>
+        <p class="text-sm text-[#4A5568] dark:text-gray-400 mt-1 max-w-2xl leading-relaxed">
+          Được tối ưu chuẩn vector SVG trong suốt, hiển thị sắc nét từ kích thước siêu nhỏ 16×16 px cho trình duyệt đến 512×512 px cho PWA & Mobile App.
+        </p>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-3 shrink-0">
+        <button onclick="document.documentElement.classList.toggle('dark')" class="px-4 py-2.5 rounded-xl bg-[#F7FAF7] dark:bg-gray-800 border border-[#E2E8F0] dark:border-gray-700 text-xs font-bold flex items-center gap-2 cursor-pointer hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors">
+          <span>🌓 Đổi Nền Sáng / Tối</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Color Palette Summary -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="bg-white dark:bg-[#111A15] p-4 rounded-2xl border border-[#E6ECE6] dark:border-[#1E2E24] flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#3C4097] shrink-0 shadow-sm"></div>
+        <div>
+          <span class="text-[11px] font-bold text-gray-400 block uppercase">Deep Indigo</span>
+          <span class="font-mono text-xs font-bold text-[#1A2E22] dark:text-white">#3C4097</span>
+        </div>
+      </div>
+      <div class="bg-white dark:bg-[#111A15] p-4 rounded-2xl border border-[#E6ECE6] dark:border-[#1E2E24] flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#2D7A4F] shrink-0 shadow-sm"></div>
+        <div>
+          <span class="text-[11px] font-bold text-gray-400 block uppercase">Garden Green</span>
+          <span class="font-mono text-xs font-bold text-[#1A2E22] dark:text-white">#2D7A4F</span>
+        </div>
+      </div>
+      <div class="bg-white dark:bg-[#111A15] p-4 rounded-2xl border border-[#E6ECE6] dark:border-[#1E2E24] flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#68D391] shrink-0 shadow-sm"></div>
+        <div>
+          <span class="text-[11px] font-bold text-gray-400 block uppercase">Bio Mint</span>
+          <span class="font-mono text-xs font-bold text-[#1A2E22] dark:text-white">#68D391</span>
+        </div>
+      </div>
+      <div class="bg-white dark:bg-[#111A15] p-4 rounded-2xl border border-[#E6ECE6] dark:border-[#1E2E24] flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#E6FFFA] border border-[#68D391]/40 shrink-0 shadow-sm"></div>
+        <div>
+          <span class="text-[11px] font-bold text-gray-400 block uppercase">Subtle Sprout</span>
+          <span class="font-mono text-xs font-bold text-[#1A2E22] dark:text-white">#E6FFFA</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 Variations Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- VARIATION 1 -->
+      <div class="bg-white dark:bg-[#111A15] rounded-3xl p-6 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-sm space-y-5 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between pb-3 border-b border-[#E6ECE6] dark:border-[#1E2E24]">
+          <div>
+            <span class="font-mono text-xs font-bold text-[#2D7A4F] dark:text-emerald-400">BIẾN THỂ 01</span>
+            <h3 class="font-bold text-base text-[#1A2E22] dark:text-white">Tech-Sprout Original</h3>
+          </div>
+          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 border border-[#68D391]/40">Cân Bằng Hài Hòa</span>
+        </div>
+
+        <!-- Canvas Showcase (Checkerboard Transparent) -->
+        <div class="checkerboard rounded-2xl p-8 flex items-center justify-center h-56 relative overflow-hidden">
+          <img src="/icons/favicons/skillgarden-favicon-v1-sprout.svg" alt="Variation 1" class="w-36 h-36 drop-shadow-md hover:scale-105 transition-transform"/>
+        </div>
+
+        <!-- Scale Simulation (16px, 32px, 48px, 64px) -->
+        <div class="bg-[#F7FAF7] dark:bg-gray-900/60 p-3.5 rounded-2xl border border-[#E6ECE6] dark:border-gray-800 space-y-2">
+          <span class="text-[10px] font-bold text-gray-400 uppercase block">Mô phỏng kích thước Favicon thực tế:</span>
+          <div class="flex items-end justify-between gap-2 px-2">
+            <div class="text-center space-y-1">
+              <div class="w-16 h-16 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v1-sprout.svg" class="w-12 h-12"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">48px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v1-sprout.svg" class="w-8 h-8"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">32px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v1-sprout.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">16px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <!-- Dark Tab Preview -->
+              <div class="w-9 h-9 flex items-center justify-center bg-[#1f2937] rounded-lg shadow-xs border border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v1-sprout.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-emerald-400">Dark 16</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-[#718096] dark:text-gray-400 leading-relaxed">
+          Kế thừa hoàn hảo mẫu phác thảo: Thân cây trung tâm mọc thẳng, 4 nhánh rễ mạch PCB 45° có các mắt pad tròn hàn chì và 3 lá xanh mướt vươn cao.
+        </p>
+
+        <a href="/icons/favicons/skillgarden-favicon-v1-sprout.svg" download="skillgarden-favicon-v1.svg" class="w-full py-2.5 rounded-xl bg-[#2D7A4F] text-white hover:bg-[#38A169] text-xs font-bold text-center block transition-colors">
+          Tải Vector SVG (Trong suốt)
+        </a>
+      </div>
+
+      <!-- VARIATION 2 -->
+      <div class="bg-white dark:bg-[#111A15] rounded-3xl p-6 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-sm space-y-5 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between pb-3 border-b border-[#E6ECE6] dark:border-[#1E2E24]">
+          <div>
+            <span class="font-mono text-xs font-bold text-[#3C4097] dark:text-indigo-400">BIẾN THỂ 02</span>
+            <h3 class="font-bold text-base text-[#1A2E22] dark:text-white">The Squircle App Badge</h3>
+          </div>
+          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">Chuẩn App Icon</span>
+        </div>
+
+        <div class="checkerboard rounded-2xl p-8 flex items-center justify-center h-56 relative overflow-hidden">
+          <img src="/icons/favicons/skillgarden-favicon-v2-squircle.svg" alt="Variation 2" class="w-36 h-36 drop-shadow-md hover:scale-105 transition-transform"/>
+        </div>
+
+        <div class="bg-[#F7FAF7] dark:bg-gray-900/60 p-3.5 rounded-2xl border border-[#E6ECE6] dark:border-gray-800 space-y-2">
+          <span class="text-[10px] font-bold text-gray-400 uppercase block">Mô phỏng kích thước Favicon thực tế:</span>
+          <div class="flex items-end justify-between gap-2 px-2">
+            <div class="text-center space-y-1">
+              <div class="w-16 h-16 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v2-squircle.svg" class="w-12 h-12"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">48px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v2-squircle.svg" class="w-8 h-8"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">32px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v2-squircle.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">16px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-[#1f2937] rounded-lg shadow-xs border border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v2-squircle.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-emerald-400">Dark 16</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-[#718096] dark:text-gray-400 leading-relaxed">
+          Được đóng gói sẵn trong khối bo Squircle nền Deep Indigo hoàng gia, mầm cây phát sáng ánh ngọc bích cực kỳ nổi bật trên thanh tab trình duyệt.
+        </p>
+
+        <a href="/icons/favicons/skillgarden-favicon-v2-squircle.svg" download="skillgarden-favicon-v2.svg" class="w-full py-2.5 rounded-xl bg-[#3C4097] text-white hover:bg-[#323AA3] text-xs font-bold text-center block transition-colors">
+          Tải Vector SVG (Trong suốt)
+        </a>
+      </div>
+
+      <!-- VARIATION 3 -->
+      <div class="bg-white dark:bg-[#111A15] rounded-3xl p-6 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-sm space-y-5 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between pb-3 border-b border-[#E6ECE6] dark:border-[#1E2E24]">
+          <div>
+            <span class="font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">BIẾN THỂ 03</span>
+            <h3 class="font-bold text-base text-[#1A2E22] dark:text-white">Circular Bio-Tech Seal</h3>
+          </div>
+          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200">Dạng Tròn Cố Kết</span>
+        </div>
+
+        <div class="checkerboard rounded-2xl p-8 flex items-center justify-center h-56 relative overflow-hidden">
+          <img src="/icons/favicons/skillgarden-favicon-v3-circle.svg" alt="Variation 3" class="w-36 h-36 drop-shadow-md hover:scale-105 transition-transform"/>
+        </div>
+
+        <div class="bg-[#F7FAF7] dark:bg-gray-900/60 p-3.5 rounded-2xl border border-[#E6ECE6] dark:border-gray-800 space-y-2">
+          <span class="text-[10px] font-bold text-gray-400 uppercase block">Mô phỏng kích thước Favicon thực tế:</span>
+          <div class="flex items-end justify-between gap-2 px-2">
+            <div class="text-center space-y-1">
+              <div class="w-16 h-16 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v3-circle.svg" class="w-12 h-12"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">48px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v3-circle.svg" class="w-8 h-8"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">32px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v3-circle.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">16px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-[#1f2937] rounded-lg shadow-xs border border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v3-circle.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-emerald-400">Dark 16</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-[#718096] dark:text-gray-400 leading-relaxed">
+          Biểu trưng cho hệ sinh thái khép kín của Khu vườn số: Vòng tròn bảo vệ bao trọn một chiếc lá hình học với gân lá vi mạch số hóa.
+        </p>
+
+        <a href="/icons/favicons/skillgarden-favicon-v3-circle.svg" download="skillgarden-favicon-v3.svg" class="w-full py-2.5 rounded-xl bg-[#2D7A4F] text-white hover:bg-[#38A169] text-xs font-bold text-center block transition-colors">
+          Tải Vector SVG (Trong suốt)
+        </a>
+      </div>
+
+      <!-- VARIATION 4 -->
+      <div class="bg-white dark:bg-[#111A15] rounded-3xl p-6 border-2 border-[#2D7A4F] dark:border-emerald-500 shadow-md space-y-5 hover:shadow-lg transition-shadow relative">
+        <div class="absolute -top-3 right-6 bg-[#2D7A4F] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-xs uppercase tracking-wider">
+          Tối ưu 16×16 px nhất
+        </div>
+
+        <div class="flex items-center justify-between pb-3 border-b border-[#E6ECE6] dark:border-[#1E2E24]">
+          <div>
+            <span class="font-mono text-xs font-bold text-[#2D7A4F] dark:text-emerald-400">BIẾN THỂ 04</span>
+            <h3 class="font-bold text-base text-[#1A2E22] dark:text-white">The Ultra-Minimal Glyph</h3>
+          </div>
+          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 border border-[#68D391]/40">Siêu Tinh Gọn</span>
+        </div>
+
+        <div class="checkerboard rounded-2xl p-8 flex items-center justify-center h-56 relative overflow-hidden">
+          <img src="/icons/favicons/skillgarden-favicon-v4-minimal.svg" alt="Variation 4" class="w-36 h-36 drop-shadow-md hover:scale-105 transition-transform"/>
+        </div>
+
+        <div class="bg-[#E6FFFA]/50 dark:bg-emerald-950/40 p-3.5 rounded-2xl border border-[#68D391]/40 space-y-2">
+          <span class="text-[10px] font-bold text-[#2D7A4F] dark:text-emerald-300 uppercase block">Độ nét vượt trội ở 16×16px:</span>
+          <div class="flex items-end justify-between gap-2 px-2">
+            <div class="text-center space-y-1">
+              <div class="w-16 h-16 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v4-minimal.svg" class="w-12 h-12"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">48px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v4-minimal.svg" class="w-8 h-8"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">32px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v4-minimal.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500 font-bold">16px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-[#1f2937] rounded-lg shadow-xs border border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v4-minimal.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-emerald-400 font-bold">Dark 16</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-[#718096] dark:text-gray-400 leading-relaxed">
+          Được thiết kế chuyên biệt cho kích thước 16×16px: Giảm tối đa chi tiết phức tạp, sử dụng 2 phiến lá to bản đậm nét và mạch vuông góc có pad lớn giúp nhận diện từ xa tức thì.
+        </p>
+
+        <a href="/icons/favicons/skillgarden-favicon-v4-minimal.svg" download="skillgarden-favicon-v4.svg" class="w-full py-2.5 rounded-xl bg-[#2D7A4F] text-white hover:bg-[#38A169] text-xs font-bold text-center block transition-colors">
+          Tải Vector SVG (Trong suốt)
+        </a>
+      </div>
+
+      <!-- VARIATION 5 -->
+      <div class="bg-white dark:bg-[#111A15] rounded-3xl p-6 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-sm space-y-5 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between pb-3 border-b border-[#E6ECE6] dark:border-[#1E2E24]">
+          <div>
+            <span class="font-mono text-xs font-bold text-[#2D7A4F] dark:text-emerald-400">BIẾN THỂ 05</span>
+            <h3 class="font-bold text-base text-[#1A2E22] dark:text-white">5-Leaf Lotus Canopy</h3>
+          </div>
+          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 border border-[#68D391]/40">Tán Lá Ngũ Hành</span>
+        </div>
+
+        <div class="checkerboard rounded-2xl p-8 flex items-center justify-center h-56 relative overflow-hidden">
+          <img src="/icons/favicons/skillgarden-favicon-v5-lotus.svg" alt="Variation 5" class="w-36 h-36 drop-shadow-md hover:scale-105 transition-transform"/>
+        </div>
+
+        <div class="bg-[#F7FAF7] dark:bg-gray-900/60 p-3.5 rounded-2xl border border-[#E6ECE6] dark:border-gray-800 space-y-2">
+          <span class="text-[10px] font-bold text-gray-400 uppercase block">Mô phỏng kích thước Favicon thực tế:</span>
+          <div class="flex items-end justify-between gap-2 px-2">
+            <div class="text-center space-y-1">
+              <div class="w-16 h-16 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v5-lotus.svg" class="w-12 h-12"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">48px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v5-lotus.svg" class="w-8 h-8"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">32px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v5-lotus.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">16px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-[#1f2937] rounded-lg shadow-xs border border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v5-lotus.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-emerald-400">Dark 16</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-[#718096] dark:text-gray-400 leading-relaxed">
+          Tán cây ngũ hành xòe 5 lá đối xứng như đài hoa sen tri thức, bên dưới là hệ thống 6 rễ mạch điện tử đan xen dạng bus truyền dữ liệu nhịp nhàng.
+        </p>
+
+        <a href="/icons/favicons/skillgarden-favicon-v5-lotus.svg" download="skillgarden-favicon-v5.svg" class="w-full py-2.5 rounded-xl bg-[#2D7A4F] text-white hover:bg-[#38A169] text-xs font-bold text-center block transition-colors">
+          Tải Vector SVG (Trong suốt)
+        </a>
+      </div>
+
+      <!-- VARIATION 6 -->
+      <div class="bg-white dark:bg-[#111A15] rounded-3xl p-6 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-sm space-y-5 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between pb-3 border-b border-[#E6ECE6] dark:border-[#1E2E24]">
+          <div>
+            <span class="font-mono text-xs font-bold text-[#3C4097] dark:text-indigo-400">BIẾN THỂ 06</span>
+            <h3 class="font-bold text-base text-[#1A2E22] dark:text-white">Hexagonal Tech-Seed</h3>
+          </div>
+          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200">Lục Giác Cyber</span>
+        </div>
+
+        <div class="checkerboard rounded-2xl p-8 flex items-center justify-center h-56 relative overflow-hidden">
+          <img src="/icons/favicons/skillgarden-favicon-v6-hexseed.svg" alt="Variation 6" class="w-36 h-36 drop-shadow-md hover:scale-105 transition-transform"/>
+        </div>
+
+        <div class="bg-[#F7FAF7] dark:bg-gray-900/60 p-3.5 rounded-2xl border border-[#E6ECE6] dark:border-gray-800 space-y-2">
+          <span class="text-[10px] font-bold text-gray-400 uppercase block">Mô phỏng kích thước Favicon thực tế:</span>
+          <div class="flex items-end justify-between gap-2 px-2">
+            <div class="text-center space-y-1">
+              <div class="w-16 h-16 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v6-hexseed.svg" class="w-12 h-12"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">48px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v6-hexseed.svg" class="w-8 h-8"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">32px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-xs border border-gray-200 dark:border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v6-hexseed.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-gray-500">16px</span>
+            </div>
+            <div class="text-center space-y-1">
+              <div class="w-9 h-9 flex items-center justify-center bg-[#1f2937] rounded-lg shadow-xs border border-gray-700">
+                <img src="/icons/favicons/skillgarden-favicon-v6-hexseed.svg" class="w-4 h-4"/>
+              </div>
+              <span class="font-mono text-[9px] text-emerald-400">Dark 16</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-[#718096] dark:text-gray-400 leading-relaxed">
+          Khối lục giác mạng tinh thể số vững chãi, bên trong chứa mầm cây hạt giống tri thức với 3 búp lá mang các điểm mắt mạch và vỏ hạt bọc rễ đối xứng.
+        </p>
+
+        <a href="/icons/favicons/skillgarden-favicon-v6-hexseed.svg" download="skillgarden-favicon-v6.svg" class="w-full py-2.5 rounded-xl bg-[#3C4097] text-white hover:bg-[#323AA3] text-xs font-bold text-center block transition-colors">
+          Tải Vector SVG (Trong suốt)
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Browser Tab Real-World Simulation Bar -->
+    <div class="bg-white dark:bg-[#111A15] p-6 sm:p-8 rounded-3xl border border-[#E6ECE6] dark:border-[#1E2E24] shadow-sm space-y-4">
+      <h3 class="font-bold text-base text-[#1A2E22] dark:text-white flex items-center gap-2">
+        <span>🌐 Mô Phỏng Thực Tế Trên Thanh Tab Trình Duyệt</span>
+      </h3>
+      
+      <!-- Simulated Chrome Light Tab Bar -->
+      <div class="bg-[#DEE1E6] p-2 rounded-t-xl flex items-center gap-2 overflow-x-auto text-xs">
+        <div class="bg-white text-gray-800 px-3.5 py-1.5 rounded-t-lg flex items-center gap-2 shadow-xs shrink-0 max-w-xs">
+          <img src="/icons/favicons/skillgarden-favicon-v4-minimal.svg" class="w-4 h-4"/>
+          <span class="font-medium truncate">SkillGarden - Nền Tảng Nuôi Dưỡng Kỹ Năng</span>
+          <span class="text-gray-400 ml-2">×</span>
+        </div>
+        <div class="bg-[#DEE1E6] text-gray-600 px-3.5 py-1.5 rounded-t-lg flex items-center gap-2 shrink-0 max-w-xs opacity-70">
+          <img src="/icons/favicons/skillgarden-favicon-v2-squircle.svg" class="w-4 h-4"/>
+          <span class="font-medium truncate">Cổng Thanh Toán Học Tập</span>
+          <span class="text-gray-400 ml-2">×</span>
+        </div>
+      </div>
+
+      <!-- Simulated Chrome Dark Tab Bar -->
+      <div class="bg-[#1e1f22] p-2 rounded-t-xl flex items-center gap-2 overflow-x-auto text-xs">
+        <div class="bg-[#2b2d30] text-gray-200 px-3.5 py-1.5 rounded-t-lg flex items-center gap-2 shadow-xs shrink-0 max-w-xs">
+          <img src="/icons/favicons/skillgarden-favicon-v4-minimal.svg" class="w-4 h-4"/>
+          <span class="font-medium truncate">SkillGarden (Dark Mode Tab)</span>
+          <span class="text-gray-400 ml-2">×</span>
+        </div>
+        <div class="bg-[#1e1f22] text-gray-400 px-3.5 py-1.5 rounded-t-lg flex items-center gap-2 shrink-0 max-w-xs opacity-70">
+          <img src="/icons/favicons/skillgarden-favicon-v2-squircle.svg" class="w-4 h-4"/>
+          <span class="font-medium truncate">Cổng Thanh Toán Học Tập</span>
+          <span class="text-gray-400 ml-2">×</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

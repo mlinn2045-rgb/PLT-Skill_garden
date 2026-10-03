@@ -66,7 +66,7 @@ class GardenService
         ]);
     }
 
-    public function plantSeed(int $userId, int $skillId, int $plantId = 0): array
+    public function plantSeed(int $userId, int $skillId, int $plantId = 0, ?string $treeName = null): array
     {
         if ($plantId <= 0) {
             $skillStmt = $this->db->prepare("SELECT plant_id FROM skills WHERE id = :skill_id");
@@ -83,10 +83,12 @@ class GardenService
         $stageId = (int) $stageStmt->fetchColumn();
 
         $stmt = $this->db->prepare("
-            INSERT INTO user_garden_trees (user_id, skill_id, plant_id, current_stage_id, level, status)
-            VALUES (:user_id, :skill_id, :plant_id, :stage_id, 1, 'GROWING')
+            INSERT INTO user_garden_trees (user_id, skill_id, plant_id, current_stage_id, tree_name, level, status)
+            VALUES (:user_id, :skill_id, :plant_id, :stage_id, :tree_name, 1, 'GROWING')
             ON DUPLICATE KEY UPDATE 
                 plant_id = VALUES(plant_id),
+                tree_name = COALESCE(VALUES(tree_name), user_garden_trees.tree_name),
+                current_stage_id = COALESCE(user_garden_trees.current_stage_id, VALUES(current_stage_id)),
                 updated_at = NOW()
         ");
         $stmt->execute([
@@ -94,8 +96,51 @@ class GardenService
             'skill_id' => $skillId,
             'plant_id' => $plantId,
             'stage_id' => $stageId > 0 ? $stageId : null,
+            'tree_name' => $treeName,
         ]);
 
         return ['message' => 'Đã bắt đầu trồng cây kỹ năng mới thành công!'];
+    }
+
+    public function addGrowth(int $userId, int $skillId, float $growthPercent, int $xpAmount): array
+    {
+        $xpResult = [];
+        if ($xpAmount > 0) {
+            $xpService = new XPService($this->db);
+            $xpResult = $xpService->awardXP($userId, $xpAmount, 'QUIZ_REWARD', "Thưởng Quiz (+{$xpAmount} XP, +{$growthPercent}% sinh trưởng)");
+        }
+
+        if ($growthPercent > 0 || $xpAmount > 0) {
+            // Update user_skills progress_percent
+            $uSkillStmt = $this->db->prepare("
+                UPDATE user_skills 
+                SET progress_percent = LEAST(100.0, progress_percent + :growth)
+                WHERE user_id = :user_id AND skill_id = :skill_id
+            ");
+            $uSkillStmt->execute([
+                'growth' => $growthPercent,
+                'user_id' => $userId,
+                'skill_id' => $skillId
+            ]);
+
+            // Update user_garden_trees
+            $treeStmt = $this->db->prepare("
+                UPDATE user_garden_trees 
+                SET xp_accumulated = xp_accumulated + :xp,
+                    updated_at = NOW()
+                WHERE user_id = :user_id AND skill_id = :skill_id
+            ");
+            $treeStmt->execute([
+                'xp' => $xpAmount,
+                'user_id' => $userId,
+                'skill_id' => $skillId
+            ]);
+        }
+
+        return [
+            'xp_awarded' => $xpAmount,
+            'growth_percent' => $growthPercent,
+            'xp_result' => $xpResult
+        ];
     }
 }

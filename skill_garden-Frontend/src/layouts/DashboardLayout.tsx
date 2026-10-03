@@ -27,6 +27,7 @@ import {
 import { Avatar } from '../components/ui/Avatar'
 import { PltLogo } from '../components/ui/PltLogo'
 import { WelcomeRewardModal } from '../components/ui/WelcomeRewardModal'
+import { AIAssistantWidget } from '../components/ai/AIAssistantWidget'
 import { useAuthStore } from '../stores/authStore'
 import { getStudentStats } from '../services/studentStats'
 
@@ -100,6 +101,7 @@ export const DashboardLayout: React.FC = () => {
 
     const studentNavItems = [
         { label: 'Tổng quan Vườn', path: '/dashboard', icon: <Sprout className="w-5 h-5 text-emerald-600" /> },
+        { label: 'AI Hermes Studio', path: '/dashboard/hermes', icon: <Zap className="w-5 h-5 text-purple-600" />, badge: 'PRO' },
         { label: 'Khu Vườn Kỹ Năng', path: '/dashboard/garden', icon: <Sprout className="w-5 h-5 text-emerald-600" /> },
         { label: 'Danh Mục Kỹ Năng', path: '/dashboard/skill-catalog', icon: <BookOpen className="w-5 h-5 text-blue-600" /> },
         { label: 'Bảng Xếp Hạng', path: '/dashboard/leaderboard', icon: <Award className="w-5 h-5 text-yellow-600" /> },
@@ -111,6 +113,7 @@ export const DashboardLayout: React.FC = () => {
 
     const allAdminNavItems = [
         { label: 'Duyệt học viên', path: '/dashboard/admin/approvals', icon: <ShieldCheck className="w-5 h-5" />, permission: 'MANAGE_USERS' },
+        { label: 'AI Hermes Studio', path: '/dashboard/hermes', icon: <Zap className="w-5 h-5 text-purple-600" />, badge: 'PRO' },
         { label: 'Quản lý khóa học', path: '/dashboard/admin/courses', icon: <BookOpen className="w-5 h-5" />, permission: 'MANAGE_SKILLS' },
         { label: 'Quản lý bài học', path: '/dashboard/admin/lessons', icon: <Layers className="w-5 h-5" />, permission: 'MANAGE_LESSONS' },
         { label: 'Tạo bài học & Video', path: '/dashboard/admin/create-video-lesson', icon: <Video className="w-5 h-5" />, permission: 'MANAGE_LESSONS' },
@@ -121,16 +124,7 @@ export const DashboardLayout: React.FC = () => {
         { label: 'Cấu hình Gamification', path: '/dashboard/admin/gamification', icon: <Settings className="w-5 h-5 text-purple-600" />, permission: 'MANAGE_GAMIFICATION' },
     ]
 
-    const userPermissions = user?.permissions || []
-
-    // For ADMIN role: filter items by granted permissions. If SUPER_ADMIN, show all.
-    const filteredAdminNavItems = isSuperAdmin
-        ? allAdminNavItems
-        : allAdminNavItems.filter(item => !item.permission || userPermissions.includes(item.permission))
-
-    const adminNavItems = filteredAdminNavItems.length > 0
-        ? filteredAdminNavItems
-        : [{ label: 'Hồ sơ Admin (Chờ cấp quyền)', path: '/dashboard/profile', icon: <User className="w-5 h-5 text-amber-500" /> }]
+    const adminNavItems = allAdminNavItems
 
     const superAdminNavItems = [
         { label: 'Super Admin Overview', path: '/dashboard/superadmin', icon: <ShieldCheck className="w-5 h-5 text-purple-600" /> },
@@ -185,33 +179,36 @@ export const DashboardLayout: React.FC = () => {
         <div className="min-h-screen w-full overflow-x-hidden bg-[#FBFDFB] dark:bg-gray-950 flex text-[#1A2E22] dark:text-gray-100 font-sans">
 
             {/* Desktop Sidebar */}
-            <aside className="hidden lg:flex w-64 bg-white dark:bg-gray-900 border-r border-[#E6ECE6] dark:border-gray-800 flex-col justify-between p-5 sticky top-0 h-screen z-20 shrink-0">
-                <div className="space-y-6">
+            <aside className="hidden lg:flex w-64 xl:w-72 bg-white dark:bg-gray-900 border-r border-[#E6ECE6] dark:border-gray-800 flex-col h-screen sticky top-0 z-20 shrink-0 select-none">
+                {/* Header (Logo & Role Badge) - Pinned at top, shrink-0 */}
+                <div className="p-4 sm:p-5 pb-3 border-b border-gray-100 dark:border-gray-800/80 shrink-0 space-y-3">
                     {/* Logo */}
-                    <Link to={isAdmin ? '/dashboard/admin/approvals' : '/dashboard'} className="flex items-center gap-3 px-1 py-1 group hover:opacity-90 transition-opacity">
-                        <PltLogo height={38} />
-                        <div className="h-7 w-px bg-[#E2E8F0] dark:bg-gray-700 mx-0.5" />
-                        <div>
-                            <div className="text-base font-black text-[#1A2E22] dark:text-white tracking-tight leading-none">SkillGarden</div>
-                            <div className="text-[10px] font-bold text-[#2F3C96] dark:text-indigo-400 uppercase tracking-wider leading-none mt-1">
+                    <Link to={isAdmin ? '/dashboard/admin/approvals' : '/dashboard'} className="flex items-center gap-3 group hover:opacity-90 transition-opacity">
+                        <PltLogo height={38} className="shrink-0" />
+                        <div className="h-7 w-px bg-[#E2E8F0] dark:bg-gray-700 mx-0.5 shrink-0" />
+                        <div className="min-w-0">
+                            <div className="text-base font-black text-[#1A2E22] dark:text-white tracking-tight leading-none truncate">SkillGarden</div>
+                            <div className="text-[10px] font-bold text-[#2F3C96] dark:text-indigo-400 uppercase tracking-wider leading-none mt-1 truncate">
                                 {isAdmin ? 'ADMIN CONSOLE' : 'PLT Solutions'}
                             </div>
                         </div>
                     </Link>
 
                     {/* Role Header Indicator */}
-                    <div className={`p-3 rounded-xl text-xs font-bold flex items-center justify-between border ${isAdmin ? 'bg-indigo-50 border-indigo-200 text-[#3C4097] dark:bg-indigo-950/60 dark:border-indigo-800 dark:text-indigo-300' : 'bg-[#DCEFE1] border-emerald-200 text-[#2C6A3D] dark:bg-emerald-950/60 dark:border-emerald-800 dark:text-emerald-300'
+                    <div className={`p-2.5 sm:p-3 rounded-xl text-xs font-bold flex items-center justify-between border ${isAdmin ? 'bg-indigo-50 border-indigo-200 text-[#3C4097] dark:bg-indigo-950/60 dark:border-indigo-800 dark:text-indigo-300' : 'bg-[#DCEFE1] border-emerald-200 text-[#2C6A3D] dark:bg-emerald-950/60 dark:border-emerald-800 dark:text-emerald-300'
                         }`}>
-                        <div className="flex items-center gap-2">
-                            {isAdmin ? <ShieldCheck className="w-4 h-4" /> : <Sprout className="w-4 h-4" />}
-                            <span>{isAdmin ? 'Quản Trị Viên' : 'Học Viên PLT'}</span>
+                        <div className="flex items-center gap-2 min-w-0">
+                            {isAdmin ? <ShieldCheck className="w-4 h-4 shrink-0" /> : <Sprout className="w-4 h-4 shrink-0" />}
+                            <span className="truncate">{isAdmin ? 'Quản Trị Viên' : 'Học Viên PLT'}</span>
                         </div>
-                        <span className="text-[10px] uppercase font-extrabold px-1.5 py-0.5 bg-white dark:bg-gray-800 rounded border border-current">
+                        <span className="text-[10px] uppercase font-extrabold px-1.5 py-0.5 bg-white dark:bg-gray-800 rounded border border-current shrink-0">
                             {user?.role || 'USER'}
                         </span>
                     </div>
+                </div>
 
-                    {/* Navigation links */}
+                {/* Navigation links - Scrollable container, flex-1 min-h-0 */}
+                <div className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-4 py-3 space-y-1 sidebar-scrollbar overscroll-contain">
                     <nav className="space-y-1">
                         {currentNavItems.map((item) => {
                             const active = isRouteActive(item.path)
@@ -219,43 +216,50 @@ export const DashboardLayout: React.FC = () => {
                                 <Link
                                     key={item.path}
                                     to={item.path}
-                                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${active
+                                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${active
                                         ? 'bg-[#3F49C8] text-white shadow-sm font-bold dark:bg-indigo-600'
                                         : 'text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800 hover:text-[#1A2E22] dark:hover:text-white'
                                         }`}
                                 >
-                                    <span className={active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}>{item.icon}</span>
-                                    <span>{item.label}</span>
+                                    <span className={`shrink-0 ${active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}`}>{item.icon}</span>
+                                    <div className="flex-1 flex items-center justify-between truncate">
+                                        <span className="truncate">{item.label}</span>
+                                        {(item as any).badge && (
+                                            <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-purple-500 text-white uppercase tracking-wider ml-1">
+                                                {(item as any).badge}
+                                            </span>
+                                        )}
+                                    </div>
                                 </Link>
                             )
                         })}
                     </nav>
                 </div>
 
-                {/* Bottom Nav */}
-                <div className="pt-4 border-t border-[#E6ECE6] dark:border-gray-800 space-y-1">
+                {/* Bottom Nav - Pinned at bottom, shrink-0 */}
+                <div className="p-3 sm:p-4 border-t border-[#E6ECE6] dark:border-gray-800 shrink-0 space-y-1 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xs">
                     {bottomNavItems.map((item) => {
                         const active = isRouteActive(item.path)
                         return (
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${active
+                                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all ${active
                                     ? 'bg-[#3F49C8] text-white shadow-sm font-bold dark:bg-indigo-600'
                                     : 'text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800 hover:text-[#1A2E22] dark:hover:text-white'
                                     }`}
                             >
-                                <span className={active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}>{item.icon}</span>
-                                <span>{item.label}</span>
+                                <span className={`shrink-0 ${active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}`}>{item.icon}</span>
+                                <span className="truncate">{item.label}</span>
                             </Link>
                         )
                     })}
 
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/60 transition-all mt-2 cursor-pointer"
+                        className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/60 transition-all mt-1 cursor-pointer"
                     >
-                        <LogOut className="w-5 h-5 text-red-500" />
+                        <LogOut className="w-5 h-5 text-red-500 shrink-0" />
                         <span>Đăng xuất</span>
                     </button>
                 </div>
@@ -263,19 +267,39 @@ export const DashboardLayout: React.FC = () => {
 
             {/* Mobile Drawer Backdrop & Sidebar */}
             {mobileMenuOpen && (
-                <div className="fixed inset-0 bg-black/40 z-50 lg:hidden backdrop-blur-xs" onClick={() => setMobileMenuOpen(false)}>
-                    <div className="w-72 bg-white dark:bg-gray-900 h-full p-6 flex flex-col justify-between shadow-2xl overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                        <div className="space-y-6">
+                <div className="fixed inset-0 bg-black/50 z-50 lg:hidden backdrop-blur-xs flex" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-72 max-w-[85vw] bg-white dark:bg-gray-900 h-full flex flex-col shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+                        {/* Mobile Header - shrink-0 */}
+                        <div className="p-4 sm:p-5 border-b border-[#E6ECE6] dark:border-gray-800 shrink-0 space-y-3">
                             <div className="flex items-center justify-between">
-                                <Link to={isAdmin ? '/dashboard/admin/approvals' : '/dashboard'} className="flex items-center gap-2">
-                                    <PltLogo height={32} />
-                                    <span className="font-bold text-base text-[#1A2E22] dark:text-white">SkillGarden</span>
+                                <Link to={isAdmin ? '/dashboard/admin/approvals' : '/dashboard'} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3">
+                                    <PltLogo height={32} className="shrink-0" />
+                                    <div>
+                                        <div className="font-black text-sm text-[#1A2E22] dark:text-white leading-none">SkillGarden</div>
+                                        <div className="text-[9px] font-bold text-[#2F3C96] dark:text-indigo-400 uppercase tracking-wider leading-none mt-1">
+                                            {isAdmin ? 'ADMIN CONSOLE' : 'PLT Solutions'}
+                                        </div>
+                                    </div>
                                 </Link>
-                                <button onClick={() => setMobileMenuOpen(false)} className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-                                    <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                                <button onClick={() => setMobileMenuOpen(false)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300">
+                                    <X className="w-5 h-5" />
                                 </button>
                             </div>
 
+                            {/* Mobile Role Badge */}
+                            <div className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-between border ${isAdmin ? 'bg-indigo-50 border-indigo-200 text-[#3C4097] dark:bg-indigo-950/60 dark:border-indigo-800 dark:text-indigo-300' : 'bg-[#DCEFE1] border-emerald-200 text-[#2C6A3D] dark:bg-emerald-950/60 dark:border-emerald-800 dark:text-emerald-300'}`}>
+                                <div className="flex items-center gap-2">
+                                    {isAdmin ? <ShieldCheck className="w-4 h-4 shrink-0" /> : <Sprout className="w-4 h-4 shrink-0" />}
+                                    <span>{isAdmin ? 'Quản Trị Viên' : 'Học Viên PLT'}</span>
+                                </div>
+                                <span className="text-[10px] uppercase font-extrabold px-1.5 py-0.5 bg-white dark:bg-gray-800 rounded border border-current shrink-0">
+                                    {user?.role || 'USER'}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Mobile Nav Links - flex-1 min-h-0 overflow-y-auto */}
+                        <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-1 sidebar-scrollbar overscroll-contain">
                             <nav className="space-y-1">
                                 {currentNavItems.map((item) => {
                                     const active = isRouteActive(item.path)
@@ -287,15 +311,23 @@ export const DashboardLayout: React.FC = () => {
                                             className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${active ? 'bg-[#3F49C8] text-white font-bold dark:bg-indigo-600' : 'text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800'
                                                 }`}
                                         >
-                                            <span className={active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}>{item.icon}</span>
-                                            <span>{item.label}</span>
+                                            <span className={`shrink-0 ${active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}`}>{item.icon}</span>
+                                            <div className="flex-1 flex items-center justify-between truncate">
+                                                <span className="truncate">{item.label}</span>
+                                                {(item as any).badge && (
+                                                    <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-purple-500 text-white uppercase tracking-wider ml-1">
+                                                        {(item as any).badge}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </Link>
                                     )
                                 })}
                             </nav>
                         </div>
 
-                        <div className="pt-4 border-t border-[#E6ECE6] dark:border-gray-800 space-y-1">
+                        {/* Mobile Footer - shrink-0 */}
+                        <div className="p-4 border-t border-[#E6ECE6] dark:border-gray-800 shrink-0 space-y-1 bg-white dark:bg-gray-900">
                             {bottomNavItems.map((item) => {
                                 const active = isRouteActive(item.path)
                                 return (
@@ -306,16 +338,16 @@ export const DashboardLayout: React.FC = () => {
                                         className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all ${active ? 'bg-[#3F49C8] text-white font-bold dark:bg-indigo-600' : 'text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800'
                                             }`}
                                     >
-                                        <span className={active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}>{item.icon}</span>
-                                        <span>{item.label}</span>
+                                        <span className={`shrink-0 ${active ? 'text-white' : 'text-[#718096] dark:text-gray-400'}`}>{item.icon}</span>
+                                        <span className="truncate">{item.label}</span>
                                     </Link>
                                 )
                             })}
                             <button
                                 onClick={handleLogout}
-                                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/60 transition-all mt-2"
+                                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/60 transition-all mt-1 cursor-pointer"
                             >
-                                <LogOut className="w-5 h-5" />
+                                <LogOut className="w-5 h-5 text-red-500 shrink-0" />
                                 <span>Đăng xuất</span>
                             </button>
                         </div>
@@ -483,6 +515,9 @@ export const DashboardLayout: React.FC = () => {
                 isOpen={Boolean(showWelcomeModal)}
                 onClose={() => setDismissedWelcomeModal(true)}
             />
+
+            {/* Persistent 3D AI Assistant Widget */}
+            <AIAssistantWidget />
 
         </div>
     )

@@ -26,6 +26,11 @@ try {
         $role = $_GET['role'] ?? null;
         $status = $_GET['status'] ?? null;
 
+        $currentUser = AuthMiddleware::authenticate();
+        if ($currentUser['role'] === 'ADMIN' && empty($role)) {
+            $role = 'USER';
+        }
+
         $result = $userService->getUsers($page, $perPage, $search, $role, $status);
         Response::success($result, "Lấy danh sách người dùng thành công.");
     }
@@ -66,7 +71,8 @@ try {
         }
 
         if ($action === 'delete') {
-            $userService->deleteUser($userId);
+            $currentUser = AuthMiddleware::authenticate();
+            $userService->deleteUser($userId, $currentUser);
             Response::success(null, "Đã xóa tài khoản người dùng thành công!");
         }
 
@@ -93,8 +99,9 @@ try {
             Response::error("ID người dùng không hợp lệ.", 400);
         }
 
-        $userService->deleteUser($userId);
-        Response::success(null, "Đã xóa tài khoản người dùng.");
+        $currentUser = AuthMiddleware::authenticate();
+        $userService->deleteUser($userId, $currentUser);
+        Response::success(null, "Đã xóa tài khoản người dùng thành công.");
     }
 
     Response::error("Method not allowed", 405);

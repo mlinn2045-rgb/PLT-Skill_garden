@@ -17,7 +17,8 @@ import {
     Code,
     Share2,
     Bookmark,
-    ArrowLeft
+    ArrowLeft,
+    Sparkles
 } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
@@ -82,6 +83,11 @@ export const SkillDetailPage: React.FC = () => {
                             <Link to="/dashboard/video-learning?skill_id=1">
                                 <Button variant="indigo" size="md" iconRight={<ArrowRight className="w-4 h-4" />}>
                                     Tiếp tục học bài tiếp theo
+                                </Button>
+                            </Link>
+                            <Link to={`/checkout?courseId=${id}&title=JavaScript%20Core%20%26%20Async`}>
+                                <Button variant="primary" size="md" iconRight={<Sparkles className="w-4 h-4 text-amber-300" />}>
+                                    Đăng ký PRO (600k)
                                 </Button>
                             </Link>
                             <Button variant="outline" size="md">Xem sơ đồ cây kỹ năng</Button>

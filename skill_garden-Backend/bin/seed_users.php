@@ -77,6 +77,7 @@ foreach ($usersData as $u) {
             'email' => $email
         ]);
         $updatedCount++;
+        $adminId = (int) $existing['id'];
     } else {
         $uuid = sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -109,10 +110,28 @@ foreach ($usersData as $u) {
             'has_claimed_welcome_xp' => $totalXp > 0 ? 1 : 0,
             'bio' => $bio
         ]);
+        $adminId = (int) $db->lastInsertId();
         $insertedCount++;
+    }
+
+    // Seed permissions for ADMIN role
+    if ($role === 'ADMIN' && $adminId > 0) {
+        $permissions = $u['permissions'] ?? [
+            'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_QUIZZES',
+            'MANAGE_MATERIALS', 'MANAGE_PLANTS', 'MANAGE_ACHIEVEMENTS', 'MANAGE_GAMIFICATION'
+        ];
+        
+        $stmtDel = $db->prepare("DELETE FROM admin_permissions WHERE admin_id = :admin_id");
+        $stmtDel->execute(['admin_id' => $adminId]);
+
+        $stmtPerm = $db->prepare("INSERT INTO admin_permissions (admin_id, permission_key) VALUES (:admin_id, :perm_key)");
+        foreach ($permissions as $p) {
+            $stmtPerm->execute(['admin_id' => $adminId, 'perm_key' => $p]);
+        }
     }
 }
 
 echo "=== IMPORT TÀI KHOẢN JSON THÀNH CÔNG ===" . PHP_EOL;
 echo "Thêm mới: $insertedCount tài khoản" . PHP_EOL;
 echo "Cập nhật: $updatedCount tài khoản" . PHP_EOL;
+

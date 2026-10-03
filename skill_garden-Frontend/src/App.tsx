@@ -45,6 +45,10 @@ import { AdminRolePermissionPage } from './pages/superadmin/AdminRolePermissionP
 import { SystemReportsPage } from './pages/superadmin/SystemReportsPage'
 import { AuditLogsPage } from './pages/superadmin/AuditLogsPage'
 import { SystemConfigPage } from './pages/superadmin/SystemConfigPage'
+import { NotFoundPage, ForbiddenPage, ServerErrorPage, UnauthorizedPage, ServiceUnavailablePage, ErrorPage } from './pages/error/ErrorPage'
+import { PaymentCheckoutPage } from './pages/payment/PaymentCheckoutPage'
+import { PaymentQrPage } from './pages/payment/PaymentQrPage'
+import { HermesStudioPage } from './pages/dashboard/HermesStudioPage'
 
 import { ProtectedRoute, RoleProtectedRoute } from './components/ProtectedRoute'
 
@@ -82,10 +86,22 @@ export const App: React.FC = () => {
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/pending-approval" element={<PendingApprovalPage />} />
 
+                {/* Checkout & Payment Gateway Routes (2-Step Standalone Checkout Flow) */}
+                <Route path="/checkout" element={<PaymentCheckoutPage />} />
+                <Route path="/checkout/qr" element={<PaymentQrPage />} />
+                <Route path="/payment" element={<Navigate to="/checkout" replace />} />
+                <Route path="/payment/qr" element={<Navigate to="/checkout/qr" replace />} />
+                <Route path="/payment-demo" element={<PaymentCheckoutPage />} />
+                <Route path="/payment-demo/qr" element={<PaymentQrPage />} />
+                <Route path="/hermes" element={<Navigate to="/dashboard/hermes" replace />} />
+                <Route path="/ai-hermes" element={<Navigate to="/dashboard/hermes" replace />} />
+
                 {/* Dashboard Routes */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="/dashboard" element={<DashboardLayout />}>
                         <Route index element={<DashboardRedirect />} />
+                        <Route path="hermes" element={<HermesStudioPage />} />
+                        <Route path="ai-hermes" element={<HermesStudioPage />} />
                         <Route path="learning-path/:id" element={<LearningPathPage />} />
                         <Route path="skill/:id" element={<SkillDetailPage />} />
                         <Route path="video-learning" element={<VideoLearningPage />} />
@@ -122,12 +138,21 @@ export const App: React.FC = () => {
                         <Route path="superadmin/audit-logs" element={<AuditLogsPage />} />
                         <Route path="superadmin/config" element={<SystemConfigPage />} />
 
-                        <Route path="*" element={<DashboardRedirect />} />
+                        {/* Error Fallback inside Dashboard */}
+                        <Route path="*" element={<NotFoundPage />} />
                     </Route>
                 </Route>
 
-                {/* Fallback */}
-                <Route path="*" element={<Navigate to="/login" replace />} />
+                {/* Explicit Error Routes */}
+                <Route path="/401" element={<UnauthorizedPage />} />
+                <Route path="/403" element={<ForbiddenPage />} />
+                <Route path="/404" element={<NotFoundPage />} />
+                <Route path="/500" element={<ServerErrorPage />} />
+                <Route path="/503" element={<ServiceUnavailablePage />} />
+                <Route path="/error/:code" element={<ErrorPage />} />
+
+                {/* Global Fallback for any unknown route */}
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>
     )

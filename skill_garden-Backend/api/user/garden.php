@@ -66,9 +66,17 @@ try {
         }
 
         if ($action === 'plant') {
-            $plantId = (int) ($body['plant_id'] ?? 1);
-            $result = $gardenService->plantSeed($userId, $skillId, $plantId);
+            $plantId = (int) ($body['plant_id'] ?? 0);
+            $treeName = !empty($body['tree_name']) ? trim($body['tree_name']) : null;
+            $result = $gardenService->plantSeed($userId, $skillId, $plantId, $treeName);
             Response::success($result, $result['message']);
+        }
+
+        if ($action === 'add_growth') {
+            $growthPercent = (float) ($body['growth_percent'] ?? 0);
+            $xpAmount = (int) ($body['xp'] ?? 0);
+            $result = $gardenService->addGrowth($userId, $skillId, $growthPercent, $xpAmount);
+            Response::success($result, "Đã cập nhật tiến độ sinh trưởng cây và XP thành công!");
         }
     }
 

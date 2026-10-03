@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thanh Toán Học Phí • SkillGarden Academy</title>
+  
+  <!-- SkillGarden Official Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono (SkillGarden Design System) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            sg: {
+              primary: '#2D7A4F',
+              'primary-hover': '#38A169',
+              'primary-light': '#48BB78',
+              'primary-bg': '#E6FFFA',
+              mint: '#68D391',
+              'mint-light': '#9AE6B4',
+              indigo: '#3F49C8',
+              'indigo-hover': '#323AA3',
+              'indigo-light': '#EEF0FD',
+              xp: '#ED8936',
+              'xp-light': '#FEFCBF',
+              streak: '#E53E3E',
+              'streak-bg': '#FFF5F5',
+              bg: '#FBFDFB',
+              'bg-subtle': '#F7FAF7',
+              border: '#E6ECE6',
+              text: '#1A2E22',
+              'text-muted': '#4A5568',
+              'text-subtle': '#718096',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C4D4C6;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-track {
+      background: #111A15;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #25382D;
+    }
+  </style>
+</head>
+
+<body class="bg-[#FBFDFB] dark:bg-[#070D09] text-[#1A2E22] dark:text-[#E2E8F0] antialiased selection:bg-[#68D391]/30 selection:text-[#0B1F14] transition-colors duration-200 min-h-screen flex flex-col justify-between">
+
+  <!-- ================= TOP ANNOUNCEMENT BANNER ================= -->
+  <div class="bg-[#E6FFFA] dark:bg-emerald-950/70 border-b border-[#68D391]/40 dark:border-emerald-800/80 px-4 py-2 text-xs font-semibold text-[#2D7A4F] dark:text-emerald-300">
+    <div class="max-w-7xl mx-auto w-full flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-[#2D7A4F] dark:bg-emerald-400 animate-pulse shrink-0"></span>
+        <span>
+          <strong>Chế độ Xem trước Độc lập (Standalone Preview)</strong> — Tuyến đường: <code class="font-mono bg-white dark:bg-emerald-900/60 px-1.5 py-0.5 rounded border border-[#68D391]/40">/payment</code> (Hoàn toàn độc lập, không tích hợp vào luồng web chính)
+        </span>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-2.5 py-1 rounded-lg bg-white/80 dark:bg-emerald-900/60 border border-[#68D391]/30 hover:bg-emerald-100 dark:hover:bg-emerald-800 transition-colors flex items-center gap-1.5 cursor-pointer text-xs font-bold text-[#2D7A4F] dark:text-emerald-300">
+          <svg id="theme-icon-sun" class="w-3.5 h-3.5 text-amber-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg id="theme-icon-moon" class="w-3.5 h-3.5 text-emerald-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <span id="theme-text">Chế độ Tối</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= STANDALONE BRAND HEADER ================= -->
+  <header class="sticky top-0 z-40 bg-white/95 dark:bg-[#0B1510]/95 backdrop-blur-md border-b border-[#E6ECE6] dark:border-[#1E2E24] shadow-[0_2px_12px_-4px_rgba(26,46,34,0.03)]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+      
+      <!-- Brand Logo & Identity -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <!-- Official PLT Solutions Logo (Vector SVG) -->
+          <div class="inline-flex flex-col items-center select-none shrink-0" style="height: 38px;">
+            <svg viewBox="0 0 340 160" fill="none" class="h-9 w-auto block">
+              <text x="50%" y="110" text-anchor="middle" fill="#2F3C96" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="135" letter-spacing="-1">PLT</text>
+              <text x="50%" y="152" text-anchor="middle" fill="#2F3C96" font-family="'Arial', sans-serif" font-weight="800" font-size="28" letter-spacing="11">SOLUTIONS</text>
+            </svg>
+          </div>
+          <div class="h-7 w-px bg-[#E2E8F0] dark:bg-gray-700 hidden sm:block"></div>
+          <div>
+            <div class="text-base sm:text-lg font-black text-[#1A2E22] dark:text-white tracking-tight leading-none flex items-center gap-1.5">
+              <span>SkillGarden</span>
+              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 border border-[#68D391]/30">
+                Academy
+              </span>
+            </div>
+            <div class="text-[9px] font-extrabold text-[#718096] dark:text-emerald-400/80 tracking-wider uppercase leading-none mt-1">
+              PLT SOLUTIONS • KHU VƯỜN KỸ NĂNG SỐ
+            </div>
+          </div>
+        </div>
+
+        <!-- Breadcrumbs (Desktop) -->
+        <nav aria-label="Breadcrumb" class="hidden lg:flex items-center gap-2 text-xs text-[#718096] dark:text-gray-400 ml-6 pl-6 border-l border-[#E6ECE6] dark:border-gray-800">
+          <span class="hover:text-[#2D7A4F] transition-colors cursor-pointer">Khóa học</span>
+          <svg class="w-3.5 h-3.5 text-[#A0AEC0]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          <span class="hover:text-[#2D7A4F] transition-colors cursor-pointer">Backend Architecture</span>
+          <svg class="w-3.5 h-3.5 text-[#A0AEC0]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          <span class="font-semibold text-[#2D7A4F] dark:text-emerald-300">Cổng Thanh Toán</span>
+        </nav>
+      </div>
+
+      <!-- Right Security Badges -->
+      <div class="flex items-center gap-3">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E6FFFA] dark:bg-emerald-950/80 border border-[#68D391]/40 dark:border-emerald-800 text-[#2D7A4F] dark:text-emerald-300 text-xs font-semibold">
+          <svg class="w-4 h-4 text-[#2D7A4F] dark:text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>Bảo mật SSL 256-bit</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= MAIN CHECKOUT CONTENT ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex-1 w-full">
+    
+    <!-- Title & Organic Philosophy Statement -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div>
+        <div class="flex items-center gap-2 text-[#2D7A4F] dark:text-emerald-400 font-semibold text-xs uppercase tracking-wider mb-1.5">
+          <!-- Sprout Icon -->
+          <svg class="w-4 h-4 text-[#2D7A4F] dark:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 20h10"></path><path d="M10 20c5.5-2.5.8-6.4 3-10"></path><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"></path><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"></path></svg>
+          <span>Gieo Mầm Tri Thức • Kích Hoạt Kỹ Năng</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#1A2E22] dark:text-white tracking-tight">
+          Cổng Thanh Toán Học Tập
+        </h1>
+        <p class="text-sm text-[#4A5568] dark:text-gray-400 mt-1 max-w-2xl leading-relaxed">
+          Hoàn tất thanh toán an toàn để bắt đầu nuôi dưỡng cây kỹ năng và nhận quyền truy cập toàn bộ tài liệu giảng dạy.
+        </p>
+      </div>
+
+      <!-- Trust Indicator Strip -->
+      <div class="flex items-center gap-3 bg-white dark:bg-[#111A15] px-4 py-2.5 rounded-2xl border border-[#E6ECE6] dark:border-[#1E2E24] shadow-[0_2px_10px_-2px_rgba(45,122,79,0.04)] self-start md:self-auto">
+        <div class="flex items-center gap-1.5 text-xs font-bold text-[#2D7A4F] dark:text-emerald-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          <span>Kích hoạt tự động 3s</span>
+        </div>
+        <span class="w-1 h-1 rounded-full bg-[#CBD5E0]"></span>
+        <div class="flex items-center gap-1 text-xs text-[#718096] dark:text-gray-400">
+          <svg class="w-3.5 h-3.5 text-[#2D7A4F] dark:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span>Chuẩn PCI-DSS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Two-Column Grid: 7 Cols Left / 5 Cols Right (~60% / 40%) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      
+      <!-- ================= LEFT COLUMN: Payment Methods & QR Canvas ================= -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <!-- Payment Methods Selection Card -->
+        <div class="bg-white dark:bg-[#111A15] rounded-2xl p-5 sm:p-7 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-[0_4px_20px_-2px_rgba(45,122,79,0.04)] space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-[#E6ECE6] dark:border-[#1E2E24]">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#E6FFFA] dark:bg-emerald-950/80 border border-[#68D391]/30 flex items-center justify-center text-[#2D7A4F] dark:text-emerald-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+              </div>
+              <div>
+                <h2 class="text-base sm:text-lg font-bold text-[#1A2E22] dark:text-white">
+                  Chọn phương thức thanh toán
+                </h2>
+                <p class="text-xs text-[#718096] dark:text-gray-400">
+                  Lựa chọn kênh giao dịch phù hợp nhất để kích hoạt tức thì
+                </p>
+              </div>
+            </div>
+            <span class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 text-xs font-semibold border border-[#68D391]/30">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              Xác thực an toàn
+            </span>
+          </div>
+
+          <!-- Selection List -->
+          <div class="space-y-3" id="payment-methods-list">
+            
+            <!-- Option 1: VietQR (Default Selected) -->
+            <div id="method-card-vietqr" onclick="switchMethod('vietqr')" class="cursor-pointer rounded-2xl p-4 sm:p-5 border-2 border-[#2D7A4F] dark:border-emerald-500 bg-[#F7FAF7] dark:bg-emerald-950/30 shadow-[0_4px_16px_-2px_rgba(45,122,79,0.08)] transition-all duration-200">
+              <div class="flex items-start sm:items-center justify-between gap-3">
+                <div class="flex items-start sm:items-center gap-3.5">
+                  <div id="radio-vietqr" class="w-5 h-5 rounded-full bg-[#2D7A4F] text-white flex items-center justify-center mt-0.5 sm:mt-0 shrink-0 transition-colors">
+                    <svg class="w-3 h-3 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                  <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="font-bold text-sm sm:text-base text-[#1A2E22] dark:text-white">
+                        VietQR Chuyển khoản nhanh 24/7
+                      </span>
+                      <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 border border-[#68D391]/40">
+                        Khuyên dùng
+                      </span>
+                    </div>
+                    <p class="text-xs text-[#718096] dark:text-gray-400 mt-1 leading-relaxed">
+                      Quét mã QR từ bất kỳ app ngân hàng nào (Vietcombank, MB, Techcombank, VPBank...) hoặc ví điện tử. Tự động mở khóa khóa học trong 3 giây.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-1.5 shrink-0 self-start sm:self-center">
+                  <span class="font-mono text-xs font-black px-2 py-1 rounded-md bg-white dark:bg-gray-800 border border-[#E6ECE6] dark:border-gray-700 text-[#2F3C96] dark:text-indigo-400">VietQR</span>
+                  <span class="font-mono text-xs font-bold px-2 py-1 rounded-md bg-white dark:bg-gray-800 border border-[#E6ECE6] dark:border-gray-700 text-[#2D7A4F] dark:text-emerald-400">Napas247</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Option 2: MoMo -->
+            <div id="method-card-momo" onclick="switchMethod('momo')" class="cursor-pointer rounded-2xl p-4 sm:p-5 border-2 border-[#E6ECE6] dark:border-[#1E2E24] hover:border-[#68D391] hover:bg-[#FBFDFB] dark:hover:bg-[#16221C] transition-all duration-200">
+              <div class="flex items-start sm:items-center justify-between gap-3">
+                <div class="flex items-start sm:items-center gap-3.5">
+                  <div id="radio-momo" class="w-5 h-5 rounded-full border-2 border-[#CBD5E0] dark:border-gray-600 bg-white dark:bg-gray-800 flex items-center justify-center mt-0.5 sm:mt-0 shrink-0 transition-colors">
+                  </div>
+                  <div>
+                    <span class="font-bold text-sm sm:text-base text-[#1A2E22] dark:text-white">Ví điện tử MoMo</span>
+                    <p class="text-xs text-[#718096] dark:text-gray-400 mt-1 leading-relaxed">
+                      Thanh toán 1-chạm hoặc quét mã bảo mật qua liên kết ví MoMo chính chủ.
+                    </p>
+                  </div>
+                </div>
+                <div class="shrink-0 self-start sm:self-center">
+                  <span class="text-xs font-extrabold px-2.5 py-1 rounded-md bg-[#A50064]/10 text-[#A50064] dark:bg-[#A50064]/20 border border-[#A50064]/30">MoMo Pay</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Option 3: ATM / Napas -->
+            <div id="method-card-atm" onclick="switchMethod('atm')" class="cursor-pointer rounded-2xl p-4 sm:p-5 border-2 border-[#E6ECE6] dark:border-[#1E2E24] hover:border-[#68D391] hover:bg-[#FBFDFB] dark:hover:bg-[#16221C] transition-all duration-200">
+              <div class="flex items-start sm:items-center justify-between gap-3">
+                <div class="flex items-start sm:items-center gap-3.5">
+                  <div id="radio-atm" class="w-5 h-5 rounded-full border-2 border-[#CBD5E0] dark:border-gray-600 bg-white dark:bg-gray-800 flex items-center justify-center mt-0.5 sm:mt-0 shrink-0 transition-colors">
+                  </div>
+                  <div>
+                    <span class="font-bold text-sm sm:text-base text-[#1A2E22] dark:text-white">Thẻ ATM / Internet Banking / Visa</span>
+                    <p class="text-xs text-[#718096] dark:text-gray-400 mt-1 leading-relaxed">
+                      Cổng thanh toán thẻ nội địa Napas của hơn 40 ngân hàng & thẻ thanh toán quốc tế.
+                    </p>
+                  </div>
+                </div>
+                <div class="shrink-0 text-[#718096] self-start sm:self-center">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Detailed VietQR Checkout Canvas -->
+        <div id="panel-vietqr" class="bg-white dark:bg-[#111A15] rounded-2xl p-5 sm:p-7 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-[0_4px_20px_-2px_rgba(45,122,79,0.04)] space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-[#E6ECE6] dark:border-[#1E2E24]">
+            <div class="flex items-center gap-2.5">
+              <svg class="w-5 h-5 text-[#2D7A4F] dark:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              <h3 class="font-bold text-base sm:text-lg text-[#1A2E22] dark:text-white">
+                Hướng dẫn quét mã VietQR tự động
+              </h3>
+            </div>
+            <div class="flex items-center gap-1.5 text-xs text-[#718096] dark:text-gray-400 bg-[#F7FAF7] dark:bg-gray-800 px-2.5 py-1 rounded-full border border-[#E6ECE6] dark:border-gray-700">
+              <svg class="w-3.5 h-3.5 text-[#2D7A4F] dark:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Khởi tạo: 14:32</span>
+            </div>
+          </div>
+
+          <!-- Stepper Process Bar -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 bg-[#F7FAF7] dark:bg-[#16221C] p-3.5 rounded-xl border border-[#E6ECE6] dark:border-[#1E2E24]">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-[#2D7A4F] text-white text-[11px] font-bold flex items-center justify-center shrink-0">1</span>
+                <span class="font-bold text-xs text-[#1A2E22] dark:text-white truncate">Mở App Bank</span>
+              </div>
+              <p class="text-[11px] text-[#718096] dark:text-gray-400 pl-7">Mọi ngân hàng VN</p>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-[#2D7A4F] text-white text-[11px] font-bold flex items-center justify-center shrink-0">2</span>
+                <span class="font-bold text-xs text-[#1A2E22] dark:text-white truncate">Quét mã QR</span>
+              </div>
+              <p class="text-[11px] text-[#718096] dark:text-gray-400 pl-7">Chọn tính năng QR</p>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-[#2D7A4F] text-white text-[11px] font-bold flex items-center justify-center shrink-0">3</span>
+                <span class="font-bold text-xs text-[#1A2E22] dark:text-white truncate">Kiểm tra số tiền</span>
+              </div>
+              <p class="text-[11px] text-[#718096] dark:text-gray-400 pl-7">Đúng 499.000 ₫</p>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-[#2D7A4F] text-white text-[11px] font-bold flex items-center justify-center shrink-0">4</span>
+                <span class="font-bold text-xs text-[#1A2E22] dark:text-white truncate">Hoàn tất</span>
+              </div>
+              <p class="text-[11px] text-[#718096] dark:text-gray-400 pl-7">Mở khóa ngay 3s</p>
+            </div>
+          </div>
+
+          <!-- Split: QR Code Graphic vs Transfer Details Table -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+            
+            <!-- Left: Digital Garden Custom QR Card (5 Cols) -->
+            <div class="md:col-span-5 bg-[#F7FAF7] dark:bg-[#16221C] rounded-2xl p-5 border border-[#E6ECE6] dark:border-[#1E2E24] flex flex-col items-center justify-center text-center">
+              <div class="relative bg-white dark:bg-white p-3.5 rounded-2xl shadow-sm border border-[#E6ECE6] mb-3">
+                <!-- SVG Stylized Precision VietQR Code with SkillGarden Sprout in the core -->
+                <svg class="w-48 h-48 sm:w-52 sm:h-52 text-[#2D7A4F]" viewBox="0 0 220 220" fill="currentColor">
+                  <!-- Finder Patterns -->
+                  <rect x="10" y="10" width="56" height="56" rx="10" fill="#2D7A4F"/>
+                  <rect x="20" y="20" width="36" height="36" rx="6" fill="#ffffff"/>
+                  <rect x="28" y="28" width="20" height="20" rx="4" fill="#2D7A4F"/>
+
+                  <rect x="154" y="10" width="56" height="56" rx="10" fill="#2D7A4F"/>
+                  <rect x="164" y="20" width="36" height="36" rx="6" fill="#ffffff"/>
+                  <rect x="172" y="28" width="20" height="20" rx="4" fill="#2D7A4F"/>
+
+                  <rect x="10" y="154" width="56" height="56" rx="10" fill="#2D7A4F"/>
+                  <rect x="20" y="164" width="36" height="36" rx="6" fill="#ffffff"/>
+                  <rect x="28" y="172" width="20" height="20" rx="4" fill="#2D7A4F"/>
+
+                  <!-- Data Modules & Grid Aesthetics -->
+                  <rect x="76" y="16" width="10" height="10" rx="2" fill="#2D7A4F"/>
+                  <rect x="94" y="16" width="10" height="10" rx="2" fill="#38A169"/>
+                  <rect x="112" y="16" width="10" height="10" rx="2" fill="#2D7A4F"/>
+                  <rect x="130" y="16" width="10" height="10" rx="2" fill="#2D7A4F"/>
+                  <rect x="76" y="34" width="18" height="10" rx="2" fill="#2D7A4F"/>
+                  <rect x="106" y="34" width="10" height="18" rx="2" fill="#68D391"/>
+                  <rect x="124" y="34" width="18" height="10" rx="2" fill="#2D7A4F"/>
+
+                  <rect x="16" y="76" width="10" height="18" rx="2" fill="#2D7A4F"/>
+                  <rect x="34" y="76" width="18" height="10" rx="2" fill="#38A169"/>
+                  <rect x="60" y="76" width="10" height="10" rx="2" fill="#68D391"/>
+                  <rect x="16" y="104" width="18" height="10" rx="2" fill="#2D7A4F"/>
+                  <rect x="42" y="104" width="10" height="18" rx="2" fill="#2D7A4F"/>
+                  <rect x="60" y="122" width="10" height="10" rx="2" fill="#2D7A4F"/>
+
+                  <!-- Secondary Matrix Right -->
+                  <rect x="154" y="76" width="18" height="10" rx="2" fill="#2D7A4F"/>
+                  <rect x="180" y="76" width="10" height="18" rx="2" fill="#38A169"/>
+                  <rect x="198" y="76" width="12" height="10" rx="2" fill="#2D7A4F"/>
+                  <rect x="154" y="104" width="10" height="10" rx="2" fill="#68D391"/>
+                  <rect x="172" y="98" width="18" height="18" rx="3" fill="#2D7A4F"/>
+                  <rect x="198" y="104" width="12" height="18" rx="2" fill="#2D7A4F"/>
+
+                  <!-- Bottom Data Matrix -->
+                  <rect x="76" y="154" width="18" height="10" rx="2" fill="#2D7A4F"/>
+                  <rect x="102" y="154" width="10" height="18" rx="2" fill="#38A169"/>
+                  <rect x="120" y="154" width="22" height="10" rx="2" fill="#68D391"/>
+                  <rect x="76" y="172" width="10" height="20" rx="2" fill="#2D7A4F"/>
+                  <rect x="94" y="180" width="18" height="12" rx="2" fill="#2D7A4F"/>
+                  <rect x="120" y="172" width="12" height="12" rx="2" fill="#2D7A4F"/>
+                  <rect x="154" y="154" width="12" height="20" rx="2" fill="#2D7A4F"/>
+                  <rect x="174" y="154" width="18" height="10" rx="2" fill="#38A169"/>
+                  <rect x="174" y="172" width="36" height="12" rx="2" fill="#2D7A4F"/>
+                  <rect x="154" y="182" width="12" height="18" rx="2" fill="#68D391"/>
+                  <rect x="198" y="192" width="12" height="14" rx="2" fill="#2D7A4F"/>
+
+                  <!-- Center Logo Badge with Botanical Sprout metaphor -->
+                  <rect x="80" y="80" width="60" height="60" rx="14" fill="#ffffff" filter="drop-shadow(0 2px 5px rgba(0,0,0,0.15))"/>
+                  <circle cx="110" cy="110" r="22" fill="#E6FFFA" stroke="#68D391" stroke-width="1.5"/>
+                  <path d="M110 119C110 119 110 114 110 111C110 106 106 102 101 102C101 107 104 111 110 111M110 119C110 119 110 113 111 109C113 103 119 101 119 101C119 106 115 112 110 119M110 119V124" fill="none" stroke="#2D7A4F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+
+              <!-- Status Badge -->
+              <div class="flex items-center gap-1.5 text-[#2D7A4F] dark:text-emerald-400 text-xs font-bold mb-1">
+                <span class="w-2 h-2 rounded-full bg-[#2D7A4F] dark:bg-emerald-400 animate-pulse"></span>
+                <span>Mã phản hồi trực tiếp (Live QR)</span>
+              </div>
+              <span class="text-xs text-[#718096] dark:text-gray-400">
+                Hết hạn sau <span class="font-mono font-bold text-[#2D7A4F] dark:text-emerald-300" id="countdown-timer">14:58</span>
+              </span>
+            </div>
+
+            <!-- Right: Bank Transfer Information Table (7 Cols) -->
+            <div class="md:col-span-7 flex flex-col justify-between space-y-3">
+              
+              <!-- Field 1: Account Holder -->
+              <div class="bg-[#F7FAF7] dark:bg-[#16221C] p-3 sm:p-3.5 rounded-xl border border-[#E6ECE6] dark:border-[#1E2E24] flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#718096] dark:text-gray-400 block">Tên chủ tài khoản</span>
+                  <span class="font-bold text-xs sm:text-sm text-[#1A2E22] dark:text-white truncate block">SKILLGARDEN ACADEMY - PLT SOLUTIONS</span>
+                </div>
+                <button type="button" onclick="copyValue('SKILLGARDEN ACADEMY', 'Tên chủ tài khoản')" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-gray-800 text-[#2D7A4F] dark:text-emerald-300 hover:bg-[#E6FFFA] dark:hover:bg-emerald-950 border border-[#E6ECE6] dark:border-gray-700 text-xs font-semibold flex items-center gap-1 shrink-0 transition-colors cursor-pointer">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  <span>Sao chép</span>
+                </button>
+              </div>
+
+              <!-- Field 2: Account Number -->
+              <div class="bg-[#F7FAF7] dark:bg-[#16221C] p-3 sm:p-3.5 rounded-xl border border-[#E6ECE6] dark:border-[#1E2E24] flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#718096] dark:text-gray-400 block">Số tài khoản (MB Bank - Chi nhánh Hội Sở)</span>
+                  <span class="font-mono font-bold text-sm sm:text-base text-[#2D7A4F] dark:text-emerald-400 tracking-wider block">0388 2948 201</span>
+                </div>
+                <button type="button" onclick="copyValue('03882948201', 'Số tài khoản')" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-gray-800 text-[#2D7A4F] dark:text-emerald-300 hover:bg-[#E6FFFA] dark:hover:bg-emerald-950 border border-[#E6ECE6] dark:border-gray-700 text-xs font-semibold flex items-center gap-1 shrink-0 transition-colors cursor-pointer">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  <span>Sao chép</span>
+                </button>
+              </div>
+
+              <!-- Field 3: Amount -->
+              <div class="bg-[#F7FAF7] dark:bg-[#16221C] p-3 sm:p-3.5 rounded-xl border border-[#E6ECE6] dark:border-[#1E2E24] flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#718096] dark:text-gray-400 block">Số tiền chuyển khoản</span>
+                  <span class="font-bold text-base sm:text-lg text-[#2D7A4F] dark:text-emerald-400 block" id="transfer-amount-display">499.000 ₫</span>
+                </div>
+                <button type="button" onclick="copyValue('499000', 'Số tiền')" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-gray-800 text-[#2D7A4F] dark:text-emerald-300 hover:bg-[#E6FFFA] dark:hover:bg-emerald-950 border border-[#E6ECE6] dark:border-gray-700 text-xs font-semibold flex items-center gap-1 shrink-0 transition-colors cursor-pointer">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  <span>Sao chép</span>
+                </button>
+              </div>
+
+              <!-- Field 4: Crucial Memo Code -->
+              <div class="bg-[#E6FFFA] dark:bg-emerald-950/60 p-3 sm:p-3.5 rounded-xl border-2 border-[#68D391] dark:border-emerald-700 flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#2D7A4F] dark:text-emerald-300 flex items-center gap-1">
+                    <span>Nội dung chuyển khoản (Bắt buộc)</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#E53E3E]"></span>
+                  </span>
+                  <span class="font-mono font-black text-base sm:text-lg text-[#2D7A4F] dark:text-emerald-200 tracking-widest block">SKG-KHOA-2026</span>
+                </div>
+                <button type="button" onclick="copyValue('SKG-KHOA-2026', 'Nội dung chuyển khoản')" class="px-3 py-2 rounded-xl bg-[#2D7A4F] text-white hover:bg-[#38A169] text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-sm transition-all cursor-pointer hover:-translate-y-0.5">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  <span>Sao chép mã</span>
+                </button>
+              </div>
+
+              <!-- Organic Sprout Clarification Note -->
+              <div class="bg-[#F7FAF7] dark:bg-[#16221C] p-3 rounded-xl border border-[#E6ECE6] dark:border-[#1E2E24] flex items-start gap-2.5 text-xs text-[#4A5568] dark:text-gray-300">
+                <svg class="w-4 h-4 text-[#2D7A4F] dark:text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 20h10"></path><path d="M10 20c5.5-2.5.8-6.4 3-10"></path><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"></path><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"></path></svg>
+                <p class="leading-relaxed">
+                  <strong class="text-[#1A2E22] dark:text-white font-semibold">Gieo mầm tức thì:</strong> Khóa học sẽ tự động được gieo mầm vào tài khoản học viên ngay khi giao dịch hoàn tất. Vui lòng giữ đúng nội dung chuyển khoản để nhận diện mầm tri thức chuẩn xác.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Alternate Panel: MoMo Placeholder Content -->
+        <div id="panel-momo" class="hidden bg-white dark:bg-[#111A15] rounded-2xl p-6 sm:p-8 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-[0_4px_20px_-2px_rgba(45,122,79,0.04)] text-center space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-[#A50064]/10 text-[#A50064] flex items-center justify-center mx-auto">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+          </div>
+          <h3 class="font-bold text-lg text-[#1A2E22] dark:text-white">Thanh toán qua Ví điện tử MoMo</h3>
+          <p class="text-xs sm:text-sm text-[#4A5568] dark:text-gray-400 max-w-md mx-auto leading-relaxed">
+            Nhấn nút <strong class="text-[#1A2E22] dark:text-white font-semibold">"Xác nhận & Hoàn tất thanh toán"</strong> bên phải để điều hướng trực tiếp sang ứng dụng MoMo và xác nhận giao dịch số tiền <strong class="text-[#2D7A4F] dark:text-emerald-400 font-bold">499.000 ₫</strong>.
+          </p>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#A50064]/10 text-[#A50064] text-xs font-semibold">
+            <span>Hỗ trợ quét MoMo QR & MoMo App Link</span>
+          </div>
+        </div>
+
+        <!-- Alternate Panel: ATM Card Placeholder Content -->
+        <div id="panel-atm" class="hidden bg-white dark:bg-[#111A15] rounded-2xl p-6 sm:p-8 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-[0_4px_20px_-2px_rgba(45,122,79,0.04)] text-center space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-[#E6FFFA] dark:bg-emerald-950/80 text-[#2D7A4F] dark:text-emerald-400 flex items-center justify-center mx-auto">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+          </div>
+          <h3 class="font-bold text-lg text-[#1A2E22] dark:text-white">Cổng Thẻ Nội Địa Napas & Thẻ Quốc Tế</h3>
+          <p class="text-xs sm:text-sm text-[#4A5568] dark:text-gray-400 max-w-md mx-auto leading-relaxed">
+            Hệ thống sẽ chuyển hướng bạn đến cổng thanh toán bảo mật tiêu chuẩn Napas 24/7. Vui lòng chuẩn bị tên ngân hàng và số thẻ ATM nội địa.
+          </p>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 text-xs font-semibold">
+            <span>Bảo mật 3D-Secure 2.0</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= RIGHT COLUMN: Order Summary & Voucher ================= -->
+      <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
+        
+        <!-- Order Summary Card -->
+        <div class="bg-white dark:bg-[#111A15] rounded-2xl p-5 sm:p-6 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-[0_4px_20px_-2px_rgba(45,122,79,0.04)] space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-[#E6ECE6] dark:border-[#1E2E24]">
+            <h2 class="text-base sm:text-lg font-bold text-[#1A2E22] dark:text-white">Đơn hàng của bạn</h2>
+            <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 border border-[#68D391]/30">
+              1 khóa học
+            </span>
+          </div>
+
+          <!-- Course Item Box -->
+          <div class="p-3.5 rounded-2xl bg-[#F7FAF7] dark:bg-[#16221C] border border-[#E6ECE6] dark:border-[#1E2E24] flex gap-3.5 items-center">
+            <div class="w-20 h-20 sm:w-22 sm:h-22 rounded-xl overflow-hidden shrink-0 relative bg-[#1A2E22] border border-[#E6ECE6] dark:border-gray-700">
+              <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80" alt="ASP.NET Core Web API" class="w-full h-full object-cover opacity-90 hover:scale-105 transition-transform duration-300"/>
+              <div class="absolute top-1 left-1 bg-[#2D7A4F] text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs uppercase">
+                PRO
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-1.5 text-[11px] font-bold text-[#2D7A4F] dark:text-emerald-400 uppercase tracking-wider">
+                <span>Backend Architecture</span>
+                <span>•</span>
+                <span>Cổ Thụ Bách Tùng 🌲</span>
+              </div>
+              <h3 class="font-extrabold text-sm sm:text-base text-[#1A2E22] dark:text-white truncate mt-0.5">
+                ASP.NET Core Web API
+              </h3>
+              <p class="text-xs text-[#718096] dark:text-gray-400 truncate mt-0.5">
+                Giảng viên: ThS. Hoàng Minh Đức
+              </p>
+              
+              <!-- Stats Badges -->
+              <div class="flex items-center gap-2 text-[11px] text-[#718096] dark:text-gray-400 mt-2">
+                <span class="font-semibold text-[#1A2E22] dark:text-gray-300">48 bài học</span>
+                <span>•</span>
+                <span>32 giờ video</span>
+                <span>•</span>
+                <span class="text-[#ED8936] dark:text-amber-400 font-bold">+500 XP</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skill Voucher Box -->
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-[#4A5568] dark:text-gray-300 uppercase tracking-wider block">
+              Mã ưu đãi học tập (Skill Voucher)
+            </label>
+            <div class="flex gap-2">
+              <input id="voucher-input" type="text" value="SKILLGARDEN2026" placeholder="Nhập mã ưu đãi..." class="flex-1 h-11 px-3.5 rounded-xl bg-[#F7FAF7] dark:bg-gray-800 border border-[#E2E8F0] dark:border-gray-700 text-xs font-mono font-bold text-[#1A2E22] dark:text-white uppercase placeholder:text-[#A0AEC0] focus:outline-none focus:bg-white dark:focus:bg-gray-900 focus:border-[#2D7A4F] focus:ring-2 focus:ring-[#68D391]/25 transition-all"/>
+              <button type="button" onclick="applyVoucher()" class="px-4 py-2.5 rounded-xl bg-white dark:bg-gray-800 text-[#1A2E22] dark:text-gray-100 hover:bg-[#F7FAF7] dark:hover:bg-gray-700 border border-[#E6ECE6] dark:border-gray-700 text-xs font-bold shadow-xs transition-colors cursor-pointer">
+                Áp dụng
+              </button>
+            </div>
+            <div id="voucher-message" class="flex items-center gap-1.5 text-xs text-[#2D7A4F] dark:text-emerald-400 font-semibold pt-1">
+              <svg class="w-4 h-4 text-[#2D7A4F] dark:text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              <span>Đã kích hoạt học bổng phát triển kỹ năng 400.000 ₫</span>
+            </div>
+          </div>
+
+          <!-- Price Calculation Breakdown -->
+          <div class="space-y-2.5 pt-2 text-xs sm:text-sm">
+            <div class="flex items-center justify-between text-[#718096] dark:text-gray-400">
+              <span>Giá niêm yết khóa học</span>
+              <span class="font-semibold line-through text-[#A0AEC0]">899.000 ₫</span>
+            </div>
+            <div class="flex items-center justify-between text-[#2D7A4F] dark:text-emerald-400 font-semibold">
+              <span class="flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                <span>Học bổng SkillGarden</span>
+              </span>
+              <span class="font-bold" id="discount-display">-400.000 ₫</span>
+            </div>
+            <div class="flex items-center justify-between text-[#718096] dark:text-gray-400">
+              <span>Thuế VAT (Chính sách Giáo dục)</span>
+              <span class="font-semibold">0 ₫</span>
+            </div>
+            
+            <div class="h-px bg-[#E6ECE6] dark:bg-[#1E2E24] my-3"></div>
+
+            <div class="flex items-end justify-between pt-1">
+              <div>
+                <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#718096] dark:text-gray-400 block">
+                  Tổng thanh toán
+                </span>
+                <span class="text-[11px] text-[#2D7A4F] dark:text-emerald-400 font-semibold">
+                  Bao gồm mã nguồn & chứng chỉ
+                </span>
+              </div>
+              <div class="text-right">
+                <span class="text-2xl sm:text-3xl font-black text-[#2D7A4F] dark:text-emerald-400 tracking-tight block" id="final-price-display">
+                  499.000 ₫
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Call to Action Button -->
+          <button id="confirm-btn" type="button" onclick="handleSimulatePayment()" class="w-full bg-[#2D7A4F] text-white hover:bg-[#38A169] h-13 px-4 rounded-xl font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5 active:scale-[0.98]">
+            <span id="btn-text">Xác nhận & Hoàn tất thanh toán</span>
+            <svg id="btn-icon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+
+          <!-- Student Guarantees Strip -->
+          <div class="pt-4 border-t border-[#E6ECE6] dark:border-[#1E2E24] space-y-3">
+            <div class="flex items-start gap-2.5">
+              <div class="w-6 h-6 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              </div>
+              <div>
+                <div class="font-bold text-xs text-[#1A2E22] dark:text-white">Cam kết chất lượng 100%</div>
+                <div class="text-[11px] text-[#718096] dark:text-gray-400 leading-relaxed">
+                  Hoàn tiền 100% trong vòng 7 ngày nếu nội dung không phù hợp với lộ trình của bạn.
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <div class="w-6 h-6 rounded-full bg-[#EEF0FD] dark:bg-indigo-950 text-[#3F49C8] dark:text-indigo-300 flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+              </div>
+              <div>
+                <div class="font-bold text-xs text-[#1A2E22] dark:text-white">Chứng chỉ & Quyền truy cập trọn đời</div>
+                <div class="text-[11px] text-[#718096] dark:text-gray-400 leading-relaxed">
+                  Cấp chứng chỉ xác thực URL gắn hồ sơ LinkedIn và hỗ trợ kỹ thuật trực tiếp.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Academic Accreditation Micro-Widget -->
+        <div class="p-4 rounded-2xl bg-white dark:bg-[#111A15] border border-[#E6ECE6] dark:border-[#1E2E24] flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-[#F7FAF7] dark:bg-gray-800 flex items-center justify-center text-[#2D7A4F] dark:text-emerald-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+            <div>
+              <span class="font-bold text-xs text-[#1A2E22] dark:text-white block">Cần hỗ trợ thanh toán?</span>
+              <span class="text-[11px] text-[#718096] dark:text-gray-400">Hotline: 1900 6868 (8:00 - 22:00)</span>
+            </div>
+          </div>
+          <span class="text-xs font-semibold text-[#2D7A4F] dark:text-emerald-400 hover:underline cursor-pointer">Chat Zalo</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= STANDALONE FOOTER ================= -->
+  <footer class="mt-16 border-t border-[#E6ECE6] dark:border-[#1E2E24] bg-white dark:bg-[#0B1510] py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#718096] dark:text-gray-400">
+      <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 text-[#2D7A4F] dark:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 20h10"></path><path d="M10 20c5.5-2.5.8-6.4 3-10"></path><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"></path><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"></path></svg>
+        <span>© 2026 SkillGarden Academy by PLT Solutions. Nền tảng nuôi dưỡng kỹ năng số.</span>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a class="hover:text-[#2D7A4F] transition-colors" href="#">Điều khoản dịch vụ</a>
+        <a class="hover:text-[#2D7A4F] transition-colors" href="#">Chính sách hoàn tiền</a>
+        <a class="hover:text-[#2D7A4F] transition-colors" href="#">Bảo mật thông tin</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= INTERACTIVE FLOATING TOAST ================= -->
+  <div id="copy-toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2.5 bg-[#1A2E22] dark:bg-emerald-950 text-white px-4 py-3 rounded-xl shadow-xl border border-[#68D391]/30">
+    <svg class="w-5 h-5 text-[#68D391] shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    <span class="text-xs font-semibold" id="toast-text">Đã sao chép vào bộ nhớ tạm!</span>
+  </div>
+
+  <!-- ================= CELEBRATION MODAL ================= -->
+  <div id="success-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div class="bg-white dark:bg-[#111A15] rounded-3xl max-w-md w-full p-6 sm:p-8 border border-[#E6ECE6] dark:border-[#1E2E24] shadow-2xl text-center space-y-5">
+      <div class="w-18 h-18 rounded-3xl bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-400 flex items-center justify-center mx-auto shadow-inner border border-[#68D391]/40 p-4">
+        <svg class="w-10 h-10 animate-bounce" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 20h10"></path><path d="M10 20c5.5-2.5.8-6.4 3-10"></path><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"></path><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"></path></svg>
+      </div>
+
+      <div>
+        <span class="font-mono text-xs font-extrabold px-3 py-1 rounded-full bg-[#E6FFFA] dark:bg-emerald-950 text-[#2D7A4F] dark:text-emerald-300 border border-[#68D391]/40 uppercase">
+          Giao dịch thành công
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-[#1A2E22] dark:text-white tracking-tight mt-3">
+          Mầm Cây Đã Được Gieo! 🌲
+        </h3>
+        <p class="text-xs sm:text-sm text-[#4A5568] dark:text-gray-300 mt-2 leading-relaxed">
+          Khóa học <strong class="text-[#1A2E22] dark:text-white">ASP.NET Core Web API & Microservices</strong> đã được kích hoạt thành công trong khu vườn kỹ năng của bạn.
+        </p>
+      </div>
+
+      <div class="bg-[#F7FAF7] dark:bg-[#16221C] p-4 rounded-2xl border border-[#E6ECE6] dark:border-[#1E2E24] flex items-center justify-around text-left">
+        <div>
+          <span class="text-[10px] uppercase font-bold text-[#718096] dark:text-gray-400 block">Mã đơn hàng</span>
+          <span class="font-mono text-xs font-black text-[#2D7A4F] dark:text-emerald-400">SKG-KHOA-2026</span>
+        </div>
+        <div class="h-8 w-px bg-[#E2E8F0] dark:bg-gray-700"></div>
+        <div>
+          <span class="text-[10px] uppercase font-bold text-[#718096] dark:text-gray-400 block">Phần thưởng mở mầm</span>
+          <span class="font-bold text-xs text-[#ED8936] flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span>+200 XP</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <button type="button" onclick="closeSuccessModal()" class="w-full bg-[#2D7A4F] text-white hover:bg-[#38A169] h-11 px-4 rounded-xl font-bold text-sm shadow-md transition-all cursor-pointer">
+          Đóng Hộp Thoại & Tiếp Tục Xem
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= INLINE SCRIPTS (SELF-CONTAINED) ================= -->
+  <script>
+    // 1. Copy to clipboard with sleek feedback toast
+    function copyValue(text, label) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+      
+      const toast = document.getElementById('copy-toast');
+      const toastText = document.getElementById('toast-text');
+      toastText.innerText = `Đã sao chép ${label}!`;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // 2. Toggle Payment Methods
+    function switchMethod(method) {
+      const panelVietqr = document.getElementById('panel-vietqr');
+      const panelMomo = document.getElementById('panel-momo');
+      const panelAtm = document.getElementById('panel-atm');
+
+      const cardVietqr = document.getElementById('method-card-vietqr');
+      const cardMomo = document.getElementById('method-card-momo');
+      const cardAtm = document.getElementById('method-card-atm');
+
+      const radVietqr = document.getElementById('radio-vietqr');
+      const radMomo = document.getElementById('radio-momo');
+      const radAtm = document.getElementById('radio-atm');
+
+      // Reset cards
+      [cardVietqr, cardMomo, cardAtm].forEach(c => {
+        c.className = "cursor-pointer rounded-2xl p-4 sm:p-5 border-2 border-[#E6ECE6] dark:border-[#1E2E24] hover:border-[#68D391] hover:bg-[#FBFDFB] dark:hover:bg-[#16221C] transition-all duration-200";
+      });
+      [radVietqr, radMomo, radAtm].forEach(r => {
+        r.className = "w-5 h-5 rounded-full border-2 border-[#CBD5E0] dark:border-gray-600 bg-white dark:bg-gray-800 flex items-center justify-center mt-0.5 sm:mt-0 shrink-0 transition-colors";
+        r.innerHTML = "";
+      });
+
+      panelVietqr.classList.add('hidden');
+      panelMomo.classList.add('hidden');
+      panelAtm.classList.add('hidden');
+
+      const checkSvg = '<svg class="w-3 h-3 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+      if (method === 'vietqr') {
+        cardVietqr.className = "cursor-pointer rounded-2xl p-4 sm:p-5 border-2 border-[#2D7A4F] dark:border-emerald-500 bg-[#F7FAF7] dark:bg-emerald-950/30 shadow-[0_4px_16px_-2px_rgba(45,122,79,0.08)] transition-all duration-200";
+        radVietqr.className = "w-5 h-5 rounded-full bg-[#2D7A4F] text-white flex items-center justify-center mt-0.5 sm:mt-0 shrink-0 transition-colors";
+        radVietqr.innerHTML = checkSvg;
+        panelVietqr.classList.remove('hidden');
+      } else if (method === 'momo') {
+        cardMomo.className = "cursor-pointer rounded-2xl p-4 sm:p-5 border-2 border-[#2D7A4F] dark:border-emerald-500 bg-[#F7FAF7] dark:bg-emerald-950/30 shadow-[0_4px_16px_-2px_rgba(45,122,79,0.08)] transition-all duration-200";
+        radMomo.className = "w-5 h-5 rounded-full bg-[#2D7A4F] text-white flex items-center justify-center mt-0.5 sm:mt-0 shrink-0 transition-colors";
+        radMomo.innerHTML = checkSvg;
+        panelMomo.classList.remove('hidden');
+      } else if (method === 'atm') {
+        cardAtm.className = "cursor-pointer rounded-2xl p-4 sm:p-5 border-2 border-[#2D7A4F] dark:border-emerald-500 bg-[#F7FAF7] dark:bg-emerald-950/30 shadow-[0_4px_16px_-2px_rgba(45,122,79,0.08)] transition-all duration-200";
+        radAtm.className = "w-5 h-5 rounded-full bg-[#2D7A4F] text-white flex items-center justify-center mt-0.5 sm:mt-0 shrink-0 transition-colors";
+        radAtm.innerHTML = checkSvg;
+        panelAtm.classList.remove('hidden');
+      }
+    }
+
+    // 3. Voucher Application
+    function applyVoucher() {
+      const code = document.getElementById('voucher-input').value.trim().toUpperCase();
+      const msg = document.getElementById('voucher-message');
+      const discountDisplay = document.getElementById('discount-display');
+      const finalPriceDisplay = document.getElementById('final-price-display');
+      const transferAmount = document.getElementById('transfer-amount-display');
+
+      if (code === 'SKILLGARDEN2026' || code === 'PLT2026') {
+        msg.className = "flex items-center gap-1.5 text-xs text-[#2D7A4F] dark:text-emerald-400 font-semibold pt-1";
+        msg.innerHTML = `<svg class="w-4 h-4 text-[#2D7A4F] dark:text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg><span>Đã kích hoạt học bổng phát triển kỹ năng 400.000 ₫</span>`;
+        discountDisplay.innerText = "-400.000 ₫";
+        finalPriceDisplay.innerText = "499.000 ₫";
+        transferAmount.innerText = "499.000 ₫";
+      } else {
+        msg.className = "flex items-center gap-1.5 text-xs text-red-500 font-semibold pt-1";
+        msg.innerHTML = `<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span>Mã ưu đãi không hợp lệ</span>`;
+        discountDisplay.innerText = "-0 ₫";
+        finalPriceDisplay.innerText = "899.000 ₫";
+        transferAmount.innerText = "899.000 ₫";
+      }
+    }
+
+    // 4. Simulated Payment Flow
+    function handleSimulatePayment() {
+      const btn = document.getElementById('confirm-btn');
+      const btnText = document.getElementById('btn-text');
+      const btnIcon = document.getElementById('btn-icon');
+
+      btn.disabled = true;
+      btnText.innerText = "Đang xác thực giao dịch...";
+      btnIcon.innerHTML = `<path d="M21 12a9 9 0 1 1-6.219-8.56"></path>`;
+      btnIcon.classList.add('animate-spin');
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btnText.innerText = "Xác nhận & Hoàn tất thanh toán";
+        btnIcon.innerHTML = `<line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>`;
+        btnIcon.classList.remove('animate-spin');
+
+        const modal = document.getElementById('success-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }, 1600);
+    }
+
+    function closeSuccessModal() {
+      const modal = document.getElementById('success-modal');
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+    }
+
+    // 5. Live Countdown Timer
+    let totalSeconds = 14 * 60 + 58;
+    const timerEl = document.getElementById('countdown-timer');
+    if (timerEl) {
+      setInterval(() => {
+        if (totalSeconds > 0) {
+          totalSeconds--;
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+          timerEl.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+      }, 1000);
+    }
+
+    // 6. Dark / Light Mode Switcher
+    function initTheme() {
+      const isDark = localStorage.getItem('skillgarden_theme') === 'dark';
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('theme-icon-sun').classList.remove('hidden');
+        document.getElementById('theme-icon-moon').classList.add('hidden');
+        document.getElementById('theme-text').innerText = "Giao diện Sáng";
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('theme-icon-sun').classList.add('hidden');
+        document.getElementById('theme-icon-moon').classList.remove('hidden');
+        document.getElementById('theme-text').innerText = "Giao diện Tối";
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('skillgarden_theme', isDark ? 'dark' : 'light');
+      initTheme();
+    }
+
+    // Run init
+    initTheme();
+  </script>
+</body>
+</html>

@@ -2,7 +2,7 @@ import React from 'react'
 import { clsx } from 'clsx'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'indigo' | 'secondary' | 'ghost' | 'streak' | 'outline' | 'success'
+    variant?: 'primary' | 'indigo' | 'secondary' | 'ghost' | 'streak' | 'outline' | 'success' | 'danger'
     size?: 'sm' | 'md' | 'lg'
     icon?: React.ReactNode
     iconRight?: React.ReactNode
@@ -29,7 +29,8 @@ export const Button: React.FC<ButtonProps> = ({
         outline: 'bg-white dark:bg-gray-800 text-[#1A2E22] dark:text-gray-100 hover:bg-[#F7FAF7] dark:hover:bg-gray-700 border border-[#E6ECE6] dark:border-gray-700 shadow-xs',
         ghost: 'bg-transparent text-[#4A5568] dark:text-gray-300 hover:bg-[#F3F6F3] dark:hover:bg-gray-800 hover:text-[#1A2E22] dark:hover:text-white',
         streak: 'bg-[#ED8936] text-white hover:bg-[#DD6B20] shadow-sm hover:-translate-y-0.5',
-        success: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm hover:shadow-md hover:-translate-y-0.5'
+        success: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm hover:shadow-md hover:-translate-y-0.5',
+        danger: 'bg-red-600 text-white hover:bg-red-700 shadow-sm hover:shadow-md hover:-translate-y-0.5'
     }
 
     const sizes = {

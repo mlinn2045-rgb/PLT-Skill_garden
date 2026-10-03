@@ -52,6 +52,7 @@ export const CreateLessonVideoPage: React.FC = () => {
         (user.email || '').toLowerCase().includes('lms')
     ))
     const [selectedSkillId, setSelectedSkillId] = useState('1')
+    const [selectedChapter, setSelectedChapter] = useState('1')
     const [title, setTitle] = useState('')
     const [sourceType, setSourceType] = useState<'YOUTUBE' | 'FILE'>('YOUTUBE')
     const [videoUrl, setVideoUrl] = useState('')
@@ -73,36 +74,58 @@ export const CreateLessonVideoPage: React.FC = () => {
     const fallbackSkillOptions = [
         { id: '1', title: 'Frontend React 19 Mastery (Cây Hoa Anh Đào 🌸)' },
         { id: '2', title: 'Backend NestJS & Node.js System (Cây Cổ Thụ 🌳)' },
-        { id: '3', title: 'Database SQL & Architect (Cây Tre Trăm Đốt 🎋)' },
-        { id: '4', title: 'Python & Machine Learning (Cây Xương Rồng 🌵)' },
-        { id: '5', title: 'Software Testing (Cây Hướng Dương 🌻)' },
+        { id: '3', title: 'Database SQL & MySQL Architect (Cây Tre Trăm Đốt 🎋)' },
+        { id: '4', title: 'Python & Data Analysis Core (Cây Xương Rồng 🌵)' },
+        { id: '5', title: 'Manual & Automation Testing (Cây Hướng Dương 🌻)' },
         { id: '6', title: 'Flutter & React Native Mobile (Cây Dừa 🌴)' },
     ]
     const [skillOptions, setSkillOptions] = useState(fallbackSkillOptions)
 
-    const loadCustomLessons = () => {
+    const loadBackendLessons = async () => {
         try {
-            const saved = localStorage.getItem('skillgarden_custom_lessons') || '[]'
-            setAdminLessons(JSON.parse(saved))
+            const res = await apiClient.get<any[]>('/admin/lessons.php')
+            if (Array.isArray(res.data)) {
+                setAdminLessons(res.data)
+            }
         } catch {
             setAdminLessons([])
         }
     }
 
     useEffect(() => {
-        loadCustomLessons()
+        void loadBackendLessons()
         courseService.getSkills()
             .then((skills: SkillItem[]) => {
                 if (skills.length > 0) {
                     setSkillOptions(skills.map((skill) => ({
                         id: String(skill.id),
-                        title: skill.title,
+                        title: `${skill.title} (${skill.plant_name || 'Kỹ năng'})`,
                     })))
                 }
             })
             .catch(() => {
                 // Keep the fallback list when the skills API is unavailable.
             })
+
+        let bc: BroadcastChannel | null = null
+        try {
+            bc = new BroadcastChannel('skillgarden_sync')
+            bc.onmessage = (event) => {
+                if (event.data?.type === 'LESSONS_UPDATED') {
+                    void loadBackendLessons()
+                }
+            }
+        } catch { }
+
+        const handleUpdate = () => void loadBackendLessons()
+        window.addEventListener('skillgarden_lessons_updated', handleUpdate)
+        window.addEventListener('storage', handleUpdate)
+
+        return () => {
+            if (bc) bc.close()
+            window.removeEventListener('skillgarden_lessons_updated', handleUpdate)
+            window.removeEventListener('storage', handleUpdate)
+        }
     }, [])
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -162,52 +185,39 @@ export const CreateLessonVideoPage: React.FC = () => {
 
         const normalizedVideoUrl = normalizeYouTubeUrl(videoUrl.trim())
 
-        const lessonPayload = {
-            id: 'custom_' + Date.now(),
-            skillId: selectedSkillId,
-            title: title.trim(),
-            sourceType: sourceType,
-            videoUrl: normalizedVideoUrl,
-            description: description.trim() || 'Nội dung bài học mới do Admin cập nhật.',
-            duration: '15:00',
-            xpReward: Number(xpReward) || 50,
-            growthImpact: Number(growthImpact) || 5.0,
-            createdAt: new Date().toISOString()
-        }
-
-        let savedLesson: any = lessonPayload
-
-        // Save to the shared backend before updating the local admin list.
+        // Save to the shared backend
         try {
             const payload = {
-                skill_id: selectedSkillId,
+                skill_id: Number(selectedSkillId) || 1,
+                chapter: Number(selectedChapter) || 1,
                 title: title.trim(),
                 video_url: normalizedVideoUrl,
                 description: description.trim(),
                 xp_reward: Number(xpReward) || 50,
             }
-            if (editingLesson?.backendId) {
-                await apiClient.patch('/admin/lessons.php', { id: editingLesson.backendId, ...payload })
-                savedLesson = { ...editingLesson, ...lessonPayload, backendId: editingLesson.backendId }
+            if (editingLesson?.id) {
+                await apiClient.patch('/admin/lessons.php', { id: editingLesson.id, ...payload })
             } else {
-                const response = await apiClient.post<any>('/admin/lessons.php', payload)
-                savedLesson = { ...lessonPayload, backendId: response.data?.id || response.data?.lesson?.id }
+                await apiClient.post<any>('/admin/lessons.php', payload)
             }
+
+            // Sync across all browser tabs immediately
+            localStorage.setItem('skillgarden_lessons_synced_at', String(Date.now()))
+            window.dispatchEvent(new Event('skillgarden_lessons_updated'))
+            try {
+                const bc = new BroadcastChannel('skillgarden_sync')
+                bc.postMessage({ type: 'LESSONS_UPDATED', skillId: selectedSkillId })
+                bc.close()
+            } catch { }
+
+            await loadBackendLessons()
         } catch (err: any) {
             alert(err.message || 'Không thể lưu bài học lên máy chủ. Vui lòng thử lại.')
             return
         }
 
-        try {
-            localStorage.removeItem('skillgarden_custom_lessons')
-            localStorage.removeItem('skillgarden_default_lesson_overrides')
-        } catch {
-            // ignore
-        }
-
-        window.dispatchEvent(new Event('skillgarden_lessons_updated'))
-
-        setSuccessAlert(`🎉 Đã tạo bài học "${title.trim()}" thành công! Bài học đã được kết nối và cập nhật tự động cho tất cả Học Viên.`)
+        const actionText = editingLesson ? 'cập nhật' : 'tạo'
+        setSuccessAlert(`🎉 Đã ${actionText} bài học "${title.trim()}" thành công! Bài học đã được kết nối và cập nhật tự động sang giao diện Học Viên.`)
         setTitle('')
         setVideoUrl('')
         setDescription('')
@@ -219,30 +229,32 @@ export const CreateLessonVideoPage: React.FC = () => {
 
     const handleEditCustomLesson = (lesson: any) => {
         setEditingLesson(lesson)
-        setSelectedSkillId(String(lesson.skillId || '1'))
+        setSelectedSkillId(String(lesson.skill_id || lesson.skillId || '1'))
+        setSelectedChapter(String(lesson.order_index || '1'))
         setTitle(lesson.title || '')
-        setVideoUrl(lesson.videoUrl || '')
+        setVideoUrl(lesson.video_url || lesson.videoUrl || '')
         setDescription(lesson.description || '')
-        setXpReward(String(lesson.xpReward || 50))
-        setGrowthImpact(String(lesson.growthImpact || 5))
-        setSourceType(lesson.sourceType || 'YOUTUBE')
+        setXpReward(String(lesson.xp_reward || lesson.xpReward || 50))
+        setGrowthImpact(String(lesson.growth_impact_percent || lesson.growthImpact || 5))
+        setSourceType((lesson.video_url || '').includes('/uploads/') ? 'FILE' : 'YOUTUBE')
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
-    const handleDeleteCustomLesson = async (id: string) => {
-        const lesson = adminLessons.find(item => item.id === id)
+    const handleDeleteCustomLesson = async (id: number | string) => {
         if (!confirm('Bạn có chắc chắn muốn xóa bài học video này?')) return
         try {
-            if (lesson?.backendId) {
-                await apiClient.delete(`/admin/lessons.php?id=${lesson.backendId}`)
-            }
+            await apiClient.delete(`/admin/lessons.php?id=${id}`)
+            localStorage.setItem('skillgarden_lessons_synced_at', String(Date.now()))
+            window.dispatchEvent(new Event('skillgarden_lessons_updated'))
+            try {
+                const bc = new BroadcastChannel('skillgarden_sync')
+                bc.postMessage({ type: 'LESSONS_UPDATED' })
+                bc.close()
+            } catch { }
+            await loadBackendLessons()
         } catch (err: any) {
             alert(err.message || 'Không thể xóa bài học trên máy chủ.')
-            return
         }
-        const updated = adminLessons.filter(item => item.id !== id)
-        localStorage.setItem('skillgarden_custom_lessons', JSON.stringify(updated))
-        setAdminLessons(updated)
     }
 
     return (
@@ -292,20 +304,38 @@ export const CreateLessonVideoPage: React.FC = () => {
                 {/* Left 2 cols: Content Info */}
                 <div className="md:col-span-2 bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-6">
 
-                    {/* Skill / Course Selector */}
-                    <div className="space-y-2">
-                        <label className="text-xs font-extrabold uppercase tracking-wider text-[#4A5568] dark:text-gray-300 block">
-                            CHỌN KHÓA HỌC / KỸ NĂNG ÁP DỤNG
-                        </label>
-                        <select
-                            value={selectedSkillId}
-                            onChange={(e) => setSelectedSkillId(e.target.value)}
-                            className="w-full p-3 border border-[#E2E4EB] dark:border-gray-700 rounded-xl text-xs font-bold bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#3C4097] dark:focus:ring-indigo-500 text-gray-900 dark:text-gray-100"
-                        >
-                            {skillOptions.map(opt => (
-                                <option key={opt.id} value={opt.id}>{opt.title}</option>
-                            ))}
-                        </select>
+                    {/* Skill & Chapter Selectors */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <label className="text-xs font-extrabold uppercase tracking-wider text-[#4A5568] dark:text-gray-300 block">
+                                CHỌN KHÓA HỌC / KỸ NĂNG ÁP DỤNG
+                            </label>
+                            <select
+                                value={selectedSkillId}
+                                onChange={(e) => setSelectedSkillId(e.target.value)}
+                                className="w-full p-3 border border-[#E2E4EB] dark:border-gray-700 rounded-xl text-xs font-bold bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#3C4097] dark:focus:ring-indigo-500 text-gray-900 dark:text-gray-100"
+                            >
+                                {skillOptions.map(opt => (
+                                    <option key={opt.id} value={opt.id}>{opt.title}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-xs font-extrabold uppercase tracking-wider text-[#4A5568] dark:text-gray-300 block">
+                                CHỌN CHẶNG / CHƯƠNG BÀI HỌC
+                            </label>
+                            <select
+                                value={selectedChapter}
+                                onChange={(e) => setSelectedChapter(e.target.value)}
+                                className="w-full p-3 border border-[#E2E4EB] dark:border-gray-700 rounded-xl text-xs font-bold bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#3C4097] dark:focus:ring-indigo-500 text-gray-900 dark:text-gray-100"
+                            >
+                                <option value="1">Chặng 01: Kiến thức nền tảng cốt lõi</option>
+                                <option value="2">Chặng 02: Kỹ năng nâng cao & Thực chiến</option>
+                                <option value="3">Chặng 03: Tối ưu & Mở rộng hệ thống</option>
+                                <option value="4">Chặng 04: Kiến trúc dự án chuyên sâu</option>
+                            </select>
+                        </div>
                     </div>
 
                     <Input
@@ -476,23 +506,56 @@ export const CreateLessonVideoPage: React.FC = () => {
                         <Button type="submit" variant="indigo" fullWidth className="font-bold flex items-center justify-center gap-2 bg-purple-700 hover:bg-purple-800 border-none cursor-pointer">
                             <Save className="w-4 h-4" /> {editingLesson ? 'Lưu thay đổi bài học' : 'Xuất Bản Bài Học Đến Học Viên'}
                         </Button>
+
+                        {editingLesson && (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                fullWidth
+                                onClick={() => {
+                                    setEditingLesson(null)
+                                    setTitle('')
+                                    setVideoUrl('')
+                                    setDescription('')
+                                }}
+                                className="font-bold text-xs cursor-pointer border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300"
+                            >
+                                Hủy Chế Độ Chỉnh Sửa
+                            </Button>
+                        )}
                     </div>
 
                     {/* Admin Published Lessons History List */}
                     <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-[#E2E4EB] dark:border-gray-800 shadow-xs space-y-4">
-                        <h3 className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider flex items-center justify-between">
-                            <span>Bài học Admin đã thêm ({adminLessons.length})</span>
-                        </h3>
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">
+                                Bài học trong hệ thống ({adminLessons.length})
+                            </h3>
+                            <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-md">
+                                Realtime Sync
+                            </span>
+                        </div>
 
                         {adminLessons.length === 0 ? (
-                            <p className="text-xs text-gray-400 italic">Chưa có bài học nào được thêm từ Admin.</p>
+                            <p className="text-xs text-gray-400 italic">Chưa có bài học nào trong hệ thống.</p>
                         ) : (
-                            <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                            <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
                                 {adminLessons.map((item) => (
-                                    <div key={item.id} className="p-3 bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-xl text-xs space-y-1">
+                                    <div
+                                        key={item.id}
+                                        className={`p-3 rounded-xl border text-xs space-y-1.5 transition-all ${
+                                            editingLesson?.id === item.id
+                                                ? 'bg-indigo-50/80 dark:bg-indigo-950/70 border-indigo-300 dark:border-indigo-700 ring-2 ring-indigo-400/40'
+                                                : String(item.skill_id) === String(selectedSkillId)
+                                                ? 'bg-emerald-50/50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800/60'
+                                                : 'bg-gray-50 dark:bg-gray-800/60 border-gray-200 dark:border-gray-700'
+                                        }`}
+                                    >
                                         <div className="flex items-center justify-between font-bold">
-                                            <span className="text-[#3C4097] dark:text-indigo-400 truncate max-w-[180px]">{item.title}</span>
-                                            <div className="flex items-center gap-1">
+                                            <span className="text-[#3C4097] dark:text-indigo-400 truncate max-w-[180px]" title={item.title}>
+                                                {item.title}
+                                            </span>
+                                            <div className="flex items-center gap-1 shrink-0">
                                                 <button
                                                     type="button"
                                                     onClick={() => handleEditCustomLesson(item)}
@@ -512,13 +575,28 @@ export const CreateLessonVideoPage: React.FC = () => {
                                             </div>
                                         </div>
                                         <div className="text-[11px] text-gray-500 dark:text-gray-400 flex items-center justify-between">
-                                            <span>Khóa: #{item.skillId}</span>
-                                            <span className="text-emerald-700 dark:text-emerald-400 font-bold">+{item.xpReward} XP</span>
+                                            <span className="truncate max-w-[140px] font-medium">
+                                                {item.skill_title || `Skill #${item.skill_id}`}
+                                            </span>
+                                            <span className="text-emerald-700 dark:text-emerald-400 font-bold shrink-0">
+                                                +{item.xp_reward || item.xpReward || 50} XP
+                                            </span>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         )}
+
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            fullWidth
+                            className="text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer dark:border-gray-700"
+                            onClick={() => navigate(`/dashboard/video-learning?skill_id=${selectedSkillId}`)}
+                        >
+                            <Eye className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Xem Giao Diện Học Viên (Skill #{selectedSkillId})
+                        </Button>
                     </div>
                 </div>
             </form>

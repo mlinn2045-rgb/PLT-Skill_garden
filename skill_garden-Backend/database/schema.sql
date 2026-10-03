@@ -381,40 +381,45 @@ ON DUPLICATE KEY UPDATE `id` = `id`;
 -- 4. Seed Default Skills
 INSERT INTO `skills` (`id`, `title`, `slug`, `category`, `plant_id`, `status`) VALUES
 (1, 'Frontend React 19 Mastery', 'frontend-react-19', 'FRONTEND', 1, 'ACTIVE'),
-(2, 'Backend Node.js & NestJS', 'backend-nodejs-nestjs', 'BACKEND', 2, 'ACTIVE'),
-(3, 'Python & Data Science', 'python-data-science', 'DATA', 4, 'ACTIVE'),
-(4, 'SQL & Relational Database', 'sql-database', 'DATABASE', 3, 'ACTIVE'),
-(5, 'DevOps & Cloud Infrastructure', 'devops-cloud', 'DEVOPS', 6, 'ACTIVE'),
-(6, 'Software Testing & QA Mastery', 'software-testing-qa', 'QA', 5, 'ACTIVE')
+(2, 'Backend NestJS & Node.js System', 'backend-nodejs-nestjs', 'BACKEND', 2, 'ACTIVE'),
+(3, 'Database SQL & MySQL Architect', 'database-sql-mysql', 'DATABASE', 3, 'ACTIVE'),
+(4, 'Python & Data Analysis Core', 'python-data-analysis', 'DATA', 4, 'ACTIVE'),
+(5, 'Manual & Automation Testing', 'software-testing-qa', 'QA', 5, 'ACTIVE'),
+(6, 'Flutter & React Native Mobile', 'flutter-react-native-mobile', 'MOBILE', 6, 'ACTIVE')
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `plant_id` = VALUES(`plant_id`), `category` = VALUES(`category`);
 
 -- 5. Seed Default Learning Paths
 INSERT INTO `learning_paths` (`id`, `skill_id`, `title`, `description`) VALUES
 (1, 1, 'Lộ trình Lập trình Frontend React 19 từ Zero đến Hero', 'Nắm vững kiến thức React 19, Components, Hooks và State Management.'),
-(2, 2, 'Lộ trình Lập trình Backend Node.js & NestJS', 'Xây dựng RESTful API chuẩn doanh nghiệp.'),
-(3, 3, 'Lộ trình Python & Data Science Thực Chiến', 'Phân tích dữ liệu và lập trình Python ứng dụng.'),
-(4, 4, 'Lộ trình Quản trị Cơ sở Dữ liệu SQL', 'Thiết kế CSDL và truy vấn dữ liệu tối ưu.'),
-(5, 5, 'Lộ trình DevOps & Docker/CI-CD', 'Quản trị hạ tầng và tự động hóa quy trình.'),
-(6, 6, 'Lộ trình Kiểm thử Phần mềm Chuyên nghiệp QA', 'Unit testing, Integration testing và E2E testing.')
+(2, 2, 'Lộ trình Lập trình Backend NestJS & Node.js System', 'Xây dựng RESTful API, Microservices và Architecture chuẩn doanh nghiệp.'),
+(3, 3, 'Lộ trình Database SQL & MySQL Architect Chuyên Sâu', 'Thiết kế cơ sở dữ liệu quan hệ, Indexing, Transaction và tối ưu truy vấn.'),
+(4, 4, 'Lộ trình Python & Data Analysis Thực Chiến', 'Lập trình Python, Pandas, NumPy, xử lý và trực quan hóa dữ liệu.'),
+(5, 5, 'Lộ trình Software Testing & QA Chuyên Nghiệp', 'Manual Testing, Test Design, Playwright & Automation CI/CD.'),
+(6, 6, 'Lộ trình Mobile Cross-platform Flutter & React Native', 'Xây dựng ứng dụng di động đa nền tảng iOS & Android hiện đại.')
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
 -- 6. Seed Default Modules
 INSERT INTO `modules` (`id`, `learning_path_id`, `title`, `description`, `order_index`) VALUES
 (1, 1, 'Chương 1: Kiến thức cơ bản & React 19 Core', 'Các khái niệm nền tảng quan trọng của React 19.', 1),
 (2, 1, 'Chương 2: Advanced Hooks & State Management', 'Quản lý state phức tạp và tối ưu render.', 2),
-(3, 2, 'Chương 1: Kiến thức nền tảng Backend', 'Tổng quan về server và kiến trúc API.', 1),
-(4, 3, 'Chương 1: Lập trình Python cơ bản', 'Cú pháp Python và cấu trúc dữ liệu.', 1),
-(5, 4, 'Chương 1: SQL Fundamentals', 'Thiết kế bảng và truy vấn SELECT.', 1),
-(6, 5, 'Chương 1: DevOps Basics', 'Khái niệm DevOps và Containerization.', 1),
-(7, 6, 'Chương 1: QA Fundamentals', 'Quy trình kiểm thử phần mềm.', 1)
+(3, 2, 'Chương 1: Kiến thức nền tảng Backend & NestJS', 'Tổng quan về server và kiến trúc API.', 1),
+(4, 3, 'Chương 1: SQL Fundamentals & Relational Modeling', 'Thiết kế bảng và truy vấn SELECT.', 1),
+(5, 4, 'Chương 1: Lập trình Python & Phân tích Dữ liệu Cơ bản', 'Cú pháp Python và cấu trúc dữ liệu.', 1),
+(6, 5, 'Chương 1: Manual Testing & Test Case Design', 'Quy trình kiểm thử phần mềm.', 1),
+(7, 6, 'Chương 1: Tổng quan Mobile Development & UI Components', 'Cơ bản về Flutter và React Native.', 1),
+(8, 2, 'Chương 2: Dependency Injection & Database Integration', 'DI container và ORM trong NestJS.', 2),
+(9, 3, 'Chương 2: Indexing, Transactions & Performance Tuning', 'Tối ưu hiệu năng truy vấn database.', 2),
+(10, 4, 'Chương 2: Pandas DataFrames & Data Cleaning', 'Xử lý DataFrame và làm sạch dữ liệu.', 2),
+(11, 5, 'Chương 2: Playwright Automation Testing', 'Kiểm thử tự động giao diện và API.', 2),
+(12, 6, 'Chương 2: State Management & Navigation in Mobile', 'Quản lý state và điều hướng màn hình mobile.', 2)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
 -- 7. Seed Default Lessons
 INSERT INTO `lessons` (`id`, `module_id`, `title`, `slug`, `description`, `content_type`, `video_url`, `video_duration_seconds`, `xp_reward`, `order_index`, `is_published`) VALUES
-(1, 1, '1. Giới thiệu tổng quan React 19 & Architecture', 'gioi-thieu-react-19', 'Bài học tổng quan về React 19, Virtual DOM và kiến trúc ứng dụng mới.', 'VIDEO', 'https://www.youtube.com/watch?v=s2skans2dP4', 900, 50, 1, 1),
-(2, 1, '2. React Components, JSX & Props Deep Dive', 'react-components-props', 'Hướng dẫn xây dựng Functional Component, JSX syntax và giao tiếp dữ liệu qua Props.', 'VIDEO', 'https://www.youtube.com/watch?v=bMknfKXIFA8', 1200, 50, 2, 1),
-(3, 1, '3. State Management với useState & useReducer', 'state-management-usestate', 'Quản lý trạng thái giao diện UI mượt mà với useState và useReducer hook.', 'VIDEO', 'https://www.youtube.com/watch?v=0ZJgOiR4LUs', 1500, 50, 3, 1),
-(4, 2, '4. Side Effects & Lifecycle với useEffect', 'side-effects-useeffect', 'Xử lý bất đồng bộ, call API và giải phóng bộ nhớ với useEffect hook.', 'VIDEO', 'https://www.youtube.com/watch?v=0ZJgOiR4LUs', 1800, 100, 1, 1)
+(1, 1, '1. Giới thiệu tổng quan React 19 & Architecture', 'gioi-thieu-react-19', 'Bài học tổng quan về React 19, Virtual DOM và kiến trúc ứng dụng mới.', 'VIDEO', 'https://www.youtube-nocookie.com/embed/bMknfKXIFA8', 900, 50, 1, 1),
+(2, 1, '2. React Components, JSX & Props Deep Dive', 'react-components-props', 'Hướng dẫn xây dựng Functional Component, JSX syntax và giao tiếp dữ liệu qua Props.', 'VIDEO', 'https://www.youtube-nocookie.com/embed/w7ejDZ8SWv8', 1200, 50, 2, 1),
+(3, 1, '3. State Management với useState & useReducer', 'state-management-usestate', 'Quản lý trạng thái giao diện UI mượt mà với useState và useReducer hook.', 'VIDEO', 'https://www.youtube-nocookie.com/embed/w7ejDZ8SWv8', 1500, 50, 3, 1),
+(4, 2, '4. Side Effects & Lifecycle với useEffect', 'side-effects-useeffect', 'Xử lý bất đồng bộ, call API và giải phóng bộ nhớ với useEffect hook.', 'VIDEO', 'https://www.youtube-nocookie.com/embed/bMknfKXIFA8', 1800, 100, 1, 1)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
 -- 16. COURSE SYNC LOGS TABLE (Real-Time Synchronization & Rollback Audit)

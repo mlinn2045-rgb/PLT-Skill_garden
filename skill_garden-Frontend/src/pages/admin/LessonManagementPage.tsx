@@ -28,9 +28,9 @@ const DEFAULT_SKILL_LESSONS: Record<string, Array<{ id: number; title: string; v
 const DEFAULT_SKILL_NAMES_MAP: Record<string, string> = {
     '1': 'Frontend React 19 Mastery (Cây Hoa Anh Đào 🌸)',
     '2': 'Backend NestJS & Node.js System (Cây Cổ Thụ 🌳)',
-    '3': 'Database SQL & Architect (Cây Tre Trăm Đốt 🎋)',
-    '4': 'Python & Machine Learning (Cây Xương Rồng 🌵)',
-    '5': 'Software Testing (Cây Hướng Dương 🌻)',
+    '3': 'Database SQL & MySQL Architect (Cây Tre Trăm Đốt 🎋)',
+    '4': 'Python & Data Analysis Core (Cây Xương Rồng 🌵)',
+    '5': 'Manual & Automation Testing (Cây Hướng Dương 🌻)',
     '6': 'Flutter & React Native Mobile (Cây Dừa 🌴)',
 }
 
@@ -165,7 +165,13 @@ export const LessonManagementPage: React.FC = () => {
             if (lesson.backendId) {
                 await apiClient.delete(`/admin/lessons.php?id=${lesson.backendId}`)
             }
+            localStorage.setItem('skillgarden_lessons_synced_at', String(Date.now()))
             window.dispatchEvent(new Event('skillgarden_lessons_updated'))
+            try {
+                const bc = new BroadcastChannel('skillgarden_sync')
+                bc.postMessage({ type: 'LESSONS_UPDATED' })
+                bc.close()
+            } catch { }
             await loadAllLessons()
             setSuccessMsg(`🎉 Đã xóa bài học "${lesson.title}" thành công!`)
             setTimeout(() => setSuccessMsg(''), 4000)
@@ -218,10 +224,14 @@ export const LessonManagementPage: React.FC = () => {
                 })
             }
 
-            // Clean any legacy localStorage data
-            cleanLegacyMockData()
-
+            localStorage.setItem('skillgarden_lessons_synced_at', String(Date.now()))
             window.dispatchEvent(new Event('skillgarden_lessons_updated'))
+            try {
+                const bc = new BroadcastChannel('skillgarden_sync')
+                bc.postMessage({ type: 'LESSONS_UPDATED' })
+                bc.close()
+            } catch { }
+
             setEditingLesson(null)
             await loadAllLessons()
             setSuccessMsg(`🎉 Đã cập nhật bài học "${updatedTitle}" thành công! Dữ liệu đã đồng bộ sang học viên.`)

@@ -7,6 +7,7 @@ import { useAuthStore } from '../../stores/authStore'
 import { gardenService, UserGardenResponse } from '../../services/gardenService'
 import { Tree3DViewer } from '../../components/ui/Tree3DViewer'
 import { getStudentStats } from '../../services/studentStats'
+import { getSkillGrowth } from '../../services/learningProgress'
 
 const getPlantEmoji = (code?: string, name?: string) => {
     const c = (code || '').toUpperCase()
@@ -20,6 +21,18 @@ const getPlantEmoji = (code?: string, name?: string) => {
     return '🌱'
 }
 
+const mapPlantTo3DType = (code?: string, name?: string): 'CHERRY_BLOSSOM' | 'OAK_TREE' | 'BAMBOO' | 'CACTUS' | 'PINE' | 'BONSAI' => {
+    const c = (code || '').toUpperCase()
+    const n = (name || '').toLowerCase()
+    if (c === 'PINE' || n.includes('thông')) return 'PINE'
+    if (c === 'BONSAI' || n.includes('bonsai')) return 'BONSAI'
+    if (c === 'CACTUS' || n.includes('xương rồng')) return 'CACTUS'
+    if (c === 'BAMBOO' || n.includes('tre')) return 'BAMBOO'
+    if (c === 'TREE' || n.includes('cổ thụ')) return 'OAK_TREE'
+    if (c === 'FLOWER' || n.includes('hoa') || n.includes('anh đào')) return 'CHERRY_BLOSSOM'
+    return 'CHERRY_BLOSSOM'
+}
+
 export const MyGardenPage: React.FC = () => {
     const navigate = useNavigate()
     const { user } = useAuthStore()
@@ -29,6 +42,11 @@ export const MyGardenPage: React.FC = () => {
     const [errorMsg, setErrorMsg] = useState('')
     const [toastMsg, setToastMsg] = useState('')
     const [viewMode3D, setViewMode3D] = useState(true)
+
+    const [selectedSkillId, setSelectedSkillId] = useState<number | null>(() => {
+        const saved = localStorage.getItem('skillgarden_active_skill_id')
+        return saved ? Number(saved) : null
+    })
 
     const studentStats = getStudentStats(user?.email || 'guest')
     const streakDays = Math.max(user?.streak_days || 1, gardenData?.stats.streak_days || 1, studentStats.streakDays)
@@ -48,7 +66,43 @@ export const MyGardenPage: React.FC = () => {
 
     useEffect(() => {
         fetchGarden()
+
+        const handleSync = () => {
+            const saved = localStorage.getItem('skillgarden_active_skill_id')
+            if (saved) {
+                setSelectedSkillId(Number(saved))
+            }
+            fetchGarden()
+        }
+
+        window.addEventListener('skillgarden_tree_planted', handleSync)
+        window.addEventListener('storage', handleSync)
+        return () => {
+            window.removeEventListener('skillgarden_tree_planted', handleSync)
+            window.removeEventListener('storage', handleSync)
+        }
     }, [])
+
+    const trees = gardenData?.trees || []
+
+    // If an active skill was selected in localStorage but not yet in database, plant it automatically
+    useEffect(() => {
+        if (selectedSkillId && trees.length > 0 && !trees.some(t => t.skill_id === selectedSkillId)) {
+            gardenService.plantSeed(selectedSkillId).then(() => fetchGarden()).catch(() => {})
+        }
+    }, [selectedSkillId, trees.length])
+
+    // Find the currently selected or active tree
+    const activeTree = (selectedSkillId ? trees.find(t => t.skill_id === selectedSkillId) : null) || trees[0] || null
+
+    // Determine 3D props
+    const activeTreeType = activeTree ? mapPlantTo3DType(activeTree.plant_code, activeTree.plant_name) : 'CHERRY_BLOSSOM'
+    const activeTreeName = activeTree 
+        ? `${activeTree.skill_name || activeTree.skill_title || ('Kỹ năng #' + activeTree.skill_id)} • ${activeTree.plant_name || 'Cây kỹ năng'}`
+        : 'Cây Hoa Anh Đào (Frontend React 19 Mastery)'
+    const activeSkillGrowth = activeTree ? getSkillGrowth(String(activeTree.skill_id), user?.email || 'guest') : null
+    const activeStageLevel = activeSkillGrowth?.stageLevel || activeTree?.level || 3
+    const activeGrowthProgress = activeSkillGrowth ? activeSkillGrowth.progress : (activeTree ? Math.min(100, Math.round(((activeTree.level || 1) / 5) * 100)) : 65)
 
     const handleWatering = async (skillId: number) => {
         try {
@@ -60,8 +114,6 @@ export const MyGardenPage: React.FC = () => {
             alert(err.message || 'Thao tác tưới nước thất bại.')
         }
     }
-
-    const trees = gardenData?.trees || []
 
     return (
         <div className="min-h-screen bg-[#F7F9F7] dark:bg-gray-900 text-[#1A2E22] dark:text-gray-100 pb-16 pt-6 px-4 md:px-8 max-w-7xl mx-auto space-y-8">
@@ -109,9 +161,16 @@ export const MyGardenPage: React.FC = () => {
             {/* Interactive Featured 3D Tree Spotlight */}
             <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-base font-black text-[#1A2E22] dark:text-white flex items-center gap-2">
-                        <Box className="w-5 h-5 text-emerald-600 dark:text-emerald-400" /> Mô Phỏng Cây Kỹ Năng 3D Tương Tác
-                    </h2>
+                    <div>
+                        <h2 className="text-base font-black text-[#1A2E22] dark:text-white flex items-center gap-2">
+                            <Box className="w-5 h-5 text-emerald-600 dark:text-emerald-400" /> Mô Phỏng Cây Kỹ Năng 3D Tương Tác
+                        </h2>
+                        {activeTree && (
+                            <p className="text-xs text-emerald-800 dark:text-emerald-300 font-bold mt-0.5">
+                                Đang hiển thị: <span className="underline decoration-emerald-500">{activeTree.skill_name || activeTree.skill_title}</span> ({activeTree.plant_name})
+                            </p>
+                        )}
+                    </div>
                     <button
                         onClick={() => setViewMode3D(!viewMode3D)}
                         className="px-3 py-1 bg-white dark:bg-gray-800 border border-emerald-200 dark:border-gray-700 rounded-xl text-xs font-bold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors shadow-2xs cursor-pointer"
@@ -122,11 +181,18 @@ export const MyGardenPage: React.FC = () => {
 
                 {viewMode3D && (
                     <Tree3DViewer
-                        stageLevel={3}
-                        treeType="CHERRY_BLOSSOM"
-                        treeName="Frontend React 19 Mastery (Cây 3D Thật)"
-                        growthProgress={65}
-                        onWaterSuccess={() => setToastMsg('Hiệu ứng hạt nước 3D tương tác thành công! (+10 XP)')}
+                        key={`${activeTree?.skill_id || 'default'}-${activeTreeType}-${activeStageLevel}`}
+                        stageLevel={activeStageLevel}
+                        treeType={activeTreeType}
+                        treeName={activeTreeName}
+                        growthProgress={activeGrowthProgress}
+                        onWaterSuccess={() => {
+                            if (activeTree?.skill_id) {
+                                handleWatering(activeTree.skill_id)
+                            } else {
+                                setToastMsg('Hiệu ứng hạt nước 3D tương tác thành công! (+10 XP)')
+                            }
+                        }}
                     />
                 )}
             </div>
@@ -166,86 +232,124 @@ export const MyGardenPage: React.FC = () => {
                     <p>Đang tải trạng thái khu vườn sinh thái từ Backend...</p>
                 </div>
             ) : trees.length === 0 ? (
-                <div className="p-12 text-center text-xs text-[#6B6D7A] dark:text-gray-400 bg-white dark:bg-gray-800 rounded-2xl border border-[#E6ECE6] dark:border-gray-700">
-                    Bạn chưa bắt đầu trồng cây kỹ năng nào. Hãy đến Danh mục kỹ năng để nhận hạt mầm đầu tiên!
+                <div className="p-12 text-center text-xs text-[#6B6D7A] dark:text-gray-400 bg-white dark:bg-gray-800 rounded-2xl border border-[#E6ECE6] dark:border-gray-700 space-y-3">
+                    <p>Bạn chưa bắt đầu trồng cây kỹ năng nào.</p>
+                    <Button variant="indigo" size="sm" onClick={() => navigate('/dashboard/skill-catalog')} className="font-bold cursor-pointer">
+                        Đến Danh mục kỹ năng để bắt đầu học
+                    </Button>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {trees.map((tree) => (
-                        <div
-                            key={tree.id}
-                            className="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-[#E6ECE6] dark:border-gray-700 shadow-xs hover:shadow-md transition-all duration-300 space-y-5 relative overflow-hidden group"
-                        >
-                            {/* Plant Top Info */}
-                            <div className="flex items-start justify-between gap-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-3xl shadow-md shrink-0">
-                                        {getPlantEmoji(tree.plant_code, tree.plant_name)}
+                    {trees.map((tree) => {
+                        const isSelected = activeTree?.skill_id === tree.skill_id
+                        const treeGrowth = getSkillGrowth(String(tree.skill_id), user?.email || 'guest')
+                        return (
+                            <div
+                                key={tree.id}
+                                onClick={() => {
+                                    setSelectedSkillId(tree.skill_id)
+                                    localStorage.setItem('skillgarden_active_skill_id', String(tree.skill_id))
+                                }}
+                                className={`bg-white dark:bg-gray-800 rounded-3xl p-6 border transition-all duration-300 space-y-5 relative overflow-hidden group cursor-pointer ${
+                                    isSelected 
+                                        ? 'border-2 border-emerald-500 shadow-lg ring-2 ring-emerald-500/20 dark:border-emerald-400' 
+                                        : 'border-[#E6ECE6] dark:border-gray-700 shadow-xs hover:shadow-md hover:border-emerald-300'
+                                }`}
+                            >
+                                {/* Plant Top Info */}
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-3xl shadow-md shrink-0">
+                                            {getPlantEmoji(tree.plant_code, tree.plant_name)}
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[11px] font-bold text-[#3F49C8] dark:text-indigo-400 uppercase tracking-wider">
+                                                    {tree.plant_name || 'Cây kỹ năng'}
+                                                </span>
+                                                {isSelected && (
+                                                    <span className="bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                        <Sparkles className="w-3 h-3 text-amber-500" /> Đang hiển thị 3D
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <h3 className="text-base font-extrabold text-[#1A2E22] dark:text-white group-hover:text-[#3F49C8] dark:group-hover:text-indigo-400 transition-colors">
+                                                {tree.skill_name || tree.skill_title || `Kỹ năng #${tree.skill_id}`}
+                                            </h3>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <span className="text-[11px] font-bold text-[#3F49C8] dark:text-indigo-400 uppercase tracking-wider">
-                                            {tree.plant_name || 'Cây kỹ năng'}
+
+                                    <Badge variant="success" className="font-bold text-[11px] shrink-0">
+                                        Stage {treeGrowth.stageLevel || tree.level}/5 • {treeGrowth.progress}%
+                                    </Badge>
+                                </div>
+
+                                {/* Stage Progress Visual & Bold Milestone Requirement */}
+                                <div className="bg-[#F8FAF8] dark:bg-gray-900 p-4 rounded-2xl border border-[#E6ECE6] dark:border-gray-700 space-y-3">
+                                    <div className="flex items-center justify-between text-xs">
+                                        <span className="font-bold text-[#2D3748] dark:text-gray-300 flex items-center gap-1.5">
+                                            <Sprout className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                                            Giai đoạn: <span className="text-emerald-700 dark:text-emerald-400 font-extrabold">{treeGrowth.stageName || tree.stage_name || 'Đang sinh trưởng'}</span>
                                         </span>
-                                        <h3 className="text-base font-extrabold text-[#1A2E22] dark:text-white group-hover:text-[#3F49C8] dark:group-hover:text-indigo-400 transition-colors">
-                                            {tree.skill_name || tree.skill_title || `Kỹ năng #${tree.skill_id}`}
-                                        </h3>
+                                        <span className="font-extrabold text-[#3F49C8] dark:text-indigo-400">+{tree.xp_accumulated} XP</span>
+                                    </div>
+
+                                    {/* Bolded Milestone Text */}
+                                    <div className="p-2.5 bg-emerald-100/80 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 rounded-xl text-[11px]">
+                                        <p className="font-black text-emerald-900 dark:text-emerald-200 uppercase tracking-wide flex items-center gap-1">
+                                            <Droplets className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" /> HẠN MỨC TƯỚI NƯỚC HÔM NAY: <strong>ĐÃ ĐẠT CHUẨN (+10 XP)</strong>
+                                        </p>
                                     </div>
                                 </div>
 
-                                <Badge variant="success" className="font-bold text-[11px] shrink-0">
-                                    Stage {tree.level}/5
-                                </Badge>
-                            </div>
+                                {/* Bottom Actions & Stats */}
+                                <div className="flex items-center justify-between pt-2 border-t border-[#E6ECE6] dark:border-gray-700">
+                                    <div className="text-xs text-[#718096] dark:text-gray-400">
+                                        <div className="text-[11px] text-gray-500 dark:text-gray-400">Trạng thái: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{tree.status}</strong></div>
+                                    </div>
 
-                            {/* Stage Progress Visual & Bold Milestone Requirement */}
-                            <div className="bg-[#F8FAF8] dark:bg-gray-900 p-4 rounded-2xl border border-[#E6ECE6] dark:border-gray-700 space-y-3">
-                                <div className="flex items-center justify-between text-xs">
-                                    <span className="font-bold text-[#2D3748] dark:text-gray-300 flex items-center gap-1.5">
-                                        <Sprout className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                                        Giai đoạn: <span className="text-emerald-700 dark:text-emerald-400 font-extrabold">{tree.stage_name || 'Đang sinh trưởng'}</span>
-                                    </span>
-                                    <span className="font-extrabold text-[#3F49C8] dark:text-indigo-400">+{tree.xp_accumulated} XP</span>
-                                </div>
+                                    <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => {
+                                                setSelectedSkillId(tree.skill_id)
+                                                localStorage.setItem('skillgarden_active_skill_id', String(tree.skill_id))
+                                            }}
+                                            className="border-emerald-300 text-emerald-700 dark:text-emerald-300 dark:border-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-950 font-bold flex items-center gap-1 text-xs cursor-pointer"
+                                        >
+                                            <Box className="w-3.5 h-3.5 text-emerald-600" /> Xem 3D
+                                        </Button>
 
-                                {/* Bolded Milestone Text */}
-                                <div className="p-2.5 bg-emerald-100/80 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 rounded-xl text-[11px]">
-                                    <p className="font-black text-emerald-900 dark:text-emerald-200 uppercase tracking-wide flex items-center gap-1">
-                                        <Droplets className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" /> HẠN MỨC TƯỚI NƯỚC HÔM NAY: <strong>ĐÃ ĐẠT CHUẨN (+10 XP)</strong>
-                                    </p>
-                                </div>
-                            </div>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handleWatering(tree.skill_id)}
+                                            className="border-blue-300 text-blue-700 dark:text-blue-300 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-950 font-bold flex items-center gap-1 text-xs cursor-pointer"
+                                        >
+                                            <Droplets className="w-3.5 h-3.5 text-blue-500" /> Tưới Nước (+10 XP)
+                                        </Button>
 
-                            {/* Bottom Actions & Stats */}
-                            <div className="flex items-center justify-between pt-2 border-t border-[#E6ECE6] dark:border-gray-700">
-                                <div className="text-xs text-[#718096] dark:text-gray-400">
-                                    <div className="text-[11px] text-gray-500 dark:text-gray-400">Trạng thái: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{tree.status}</strong></div>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => handleWatering(tree.skill_id)}
-                                        className="border-emerald-300 text-emerald-700 dark:text-emerald-300 dark:border-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-950 font-bold flex items-center gap-1 text-xs cursor-pointer"
-                                    >
-                                        <Droplets className="w-3.5 h-3.5 text-blue-500" /> Tưới Nước (+10 XP)
-                                    </Button>
-
-                                    <Button
-                                        variant="indigo"
-                                        size="sm"
-                                        onClick={() => navigate(`/dashboard/video-learning?skill_id=${tree.skill_id}`)}
-                                        className="font-bold flex items-center gap-1 text-xs cursor-pointer"
-                                    >
-                                        <span>Học Tiếp</span>
-                                        <ChevronRight className="w-3.5 h-3.5" />
-                                    </Button>
+                                        <Button
+                                            variant="indigo"
+                                            size="sm"
+                                            onClick={() => {
+                                                localStorage.setItem('skillgarden_active_skill_id', String(tree.skill_id))
+                                                navigate(`/dashboard/learning-path/${tree.skill_id}`)
+                                            }}
+                                            className="font-bold flex items-center gap-1 text-xs cursor-pointer"
+                                        >
+                                            <span>Học Tiếp</span>
+                                            <ChevronRight className="w-3.5 h-3.5" />
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        )
+                    })}
                 </div>
             )}
         </div>
     )
 }
+

@@ -133,10 +133,28 @@ class AuthService
         // Fetch fresh permissions if ADMIN or SUPER_ADMIN
         $permissions = [];
         if ($user['role'] === 'ADMIN') {
-            $db = \Database::getConnection();
-            $stmt = $db->prepare("SELECT permission_key FROM admin_permissions WHERE admin_id = :admin_id");
-            $stmt->execute(['admin_id' => $user['id']]);
-            $permissions = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+            try {
+                $db = \Database::getConnection();
+                $stmt = $db->prepare("SELECT permission_key FROM admin_permissions WHERE admin_id = :admin_id");
+                $stmt->execute(['admin_id' => $user['id']]);
+                $permissions = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+                if (empty($permissions)) {
+                    $permissions = [
+                        'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_QUIZZES',
+                        'MANAGE_MATERIALS', 'MANAGE_PLANTS', 'MANAGE_ACHIEVEMENTS', 'MANAGE_GAMIFICATION'
+                    ];
+                    $stmtIns = $db->prepare("INSERT IGNORE INTO admin_permissions (admin_id, permission_key) VALUES (:admin_id, :perm_key)");
+                    foreach ($permissions as $perm) {
+                        $stmtIns->execute(['admin_id' => $user['id'], 'perm_key' => $perm]);
+                    }
+                }
+            } catch (\Throwable $e) {
+                $permissions = [
+                    'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_QUIZZES',
+                    'MANAGE_MATERIALS', 'MANAGE_PLANTS', 'MANAGE_ACHIEVEMENTS', 'MANAGE_GAMIFICATION'
+                ];
+            }
         } elseif ($user['role'] === 'SUPER_ADMIN') {
             $permissions = [
                 'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_LEARNING_PATHS',
@@ -222,10 +240,28 @@ class AuthService
         // Real-time query permissions directly from database to avoid stale cache on Ctrl+F5 refresh
         $permissions = [];
         if ($user['role'] === 'ADMIN') {
-            $db = \Database::getConnection();
-            $stmt = $db->prepare("SELECT permission_key FROM admin_permissions WHERE admin_id = :admin_id");
-            $stmt->execute(['admin_id' => $user['id']]);
-            $permissions = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+            try {
+                $db = \Database::getConnection();
+                $stmt = $db->prepare("SELECT permission_key FROM admin_permissions WHERE admin_id = :admin_id");
+                $stmt->execute(['admin_id' => $user['id']]);
+                $permissions = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+                if (empty($permissions)) {
+                    $permissions = [
+                        'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_QUIZZES',
+                        'MANAGE_MATERIALS', 'MANAGE_PLANTS', 'MANAGE_ACHIEVEMENTS', 'MANAGE_GAMIFICATION'
+                    ];
+                    $stmtIns = $db->prepare("INSERT IGNORE INTO admin_permissions (admin_id, permission_key) VALUES (:admin_id, :perm_key)");
+                    foreach ($permissions as $perm) {
+                        $stmtIns->execute(['admin_id' => $user['id'], 'perm_key' => $perm]);
+                    }
+                }
+            } catch (\Throwable $e) {
+                $permissions = [
+                    'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_QUIZZES',
+                    'MANAGE_MATERIALS', 'MANAGE_PLANTS', 'MANAGE_ACHIEVEMENTS', 'MANAGE_GAMIFICATION'
+                ];
+            }
         } elseif ($user['role'] === 'SUPER_ADMIN') {
             $permissions = [
                 'MANAGE_USERS', 'MANAGE_SKILLS', 'MANAGE_LESSONS', 'MANAGE_LEARNING_PATHS',

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { ShieldCheck, UserPlus, Lock, Unlock, Trash2, RefreshCw, Key, Check, X, ShieldAlert } from 'lucide-react'
+import { ShieldCheck, UserPlus, Lock, Unlock, Trash2, RefreshCw, Key, Check, X, ShieldAlert, Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { superAdminService, AdminUser } from '../../services/superAdminService'
 
 const AVAILABLE_PERMISSIONS = [
-    { key: 'MANAGE_USERS', label: 'Duyệt học viên', desc: 'Duyệt, sửa, khóa, xóa học viên' },
+    { key: 'MANAGE_USERS', label: 'Duyệt học viên', desc: 'Duyệt, sửa, khóa học viên' },
     { key: 'MANAGE_SKILLS', label: 'Quản lý khóa học', desc: 'Tạo, sửa khóa học & kỹ năng' },
     { key: 'MANAGE_LESSONS', label: 'Quản lý bài học', desc: 'Tạo bài học, tải video LMS' },
     { key: 'MANAGE_QUIZZES', label: 'Ngân hàng Quiz', desc: 'Quản lý câu hỏi & đề trắc nghiệm' },
@@ -19,6 +19,11 @@ export const AdminUserManagementPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [errorMsg, setErrorMsg] = useState('')
     const [toastMsg, setToastMsg] = useState('')
+
+    // Search & Pagination States
+    const [searchTerm, setSearchTerm] = useState('')
+    const [currentPage, setCurrentPage] = useState(1)
+    const pageSize = 10
 
     // Create Admin State
     const [showModal, setShowModal] = useState(false)
@@ -62,6 +67,36 @@ export const AdminUserManagementPage: React.FC = () => {
     useEffect(() => {
         fetchAdmins()
     }, [])
+
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [searchTerm])
+
+    const filteredAdmins = admins.filter((adm) => {
+        const matchesSearch =
+            (adm.full_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (adm.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (adm.username || '').toLowerCase().includes(searchTerm.toLowerCase())
+        return matchesSearch
+    })
+
+    const totalPages = Math.max(1, Math.ceil(filteredAdmins.length / pageSize))
+    const startIndex = (currentPage - 1) * pageSize
+    const endIndex = Math.min(startIndex + pageSize, filteredAdmins.length)
+    const paginatedAdmins = filteredAdmins.slice(startIndex, endIndex)
+
+    const getPageNumbers = (current: number, total: number): (number | string)[] => {
+        if (total <= 10) {
+            return Array.from({ length: total }, (_, i) => i + 1)
+        }
+        if (current <= 4) {
+            return [1, 2, 3, 4, 5, '...', total]
+        }
+        if (current >= total - 3) {
+            return [1, '...', total - 4, total - 3, total - 2, total - 1, total]
+        }
+        return [1, '...', current - 1, current, current + 1, '...', total]
+    }
 
     const showToast = (msg: string) => {
         setToastMsg(msg)
@@ -174,6 +209,23 @@ export const AdminUserManagementPage: React.FC = () => {
                 </div>
             )}
 
+            {/* Search Bar */}
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
+                <div className="relative flex-1 w-full">
+                    <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Tìm kiếm theo Tên, Email hoặc Username Admin..."
+                        className="w-full pl-9 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border border-[#E2E4EB] dark:border-gray-700 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    />
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 font-medium whitespace-nowrap">
+                    Tìm thấy <span className="font-bold text-gray-900 dark:text-white">{filteredAdmins.length}</span> tài khoản Admin
+                </div>
+            </div>
+
             {/* Admin Table */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl border border-[#E2E4EB] dark:border-gray-800 shadow-xs overflow-hidden">
                 {isLoading ? (
@@ -181,79 +233,159 @@ export const AdminUserManagementPage: React.FC = () => {
                         <RefreshCw className="w-6 h-6 animate-spin mx-auto text-purple-600 dark:text-purple-400" />
                         <p>Đang nạp danh sách Admin từ Backend...</p>
                     </div>
-                ) : admins.length === 0 ? (
+                ) : filteredAdmins.length === 0 ? (
                     <div className="p-12 text-center text-xs text-gray-500 dark:text-gray-400">
-                        Chưa có tài khoản Admin nào trong danh sách.
+                        Không tìm thấy tài khoản Admin nào phù hợp.
                     </div>
                 ) : (
-                    <table className="w-full text-left text-xs">
-                        <thead className="bg-gray-50 dark:bg-gray-800/80 border-b border-[#E2E4EB] dark:border-gray-800 text-gray-600 dark:text-gray-300 uppercase tracking-wider font-bold">
-                            <tr>
-                                <th className="p-4">STT</th>
-                                <th className="p-4">Họ Và Tên</th>
-                                <th className="p-4">Email</th>
-                                <th className="p-4">Vai Trò</th>
-                                <th className="p-4">Quyền Hạn CSDL</th>
-                                <th className="p-4">Trạng Thái</th>
-                                <th className="p-4 text-right">Thao Tác</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[#E2E4EB] dark:divide-gray-800">
-                            {admins.map((adm, idx) => (
-                                <tr key={adm.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                                    <td className="p-4 font-bold text-gray-600 dark:text-gray-400">{idx + 1}</td>
-                                    <td className="p-4 font-bold text-gray-900 dark:text-gray-100">
-                                        {adm.full_name || adm.username}
-                                    </td>
-                                    <td className="p-4 font-medium text-gray-600 dark:text-gray-300 font-mono">{adm.email}</td>
-                                    <td className="p-4">
-                                        <span className="px-2 py-0.5 bg-purple-50 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 rounded font-bold">
-                                            {adm.role}
-                                        </span>
-                                    </td>
-                                    <td className="p-4">
-                                        <button
-                                            onClick={() => openPermissionModal(adm)}
-                                            className="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 rounded-lg font-bold flex items-center gap-1.5 transition-colors border border-indigo-200 dark:border-indigo-800"
-                                            title="Bấm để xem và sửa phân quyền"
-                                        >
-                                            <Key className="w-3.5 h-3.5 text-indigo-600" />
-                                            <span>{(adm.permissions || []).length} quyền được cấp</span>
-                                        </button>
-                                    </td>
-                                    <td className="p-4">
-                                        <button onClick={() => toggleLock(adm)} className="flex items-center gap-1.5 font-bold cursor-pointer">
-                                            {adm.status === 'ACTIVE' ? (
-                                                <span className="px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 rounded-full flex items-center gap-1"><Unlock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Active</span>
-                                            ) : (
-                                                <span className="px-2.5 py-1 bg-red-100 dark:bg-red-950/60 text-red-800 dark:text-red-300 rounded-full flex items-center gap-1"><Lock className="w-3.5 h-3.5 text-red-600 dark:text-red-400" /> Locked</span>
-                                            )}
-                                        </button>
-                                    </td>
-                                    <td className="p-4 text-right space-x-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => openPermissionModal(adm)}
-                                            className="text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-950/30 font-bold"
-                                            title="Phân quyền chi tiết"
-                                        >
-                                            <Key className="w-3.5 h-3.5" />
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => handleDelete(adm.id)}
-                                            className="text-red-600 dark:text-red-400 border-red-200 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/30 font-bold"
-                                            title="Xóa tài khoản"
-                                        >
-                                            <Trash2 className="w-3.5 h-3.5" />
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-xs">
+                                <thead className="bg-gray-50 dark:bg-gray-800/80 border-b border-[#E2E4EB] dark:border-gray-800 text-gray-600 dark:text-gray-300 uppercase tracking-wider font-bold">
+                                    <tr>
+                                        <th className="p-4">STT</th>
+                                        <th className="p-4">Họ Và Tên</th>
+                                        <th className="p-4">Email</th>
+                                        <th className="p-4">Vai Trò</th>
+                                        <th className="p-4">Quyền Hạn CSDL</th>
+                                        <th className="p-4">Trạng Thái</th>
+                                        <th className="p-4 text-right">Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-[#E2E4EB] dark:divide-gray-800">
+                                    {paginatedAdmins.map((adm, idx) => (
+                                        <tr key={adm.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                                            <td className="p-4 font-bold text-gray-600 dark:text-gray-400">{startIndex + idx + 1}</td>
+                                            <td className="p-4 font-bold text-gray-900 dark:text-gray-100">
+                                                {adm.full_name || adm.username}
+                                            </td>
+                                            <td className="p-4 font-medium text-gray-600 dark:text-gray-300 font-mono">{adm.email}</td>
+                                            <td className="p-4">
+                                                <span className="px-2 py-0.5 bg-purple-50 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 rounded font-bold">
+                                                    {adm.role}
+                                                </span>
+                                            </td>
+                                            <td className="p-4">
+                                                <button
+                                                    onClick={() => openPermissionModal(adm)}
+                                                    className="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 rounded-lg font-bold flex items-center gap-1.5 transition-colors border border-indigo-200 dark:border-indigo-800 cursor-pointer"
+                                                    title="Bấm để xem và sửa phân quyền"
+                                                >
+                                                    <Key className="w-3.5 h-3.5 text-indigo-600" />
+                                                    <span>{(adm.permissions || []).length} quyền được cấp</span>
+                                                </button>
+                                            </td>
+                                            <td className="p-4">
+                                                <button onClick={() => toggleLock(adm)} className="flex items-center gap-1.5 font-bold cursor-pointer">
+                                                    {adm.status === 'ACTIVE' ? (
+                                                        <span className="px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 rounded-full flex items-center gap-1"><Unlock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Active</span>
+                                                    ) : (
+                                                        <span className="px-2.5 py-1 bg-red-100 dark:bg-red-950/60 text-red-800 dark:text-red-300 rounded-full flex items-center gap-1"><Lock className="w-3.5 h-3.5 text-red-600 dark:text-red-400" /> Locked</span>
+                                                    )}
+                                                </button>
+                                            </td>
+                                            <td className="p-4 text-right space-x-2">
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => openPermissionModal(adm)}
+                                                    className="text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-950/30 font-bold cursor-pointer"
+                                                    title="Phân quyền chi tiết"
+                                                >
+                                                    <Key className="w-3.5 h-3.5" />
+                                                </Button>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => handleDelete(adm.id)}
+                                                    className="text-red-600 dark:text-red-400 border-red-200 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/30 font-bold cursor-pointer"
+                                                    title="Xóa tài khoản"
+                                                >
+                                                    <Trash2 className="w-3.5 h-3.5" />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Bottom Pagination Bar */}
+                        <div className="p-4 border-t border-[#E2E4EB] dark:border-gray-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs bg-gray-50/50 dark:bg-gray-900/50 rounded-b-2xl">
+                            <div className="text-gray-600 dark:text-gray-400 font-medium">
+                                Hiển thị <strong className="text-gray-900 dark:text-white font-bold">{filteredAdmins.length === 0 ? 0 : startIndex + 1} - {endIndex}</strong> trong tổng số <strong className="text-gray-900 dark:text-white font-bold">{filteredAdmins.length}</strong> tài khoản Admin (10 tài khoản / trang)
+                            </div>
+
+                            <div className="flex flex-wrap items-center justify-center gap-1.5">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={currentPage <= 1}
+                                    onClick={() => setCurrentPage(1)}
+                                    title="Về trang đầu"
+                                    className="px-2 py-1 h-8 dark:border-gray-700 cursor-pointer"
+                                >
+                                    <ChevronsLeft className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={currentPage <= 1}
+                                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                    className="px-3 py-1 h-8 flex items-center gap-1 dark:border-gray-700 cursor-pointer font-bold"
+                                    title="Trang trước"
+                                >
+                                    <ChevronLeft className="w-4 h-4" />
+                                    <span>Trước</span>
+                                </Button>
+
+                                {/* Numbered Page Buttons: 1, 2, 3, 4... */}
+                                <div className="flex items-center gap-1">
+                                    {getPageNumbers(currentPage, totalPages).map((item, idx) =>
+                                        typeof item === 'number' ? (
+                                            <button
+                                                key={item}
+                                                onClick={() => setCurrentPage(item)}
+                                                className={`min-w-9 h-8 px-2.5 rounded-lg font-bold text-xs transition-all cursor-pointer ${
+                                                    currentPage === item
+                                                        ? 'bg-purple-700 text-white shadow-sm ring-2 ring-purple-300 dark:ring-purple-700'
+                                                        : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-700'
+                                                }`}
+                                            >
+                                                {item}
+                                            </button>
+                                        ) : (
+                                            <span key={`ellipsis-${idx}`} className="px-1.5 text-gray-400 font-bold select-none">
+                                                ...
+                                            </span>
+                                        )
+                                    )}
+                                </div>
+
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={currentPage >= totalPages}
+                                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                    className="px-3 py-1 h-8 flex items-center gap-1 dark:border-gray-700 cursor-pointer font-bold"
+                                    title="Trang sau"
+                                >
+                                    <span>Sau</span>
+                                    <ChevronRight className="w-3.5 h-3.5" />
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={currentPage >= totalPages}
+                                    onClick={() => setCurrentPage(totalPages)}
+                                    title="Đến trang cuối"
+                                    className="px-2 py-1 h-8 dark:border-gray-700 cursor-pointer"
+                                >
+                                    <ChevronsRight className="w-4 h-4" />
+                                </Button>
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
 

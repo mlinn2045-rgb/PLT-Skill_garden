@@ -16,9 +16,10 @@ import { Card } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { Avatar } from '../../components/ui/Avatar'
 import { useAuthStore } from '../../stores/authStore'
-import { getChapterProgress, getSkillGrowth } from '../../services/learningProgress'
+import { getChapterProgress, getSkillGrowth, calculateSequentialLessons } from '../../services/learningProgress'
 import { calculateLevel, getStudentStats } from '../../services/studentStats'
 import { apiClient } from '../../services/apiClient'
+import { gardenService } from '../../services/gardenService'
 
 const learningPaths = {
     '1': {
@@ -26,6 +27,8 @@ const learningPaths = {
         subtitle: 'React 19 & Front-end Career Path 2026',
         description: 'Làm chủ React 19, Hooks, State Management, Server Components và Tailwind CSS qua các bài học thực chiến.',
         goal: 'Junior/Mid Front-end Engineer @ PLT Solutions Lab',
+        ch1Title: 'Nền tảng Web Hiện đại (Modern Semantic HTML5 & CSS3)',
+        ch1Description: 'Làm chủ cấu trúc chuẩn SEO, Accessibility WCAG AA, kiến trúc layout Flexbox/CSS Grid nâng cao, và chuẩn hóa Design System cùng Tailwind CSS theo dự án doanh nghiệp.',
         nextLesson: 'React Hooks & State Management trong ứng dụng thực tế',
         activeChapter: 'React 19, Hooks & Quản lý trạng thái',
         activeDescription: 'Xây dựng tư duy Component-driven, làm chủ React 19, Custom Hooks và quản lý State toàn cục với Zustand.',
@@ -36,6 +39,8 @@ const learningPaths = {
         subtitle: 'Backend Engineering Career Path 2026',
         description: 'Xây dựng RESTful API, Microservices, Dependency Injection và Authentication theo tiêu chuẩn enterprise.',
         goal: 'Junior/Mid Backend Engineer @ PLT Solutions Lab',
+        ch1Title: 'Kiến thức nền tảng Backend & NestJS Architecture Core',
+        ch1Description: 'Thiết kế RESTful API chuẩn mực, kiến trúc Module, Controller, Provider và Dependency Injection trong Node.js/NestJS.',
         nextLesson: 'Dependency Injection & Module Architecture trong NestJS',
         activeChapter: 'NestJS Core & kiến trúc Backend',
         activeDescription: 'Thiết kế module, controller, service và hệ thống xác thực có thể mở rộng bằng NestJS và Node.js.',
@@ -46,6 +51,8 @@ const learningPaths = {
         subtitle: 'Database Engineering Career Path 2026',
         description: 'Thiết kế cơ sở dữ liệu quan hệ, viết SQL query phức tạp và tối ưu Index, Transaction cho hệ thống lớn.',
         goal: 'Database Engineer @ PLT Solutions Lab',
+        ch1Title: 'SQL Fundamentals & Relational Data Modeling',
+        ch1Description: 'Thiết kế lược đồ quan hệ chuẩn hóa 3NF, thành thạo truy vấn JOIN, GROUP BY và quản trị giao tác Transaction ACID.',
         nextLesson: 'Index, Query Plan & tối ưu truy vấn MySQL',
         activeChapter: 'SQL chuyên sâu & thiết kế dữ liệu',
         activeDescription: 'Thực hành chuẩn hóa dữ liệu, JOIN, transaction và chiến lược index cho các truy vấn thực tế.',
@@ -56,6 +63,8 @@ const learningPaths = {
         subtitle: 'Python Data Career Path 2026',
         description: 'Học Python từ nền tảng đến phân tích dữ liệu với Pandas, NumPy và Matplotlib qua các bài tập trực quan.',
         goal: 'Python Data Analyst @ PLT Solutions Lab',
+        ch1Title: 'Lập trình Python Core & Xử lý Dữ liệu Cơ bản',
+        ch1Description: 'Nắm chắc cú pháp Python hiện đại, cấu trúc dữ liệu List/Dict/Tuple, và kỹ thuật tiền xử lý dữ liệu thực tế.',
         nextLesson: 'DataFrame, Filtering & GroupBy với Pandas',
         activeChapter: 'Python Core & xử lý dữ liệu',
         activeDescription: 'Nắm chắc cú pháp Python, cấu trúc dữ liệu và quy trình làm sạch dữ liệu cho bài toán phân tích.',
@@ -66,6 +75,8 @@ const learningPaths = {
         subtitle: 'Software Testing Career Path 2026',
         description: 'Nắm vững quy trình kiểm thử, thiết kế Test Case và tự động hóa với Playwright, Jest.',
         goal: 'QA Automation Engineer @ PLT Solutions Lab',
+        ch1Title: 'Quy trình Kiểm thử Phần mềm & Thiết kế Test Case',
+        ch1Description: 'Nắm vững kỹ thuật phân tích biên, phân vùng tương đương, lập bảng quyết định và quản lý vòng đời lỗi Defect Life Cycle.',
         nextLesson: 'Viết Test Case và chiến lược kiểm thử hiệu quả',
         activeChapter: 'Manual Testing & Test Design',
         activeDescription: 'Thực hành phân tích yêu cầu, thiết kế Test Case và xây dựng quy trình kiểm thử có thể đo lường.',
@@ -76,6 +87,8 @@ const learningPaths = {
         subtitle: 'Cross-platform Mobile Career Path 2026',
         description: 'Xây dựng ứng dụng mobile đa nền tảng với Flutter, React Native và UI/UX hiện đại.',
         goal: 'Mobile Engineer @ PLT Solutions Lab',
+        ch1Title: 'Tổng quan Mobile Development & Thiết kế Layouts',
+        ch1Description: 'Xây dựng giao diện ứng dụng đa nền tảng iOS & Android với Widget/Component-driven và responsive adaptive layout.',
         nextLesson: 'Thiết kế màn hình mobile và quản lý state',
         activeChapter: 'Mobile UI & State Management',
         activeDescription: 'Tạo giao diện responsive cho iOS và Android, kết nối dữ liệu và quản lý trạng thái ứng dụng.',
@@ -114,13 +127,57 @@ export const LearningPathPage: React.FC = () => {
     const [dbLessons, setDbLessons] = useState<any[]>([])
 
     useEffect(() => {
+        if (id) {
+            localStorage.setItem('skillgarden_active_skill_id', String(id))
+            localStorage.setItem('skillgarden_active_skill_name', path.title)
+
+            const defaultPlantMap: Record<number, number> = {
+                1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6
+            }
+            const plantId = defaultPlantMap[Number(id)] || Number(id)
+            gardenService.plantSeed(Number(id), plantId, path.title).then(() => {
+                window.dispatchEvent(new CustomEvent('skillgarden_tree_planted', { detail: { skillId: id } }))
+            }).catch(() => {})
+        }
+    }, [id, path.title])
+
+    useEffect(() => {
         let isMounted = true
         const fetchLessons = () => {
             apiClient.get<any[]>(`/lessons.php?skill_id=${encodeURIComponent(id)}`)
                 .then(res => {
                     if (isMounted) {
-                        const list = Array.isArray(res.data) ? res.data : []
-                        setDbLessons(list)
+                        const raw = res.data ?? res
+                        const list: any[] = Array.isArray(raw) ? raw : []
+                        const seenIds = new Set()
+                        const uniqueList = list.filter((item: any) => {
+                            if (seenIds.has(item.id)) return false
+                            seenIds.add(item.id)
+                            return true
+                        })
+                        const parsed = uniqueList.map((item: any, idx: number) => {
+                            let chap = 1
+                            const titleNum = item.title ? (item.title.match(/^(\d+)\./) || item.title.match(/Bài\s*(\d+)/i)) : null
+                            if (item.module_order && Number(item.module_order) > 0) {
+                                chap = Number(item.module_order)
+                            } else if (titleNum) {
+                                chap = Number(titleNum[1])
+                            } else if (item.module_title) {
+                                const m = String(item.module_title).match(/Chương\s+(\d+)/i)
+                                if (m) chap = Number(m[1])
+                            } else {
+                                chap = idx + 1
+                            }
+                            if (chap < 1) chap = 1
+                            return {
+                                ...item,
+                                id: Number(item.id),
+                                module_order: chap,
+                                chapterId: String(chap),
+                                order_index: item.order_index ?? (idx + 1)
+                            }
+                        })
+                        setDbLessons(parsed)
                     }
                 })
                 .catch(() => {
@@ -128,17 +185,46 @@ export const LearningPathPage: React.FC = () => {
                 })
         }
         fetchLessons()
-        const syncInterval = setInterval(fetchLessons, 4000)
+
+        let bc: BroadcastChannel | null = null
+        try {
+            bc = new BroadcastChannel('skillgarden_sync')
+            bc.onmessage = (event) => {
+                if (event.data?.type === 'LESSONS_UPDATED') {
+                    fetchLessons()
+                }
+            }
+        } catch { }
+
+        const handleUpdate = () => fetchLessons()
+        window.addEventListener('skillgarden_lessons_updated', handleUpdate)
+        window.addEventListener('storage', handleUpdate)
+        window.addEventListener('focus', handleUpdate)
+
+        const syncInterval = setInterval(fetchLessons, 3500)
         return () => {
             isMounted = false
+            bc?.close()
+            window.removeEventListener('skillgarden_lessons_updated', handleUpdate)
+            window.removeEventListener('storage', handleUpdate)
+            window.removeEventListener('focus', handleUpdate)
             clearInterval(syncInterval)
         }
     }, [id])
 
-    const lesson1 = dbLessons[0]
-    const lesson2 = dbLessons[1]
+    const sequentialLessons = calculateSequentialLessons(dbLessons, id, userKey)
+    const ch1Lessons = sequentialLessons.filter(l => l.moduleOrder === 1)
+    const ch2Lessons = sequentialLessons.filter(l => l.moduleOrder === 2)
+    const ch3Lessons = sequentialLessons.filter(l => l.moduleOrder === 3)
+    const ch4Lessons = sequentialLessons.filter(l => l.moduleOrder === 4)
+    const ch5Lessons = sequentialLessons.filter(l => l.moduleOrder >= 5)
 
-    const totalLessonsCount = dbLessons.length
+    const lesson1 = ch1Lessons[0] || sequentialLessons[0]
+    const lesson2 = ch2Lessons[0] || sequentialLessons[1]
+    const lesson3 = ch3Lessons[0] || sequentialLessons[2]
+    const lesson4 = ch4Lessons[0] || sequentialLessons[3]
+
+    const totalLessonsCount = sequentialLessons.length
 
     return (
         <div className="space-y-8 pb-12">
@@ -259,6 +345,8 @@ export const LearningPathPage: React.FC = () => {
                         <span className="text-xs text-[#718096]">Đồng bộ theo kỳ hạn: <strong>Q2/2026</strong></span>
                     </div>
 
+
+
                     {/* Timeline Nodes Container */}
                     <div className="relative space-y-8 before:absolute before:inset-0 before:left-6 before:w-0.5 before:bg-gradient-to-b before:from-[#68D391] before:via-[#3F49C8] before:to-gray-200">
 
@@ -272,38 +360,46 @@ export const LearningPathPage: React.FC = () => {
                                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
                                         {chapterProgress.quizCompleted ? 'CHẶNG 01 • HOÀN THÀNH' : 'CHẶNG 01 • CHƯA HOÀN THÀNH'}
                                     </span>
-                                    <span className="text-xs font-mono text-[#718096] dark:text-gray-400">{totalLessonsCount} Bài học • 4 Quiz Labs</span>
+                                    <span className="text-xs font-mono text-[#718096] dark:text-gray-400">{ch1Lessons.length || 1} Bài học • 4 Quiz Labs</span>
                                 </div>
                                 <h3 className="text-lg font-bold text-[#1A2E22] dark:text-white">
-                                    Nền tảng Web Hiện đại (Modern Semantic HTML5 & CSS3)
+                                    {path.ch1Title}
                                 </h3>
                                 <p className="text-xs text-[#4A5568] dark:text-gray-300 leading-relaxed mt-1">
-                                    Làm chủ cấu trúc chuẩn SEO, Accessibility WCAG AA, kiến trúc layout Flexbox/CSS Grid nâng cao, và chuẩn hóa Design System cùng Tailwind CSS theo dự án doanh nghiệp.
+                                    {path.ch1Description}
                                 </p>
 
-                                {/* Lesson 1 Box */}
-                                <div className="mt-4 bg-emerald-50/50 dark:bg-emerald-950/40 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800/80 flex flex-wrap items-center justify-between gap-3 shadow-xs">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-lg bg-emerald-600 dark:bg-emerald-500 text-white flex items-center justify-center shrink-0">
-                                            <PlayCircle className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">BÀI HỌC VIDEO</span>
-                                            <h4 className="text-xs font-bold text-[#1A2E22] dark:text-white">{lesson1?.title || 'Bài 1: Nền tảng Semantic HTML5 & CSS3'}</h4>
-                                        </div>
-                                    </div>
+                                {/* Lessons in Chapter 1 */}
+                                <div className="mt-4 space-y-2.5">
+                                    {(ch1Lessons.length > 0 ? ch1Lessons : [lesson1].filter(Boolean)).map((l, lIdx) => (
+                                        <div key={l?.id || lIdx} className="bg-emerald-50/50 dark:bg-emerald-950/40 p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-800/80 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-8 h-8 rounded-lg ${l?.isCompleted ? 'bg-emerald-600 dark:bg-emerald-500 text-white' : l?.isUnlocked ? 'bg-indigo-600 text-white' : 'bg-gray-300 text-gray-600'} flex items-center justify-center shrink-0`}>
+                                                    {l?.isCompleted ? <CheckCircle2 className="w-4 h-4" /> : l?.isUnlocked ? <PlayCircle className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                                                </div>
+                                                <div>
+                                                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">BÀI HỌC VIDEO • BÀI {lIdx + 1}</span>
+                                                    <h4 className="text-xs font-bold text-[#1A2E22] dark:text-white">{l?.title}</h4>
+                                                </div>
+                                            </div>
 
-                                    <Link to={chapterProgress.quizCompleted ? `/dashboard/video-learning?skill_id=${id}&chapter=1&lesson=1` : `/dashboard/video-learning?skill_id=${id}&chapter=1`}>
-                                        <Button variant={chapterProgress.quizCompleted ? 'outline' : 'indigo'} size="sm" className="font-bold">
-                                            {totalLessonsCount > 0 ? (chapterProgress.quizCompleted ? 'Ôn lại' : 'Bắt đầu học lesson 1') : 'Chưa có bài học'}
-                                        </Button>
-                                    </Link>
+                                            {l?.isUnlocked ? (
+                                                <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=1&lesson=${l?.id}`}>
+                                                    <Button variant={l?.isCompleted ? 'outline' : 'indigo'} size="sm" className="font-bold text-xs cursor-pointer">
+                                                        {l?.isCompleted ? 'Ôn lại' : 'Vào học bài này ›'}
+                                                    </Button>
+                                                </Link>
+                                            ) : (
+                                                <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400">🔒 Chưa mở khóa (Xem bài trước)</span>
+                                            )}
+                                        </div>
+                                    ))}
                                 </div>
 
                                 <div className="mt-4 pt-3 border-t border-[#E6ECE6] dark:border-gray-800 flex items-center justify-between text-xs">
                                     <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-semibold">
                                         <Award className="w-4 h-4" />
-                                        <span>Chứng chỉ Nền tảng Front-end Level 1 (Đánh giá: 98/100)</span>
+                                        <span>Chứng chỉ Nền tảng Level 1</span>
                                     </div>
                                 </div>
                             </Card>
@@ -332,27 +428,31 @@ export const LearningPathPage: React.FC = () => {
                                     {path.activeDescription}
                                 </p>
 
-                                {/* Next Lesson Box */}
-                                <div className="mt-4 bg-white dark:bg-gray-800 p-4 rounded-xl border border-[#3F49C8]/30 dark:border-indigo-500/40 flex flex-wrap items-center justify-between gap-3 shadow-xs">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-lg bg-[#3F49C8] dark:bg-indigo-600 text-white flex items-center justify-center shrink-0">
-                                            <PlayCircle className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#718096] dark:text-gray-400">BÀI HỌC BẮT BUỘC</span>
-                                            <h4 className="text-xs font-bold text-[#1A2E22] dark:text-white">{lesson2?.title || 'Bài 2: Custom Hooks & State Management'}</h4>
-                                        </div>
-                                    </div>
+                                {/* Lessons in Chapter 2 */}
+                                <div className="mt-4 space-y-2.5">
+                                    {(ch2Lessons.length > 0 ? ch2Lessons : [lesson2].filter(Boolean)).map((l, lIdx) => (
+                                        <div key={l?.id || lIdx} className="bg-white dark:bg-gray-800 p-3.5 rounded-xl border border-[#3F49C8]/30 dark:border-indigo-500/40 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-8 h-8 rounded-lg ${l?.isCompleted ? 'bg-emerald-600 dark:bg-emerald-500 text-white' : l?.isUnlocked ? 'bg-[#3F49C8] dark:bg-indigo-600 text-white' : 'bg-gray-300 text-gray-600'} flex items-center justify-center shrink-0`}>
+                                                    {l?.isCompleted ? <CheckCircle2 className="w-4 h-4" /> : l?.isUnlocked ? <PlayCircle className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                                                </div>
+                                                <div>
+                                                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#718096] dark:text-gray-400">BÀI HỌC VIDEO • BÀI {lIdx + 1}</span>
+                                                    <h4 className="text-xs font-bold text-[#1A2E22] dark:text-white">{l?.title}</h4>
+                                                </div>
+                                            </div>
 
-                                    {chapter2Unlocked ? (
-                                        <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=2`}>
-                                            <Button variant={chapter2Progress.quizCompleted ? "outline" : "indigo"} size="sm" className="font-bold cursor-pointer">
-                                                {chapter2Progress.quizCompleted ? 'Ôn lại bài học' : 'Vào học ngay ›'}
-                                            </Button>
-                                        </Link>
-                                    ) : (
-                                        <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400">🔒 Chưa mở khóa</span>
-                                    )}
+                                            {l?.isUnlocked ? (
+                                                <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=2&lesson=${l?.id}`}>
+                                                    <Button variant={l?.isCompleted ? "outline" : "indigo"} size="sm" className="font-bold text-xs cursor-pointer">
+                                                        {l?.isCompleted ? 'Ôn lại' : 'Vào học ngay ›'}
+                                                    </Button>
+                                                </Link>
+                                            ) : (
+                                                <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400">🔒 Chưa mở khóa (Xem bài trước)</span>
+                                            )}
+                                        </div>
+                                    ))}
                                 </div>
                             </Card>
                         </div>
@@ -367,7 +467,7 @@ export const LearningPathPage: React.FC = () => {
                                     <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${chapter3Progress.quizCompleted ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : chapter3Unlocked ? 'text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/60 border-purple-200 dark:border-purple-800' : 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400'}`}>
                                         {chapter3Progress.quizCompleted ? 'CHẶNG 03 • HOÀN THÀNH ✓' : chapter3Unlocked ? 'CHẶNG 03 • ĐÃ MỞ KHÓA 🌱' : 'CHẶNG 03 • ĐANG KHÓA'}
                                     </span>
-                                    <span className="text-xs font-mono text-[#718096] dark:text-gray-400">Tiến độ: {chapter3Progress.quizCompleted ? '100%' : chapter3Unlocked ? 'Bắt đầu khám phá' : 'Cần hoàn thành chặng 2'}</span>
+                                    <span className="text-xs font-mono text-[#718096] dark:text-gray-400">{ch3Lessons.length || 1} Bài học • 4 Quiz Labs</span>
                                 </div>
 
                                 <h3 className="text-lg font-bold text-[#1A2E22] dark:text-white">
@@ -375,15 +475,33 @@ export const LearningPathPage: React.FC = () => {
                                 </h3>
 
                                 <p className="text-xs text-[#4A5568] dark:text-gray-300 leading-relaxed mt-1">
-                                    Chuyển đổi tư duy Component-driven, React 19 Compiler, Custom Hooks kiến trúc sạch, quản lý State toàn cục với Zustand và Server State caching tốc độ cao với TanStack Query v5.
+                                    Nâng cao năng lực chuyên sâu, vận dụng mô hình kiến trúc chuẩn và thực hành trực tiếp trên các use-case sản phẩm thực tế.
                                 </p>
 
-                                <div className="flex flex-wrap gap-1.5 mt-3">
-                                    <Badge variant="skill">React 19</Badge>
-                                    <Badge variant="skill">Zustand</Badge>
-                                    <Badge variant="skill">TanStack Query</Badge>
-                                    <Badge variant="skill">SSR & Next.js App Router</Badge>
-                                </div>
+                                {/* Lessons in Chapter 3 */}
+                                {(ch3Lessons.length > 0 ? ch3Lessons : [lesson3].filter(Boolean)).map((l, lIdx) => (
+                                    <div key={l.id || lIdx} className="bg-purple-50/50 dark:bg-purple-950/40 p-3.5 rounded-xl border border-purple-200 dark:border-purple-800/80 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+                                        <div className="flex items-center gap-3">
+                                            <div className={`w-8 h-8 rounded-lg ${l?.isCompleted ? 'bg-emerald-600 dark:bg-emerald-500 text-white' : l?.isUnlocked ? 'bg-purple-600 dark:bg-purple-500 text-white' : 'bg-gray-300 text-gray-600'} flex items-center justify-center shrink-0`}>
+                                                {l?.isCompleted ? <CheckCircle2 className="w-4 h-4" /> : l?.isUnlocked ? <PlayCircle className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                                            </div>
+                                            <div>
+                                                <span className="text-[10px] font-extrabold uppercase tracking-wider text-purple-800 dark:text-purple-300">BÀI HỌC VIDEO • BÀI {lIdx + 1}</span>
+                                                <h4 className="text-xs font-bold text-[#1A2E22] dark:text-white">{l.title}</h4>
+                                            </div>
+                                        </div>
+
+                                        {l?.isUnlocked ? (
+                                            <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=3&lesson=${l.id}`}>
+                                                <Button variant={l?.isCompleted ? "outline" : "indigo"} size="sm" className="font-bold text-xs cursor-pointer">
+                                                    {l?.isCompleted ? 'Ôn lại' : 'Vào học ngay ›'}
+                                                </Button>
+                                            </Link>
+                                        ) : (
+                                            <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400">🔒 Chưa mở khóa (Xem bài trước)</span>
+                                        )}
+                                    </div>
+                                ))}
 
                                 <div className="mt-4 pt-3 border-t border-[#E6ECE6] dark:border-gray-800 flex items-center justify-between">
                                     <span className="text-xs font-bold text-[#3F49C8] dark:text-indigo-400 flex items-center gap-1">
@@ -410,20 +528,41 @@ export const LearningPathPage: React.FC = () => {
                                     <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md ${chapter4Progress.quizCompleted ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : chapter3Progress.quizCompleted ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300' : 'bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-300'}`}>
                                         {chapter4Progress.quizCompleted ? 'CHẶNG 04 • HOÀN THÀNH ✓' : chapter3Progress.quizCompleted ? 'CHẶNG 04 • ĐÃ MỞ KHÓA 🌱' : 'CHẶNG 04 • ĐANG KHÓA'}
                                     </span>
-                                    {!chapter3Progress.quizCompleted && (
-                                        <span className="text-xs text-amber-700 dark:text-amber-300 font-semibold bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-800">
-                                            🔒 Cần hoàn thành Quiz Chặng 3
-                                        </span>
-                                    )}
+                                    <span className="text-xs font-mono text-[#718096] dark:text-gray-400">{ch4Lessons.length || 1} Bài học • 4 Quiz Labs</span>
                                 </div>
 
                                 <h3 className="text-base font-bold text-gray-800 dark:text-gray-100">
-                                    TypeScript Chuyên nghiệp & Kiến trúc Ứng dụng Lớn
+                                    Chuyên nghiệp Hóa & Kiến trúc Hệ thống Lớn
                                 </h3>
 
                                 <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed mt-1">
-                                    Xây dựng hệ thống Type an toàn tuyệt đối với Generics, Mapped Types, Design Patterns (Factory, Strategy, Observer) và quy chuẩn Unit / Integration Testing toàn diện với Vitest & Playwright.
+                                    Tối ưu hiệu năng, bảo mật, Design Patterns và quy chuẩn kiểm thử toàn diện theo yêu cầu doanh nghiệp.
                                 </p>
+
+                                {/* Lessons in Chapter 4 */}
+                                {(ch4Lessons.length > 0 ? ch4Lessons : [lesson4].filter(Boolean)).map((l, lIdx) => (
+                                    <div key={l.id || lIdx} className="bg-indigo-50/50 dark:bg-indigo-950/40 p-3.5 rounded-xl border border-indigo-200 dark:border-indigo-800/80 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+                                        <div className="flex items-center gap-3">
+                                            <div className={`w-8 h-8 rounded-lg ${l?.isCompleted ? 'bg-emerald-600 dark:bg-emerald-500 text-white' : l?.isUnlocked ? 'bg-indigo-600 text-white' : 'bg-gray-300 text-gray-600'} flex items-center justify-center shrink-0`}>
+                                                {l?.isCompleted ? <CheckCircle2 className="w-4 h-4" /> : l?.isUnlocked ? <PlayCircle className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                                            </div>
+                                            <div>
+                                                <span className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-800 dark:text-indigo-300">BÀI HỌC VIDEO • BÀI {lIdx + 1}</span>
+                                                <h4 className="text-xs font-bold text-[#1A2E22] dark:text-white">{l.title}</h4>
+                                            </div>
+                                        </div>
+
+                                        {l?.isUnlocked ? (
+                                            <Link to={`/dashboard/video-learning?skill_id=${id}&chapter=4&lesson=${l.id}`}>
+                                                <Button variant={l?.isCompleted ? "outline" : "indigo"} size="sm" className="font-bold text-xs cursor-pointer">
+                                                    {l?.isCompleted ? 'Ôn lại' : 'Vào học ngay ›'}
+                                                </Button>
+                                            </Link>
+                                        ) : (
+                                            <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400">🔒 Chưa mở khóa (Xem bài trước)</span>
+                                        )}
+                                    </div>
+                                ))}
 
                                 {chapter3Progress.quizCompleted && (
                                     <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex justify-end">

@@ -1,118 +1,179 @@
-# 🌿 HƯỚNG DẪN SỬ DỤNG HỆ THỐNG SKILLGARDEN (EDTECH & GAMIFICATION)
+# 🌿 HƯỚNG DẪN VẬN HÀNH & SỬ DỤNG HỆ THỐNG SKILLGARDEN
+### *(Nền tảng EdTech & Gamification Nuôi Dưỡng Khu Vườn Kỹ Năng)*
 
-Tài liệu này hướng dẫn chi tiết cách vận hành, khởi chạy và khai thác toàn bộ tính năng của hệ thống **SkillGarden** dành cho 3 vai trò: **Học viên (Student)**, **Quản trị viên nội dung (Admin LMS)** và **Quản trị tối cao (Super Admin)**.
+---
+
+Tài liệu này cung cấp hướng dẫn đầy đủ cách khởi chạy hệ thống, danh sách tài khoản đã được đồng bộ chuẩn hóa 100% trong CSDL MySQL, quy trình khôi phục tài khoản tức thì sau khi Rebuild Docker, và hướng dẫn chi tiết dành cho cả 3 vai trò: **Super Admin**, **Admin LMS** và **Học viên (Student)**.
 
 ---
 
 ## 🚀 1. HƯỚNG DẪN KHỞI CHẠY HỆ THỐNG (GETTING STARTED)
 
-Để hệ thống hoạt động đầy đủ tính năng với CSDL thời gian thực:
+Hệ thống được đóng gói hoàn chỉnh bằng **Docker Compose** bao gồm 3 container độc lập:
+1. **Frontend App**: React 19 + Vite + Tailwind CSS + Lucide Icons (`skillgarden_frontend`)
+2. **Backend API**: PHP 8.3 Apache RESTful API Chuẩn MVC (`skillgarden_backend`)
+3. **Database**: MySQL 8.4 LTS (`skillgarden_db`)
 
-### Bước 1: Khởi chạy Backend PHP API
-Mở terminal PowerShell tại thư mục gốc project:
+### Lệnh Khởi Chạy Nhanh:
+Mở PowerShell tại thư mục gốc dự án (`d:\PLT-Skill_garden`):
 ```powershell
-cd d:\skill_garden-\skill_garden-Backend
-php -S localhost:8000
+# Khởi động toàn bộ cụm container
+docker compose up -d
 ```
-- API Server sẽ chạy tại: `http://localhost:8000/api`
-- Đảm bảo MySQL Service (`skill_garden` database) đang bật.
 
-### Bước 2: Khởi chạy Frontend React App
-Mở một cửa sổ terminal PowerShell mới:
+### Các Cổng Dịch Vụ & Địa Chỉ Truy Cập:
+- **Giao diện người dùng (Frontend)**: [http://localhost:5173](http://localhost:5173)
+- **Cổng API Backend**: [http://localhost:8000/api](http://localhost:8000/api)
+- **Trang Cài đặt & Khôi phục CSDL tự động**: [http://localhost:8000/install-db.php](http://localhost:8000/install-db.php)
+- **Cổng kết nối CSDL MySQL**: `localhost:3307`
+  - *Database Name*: `db_skill_garden`
+  - *Username*: `root`
+  - *Password*: `skillgarden_dev`
+
+---
+
+## 🔄 2. CÁCH KHÔI PHỤC TOÀN BỘ TÀI KHOẢN KHI REBUILD DOCKER
+
+> [!NOTE]
+> Khi bạn xóa container hoặc xóa Docker volume (`docker compose down -v`), dữ liệu database sẽ được khởi tạo lại tự động từ file [`schema.sql`](file:///d:/PLT-Skill_garden/skill_garden-Backend/database/schema.sql). File này đã được cập nhật toàn bộ tài khoản mặc định với chuẩn mã hóa mật khẩu Bcrypt hợp lệ.
+
+Nếu muốn đồng bộ hoặc reset lại toàn bộ mật khẩu và tài khoản mẫu bất cứ lúc nào, bạn chỉ cần chạy **1 dòng lệnh duy nhất**:
+
 ```powershell
-cd d:\skill_garden-\skill_garden-Frontend
-npm run dev
+docker exec skillgarden_backend php /var/www/html/bin/seed_users.php
 ```
-- Truy cập ứng dụng tại: `http://localhost:5173`
+*Hoặc truy cập trực tiếp bằng trình duyệt vào:* [http://localhost:8000/install-db.php](http://localhost:8000/install-db.php)
 
 ---
 
-## 🔑 2. DANH SÁCH TÀI KHOẢN MẪU ĐÃ CẬP NHẬT TRONG CSDL (100% ĐĂNG NHẬP THÀNH CÔNG)
+## 🔑 3. BẢNG DANH SÁCH TÀI KHOẢN ĐÃ ĐỒNG BỘ TRONG CSDL (100% ĐĂNG NHẬP THÀNH CÔNG)
 
-| Vai Trò (Role) | Email / Username | Mật Khẩu | Quyền Hạn Chính |
-| :--- | :--- | :--- | :--- |
-| **Super Admin** | `admin@pltsolutions.com` *(hoặc `admin@skillgarden.com`)* | **`admin123`** | Quản lý tài khoản Admin, Cấp ma trận phân quyền, Xem báo cáo tổng thể, Nhật ký Audit logs, Cấu hình Global |
-| **Admin LMS** | `lms.admin@pltsolutions.com` | **`admin123`** | Phê duyệt học viên, **Upload Bài học Video**, Tạo Bài thi Quiz, Upload Tài liệu PDF, Quản lý Loại cây |
-| **Học Viên (Student)** | `user_khoa@pltsolutions.com` *(hoặc `anhkhoa.user@gmail.com`)* | **`123456`** | Trồng cây kỹ năng, Xem video bài học, Làm bài thi Quiz, Tưới nước (+10 XP), Xem Bảng xếp hạng |
+Toàn bộ các tài khoản dưới đây đã được mã hóa chuẩn Bcrypt, kiểm tra kết nối API login và sẵn sàng đăng nhập ngay:
 
-> 💡 **Ghi chú:** Em đã cập nhật lại trực tiếp mật khẩu và kích hoạt trạng thái (`is_approved = 1`, `status = ACTIVE`) cho toàn bộ tài khoản mẫu trên trong CSDL MySQL. Bây giờ anh đăng nhập lại bằng các thông tin trên sẽ **thành công 100%**!
-
----
-
-## ❓ 3. ADMIN NÀO CÓ THỂ UPLOAD VIDEO BÀI HỌC CHO HỌC VIÊN?
-
-> **TRẢ LỜI:**
-> - Tài khoản có vai trò **Admin LMS** (hoặc **Super Admin**) là người thực hiện nhiệm vụ Upload và quản lý Video bài học cho học viên.
-> - **Điều kiện phân quyền:** Trong Ma trận Phân Quyền (Super Admin Portal), tài khoản Admin đó phải được tích chọn quyền **`ManageCourses`** (Quản lý khóa học) và **`ManageLessons`** (Quản lý bài học).
-
----
-
-## 🎬 4. HƯỚNG DẪN CHI TIẾT DÀNH CHO ADMIN: UPLOAD VIDEO & TÀI LIỆU PDF
-
-### 📍 Quy trình Upload Bài Học Video (3 bước):
-
-1. **Đăng nhập với tài khoản Admin LMS:**
-   - Đăng nhập email: `lms.admin@pltsolutions.com` (hoặc `admin@pltsolutions.com`) / Mật khẩu: **`admin123`**.
-   - Sau khi đăng nhập, hệ thống sẽ tự động chuyển đến **Giao diện Admin Dashboard**.
-
-2. **Truy cập Quản lý Khóa học & Bài học:**
-   - Trên thanh Sidebar bên trái, chọn **Quản Lý Khóa Học LMS** (hoặc truy cập `/admin/courses`).
-   - Chọn Khóa học/Kỹ năng cần thêm bài học (Ví dụ: *Frontend React 19 Mastery*).
-   - Nhấp nút **+ Thêm Bài Học Mới**.
-
-3. **Điền Thông Tin Bài Học Video:**
-   - **Tiêu đề bài học:** Nhập tên bài (Ví dụ: *Bài 3: React Hooks & State Management*).
-   - **Mô tả ngắn:** Tóm tắt nội dung bài học.
-   - **Đường dẫn Video (Video URL):**
-     - Nhập link Embed YouTube (Ví dụ: `https://www.youtube.com/embed/dQw4w9WgXcQ`)
-     - Hoặc đường dẫn trực tiếp MP4 (`https://cdn.example.com/videos/lesson3.mp4`).
-   - **Thời lượng video (Phút):** Nhập số phút (Ví dụ: `15`).
-   - Nhấn **Lưu Bài Học**. Bài học sẽ lập tức hiển thị cho học viên trên Giao diện Học tập.
+| STT | Vai Trò (Role) | Email Đăng Nhập | Tên Đăng Nhập | Mật Khẩu | Trạng Thái | Mô Tả Quyền Hạn & Mục Đích Sử Dụng |
+| :---: | :--- | :--- | :--- | :---: | :---: | :--- |
+| **1** | **Super Admin** | `admin@pltsolutions.com` | `skillgarden_super_admin` | **`admin123`** | ✅ Active | **Quản trị tối cao**: Quản lý Admin, cấp ma trận phân quyền, phê duyệt user, xem Audit Log hệ thống. |
+| **2** | **Super Admin** | `admin@skillgarden.com` | `skillgarden_admin` | **`admin123`** | ✅ Active | **Super Admin dự phòng**: Toàn quyền cấu hình hệ thống & phân quyền. |
+| **3** | **Admin LMS** | `lms.admin@pltsolutions.com` | `lms_admin` | **`admin123`** | ✅ Active | **Quản trị đào tạo**: Tạo & sửa khóa học, upload bài học Video, upload tài liệu PDF, quản lý câu hỏi Quiz. |
+| **4** | **Admin LMS** | `baopq@skillgarden.com` | `baopq_admin` | **`Admin123@`** | ✅ Active | **Quản trị viên nội dung**: Quản lý khóa học, bài học & bài tập thực hành. |
+| **5** | **Học Viên (Student)** | `user_khoa@pltsolutions.com` | `user_khoa` | **`123456`** | ✅ Active | Học viên chuẩn mẫu: Đã mở sẵn level 5, 1250 XP, Streak 7 ngày. Trồng cây, xem video, làm quiz, tưới nước. |
+| **6** | **Học Viên (Student)** | `anhkhoa@plt.com` | `anhkhoa` | **`Password123!`** | ✅ Active | Học viên chính thức PLT Solutions (Level 5, 1500 XP, Streak 10 ngày). |
+| **7** | **Học Viên (Student)** | `anhkhoa.user@gmail.com` | `anhkhoa_dev` | **`123456`** | ✅ Active | Học viên cá nhân đã kích hoạt (Level 5, 1250 XP). |
+| **8** | **Học Viên (Student)** | `nam.le@gmail.com` | `namle_backend` | **`Password123!`** | ✅ Active | Học viên chuyên ngành Backend (Level 3, 680 XP). |
+| **9** | **Học Viên (Cá nhân)** | `mlinn2045@gmail.com` | `mlinn2045` | *(MK bạn đã tạo khi ĐK)* | ✅ Active | Tài khoản cá nhân vừa đăng ký, **đã được duyệt kích hoạt sẵn trong DB**. |
+| **10** | **Học Viên (Chờ duyệt)** | `maitran@gmail.com` | `maitran99` | **`Password123!`** | ⏳ Chờ duyệt | Dùng để test tính năng: Admin phê duyệt học viên mới tại trang Quản lý User. |
+| **11** | **Học Viên (Chờ duyệt)** | `tuanvm.pending@gmail.com` | `tuanvm` | **`Password123!`** | ⏳ Chờ duyệt | Dùng để test tính năng từ chối / kích hoạt tài khoản học viên. |
 
 ---
 
-### 📄 Quy trình Upload Tài Liệu Tham Khảo PDF:
+## ❓ 4. QUY ĐỊNH PHÂN QUYỀN TRONG HỆ THỐNG
 
-1. Trên Sidebar Admin, chọn **Quản Lý Tài Liệu PDF** (`/admin/pdf-materials`).
-2. Nhấp nút **Upload Tài Liệu PDF Mới**.
-3. **Tiêu đề tài liệu:** Nhập tên tài liệu (Ví dụ: *Slide_Bai_3_React_Hooks.pdf*).
-4. **Bài học liên kết:** Chọn bài học video vừa tạo ở bước trên.
-5. **Đường dẫn File (URL):** Nhập link lưu trữ PDF.
-6. Nhấn **Thêm tài liệu**. Học viên khi học bài đó sẽ thấy nút "Tải tài liệu PDF" đi kèm.
+> [!IMPORTANT]
+> **Ai có quyền upload Video bài học và Tài liệu PDF?**
+> - **Chỉ có Admin LMS** (`lms.admin@pltsolutions.com`, `baopq@skillgarden.com`) hoặc **Super Admin** (`admin@pltsolutions.com`, `admin@skillgarden.com`) mới được phép truy cập trang quản trị khóa học, thêm bài học video, và đăng tải tài liệu PDF.
+> - Tài khoản **Học viên (User)** khi cố tình vào các đường dẫn quản trị (`/admin/*` hoặc `/superadmin/*`) sẽ tự động bị rào chắn bảo mật chặn lại và điều hướng về trang chủ học tập.
 
 ---
 
-## 👤 5. HƯỚNG DẪN DÀNH CHO HỌC VIÊN (STUDENT FLOW)
+## 🎬 5. HƯỚNG DẪN DÀNH CHO ADMIN LMS (TẠO BÀI HỌC VIDEO & PDF)
 
-1. **Đăng Ký / Đăng Nhập:**
-   - Sử dụng tài khoản: `user_khoa@pltsolutions.com` / Mật khẩu: **`123456`**.
+### Bước 1: Đăng nhập quyền Admin
+- Sử dụng tài khoản: `lms.admin@pltsolutions.com` / Mật khẩu: **`admin123`**
+- Truy cập vào **Trang Quản Trị Khóa Học LMS** qua menu Sidebar hoặc đường dẫn: `/admin/courses`.
 
-2. **Khám Phá Vườn Kỹ Năng & Chọn Cây Trồng:**
-   - Vào mục **Khu Vườn Của Tôi** (`/dashboard/my-garden`) hoặc **Danh Mục Kỹ Năng** (`/dashboard/skill-catalog`).
-   - Chọn kỹ năng muốn học (Ví dụ: *React 19 Mastery*) và chọn loại hạt mầm (Ví dụ: *Cây Hoa Anh Đào*).
+### Bước 2: Thêm Bài Học Video Mới
+1. Tại danh sách khóa học (ví dụ: *Frontend React 19 Mastery*), nhấp vào khóa học cần quản lý.
+2. Nhấp nút **+ Thêm Bài Học Mới**.
+3. Điền các trường thông tin:
+   - **Tên bài học**: Ví dụ *Bài 1: Giới thiệu Virtual DOM & JSX*.
+   - **Mô tả**: Tóm tắt kiến thức trọng tâm của bài học.
+   - **Đường dẫn Video (Video URL)**:
+     - Hỗ trợ link YouTube Embed: `https://www.youtube.com/embed/dQw4w9WgXcQ`
+     - Hoặc link file MP4 trực tiếp: `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`
+   - **Thời lượng (Phút)**: Nhập số phút dự kiến xem (ví dụ: `15`).
+   - **Điểm thưởng XP**: Nhập điểm kinh nghiệm khi hoàn thành (mặc định `50 XP`).
+4. Nhấn **Lưu Bài Học**. Bài học sẽ lập tức hiển thị trên sơ đồ học tập của toàn bộ học viên.
 
-3. **Học Bài Học Video & Tích Lũy XP:**
-   - Vào **Lộ Trình Học Tập** (`/dashboard/learning-path/:skillId`).
-   - Xem bài học Video, làm bài thi Quiz trắc nghiệm.
-   - Khi hoàn thành bài học, hệ thống tự động cộng điểm XP (+50 đến +100 XP) và thúc đẩy mầm cây sinh trưởng qua 5 giai đoạn (Hạt mầm ➔ Mầm xanh ➔ Cây xòe lá ➔ Đơm hoa ➔ Thu hoạch cổ thụ).
+### Bước 3: Đính Kèm Tài Liệu Tham Khảo PDF
+1. Trên Sidebar Admin, chuyển sang mục **Quản Lý Tài Liệu PDF** (`/admin/pdf-materials`).
+2. Nhấp chọn **+ Upload Tài Liệu PDF Mới**.
+3. Điền tên tài liệu (Ví dụ: *Slide_Bai_1_Kien_Truc_React19.pdf*).
+4. Chọn bài học video liên kết tương ứng.
+5. Dán đường dẫn URL file PDF lưu trữ.
+6. Nhấn **Lưu tài liệu**. Học viên khi học bài đó sẽ thấy nút "Tải tài liệu PDF" đính kèm bên dưới khung xem video.
 
-4. **Tưới Nước Hàng Ngày & Xem Bảng Xếp Hạng:**
-   - Tại trang Khu vườn, nhấn **Tưới Nước (+10 XP)** để duy trì chuỗi Streak học tập.
-   - Vào **Bảng Xếp Hạng** (`/dashboard/leaderboard`) để theo dõi vị trí thứ hạng của mình trên toàn hệ thống.
+### Bước 4: Phê Duyệt Học Viên Chờ Duyệt (Pending)
+1. Vào menu **Quản Lý Người Dùng** (`/admin/users`).
+2. Tìm các tài khoản có trạng thái ⏳ **Chờ phê duyệt** (Ví dụ: `maitran@gmail.com`, `tuanvm.pending@gmail.com`).
+3. Nhấp nút **Duyệt (Approve)**. Sau khi duyệt, học viên đó có thể đăng nhập bình thường vào hệ thống.
 
 ---
 
-## 🛡️ 6. HƯỚNG DẪN DÀNH CHO SUPER ADMIN (QUẢN TRỊ TỐI CAO)
+## 🌳 6. HƯỚNG DẪN DÀNH CHO HỌC VIÊN (STUDENT FLOW & GAMIFICATION)
 
-1. **Quản Lý Tài Khoản Admin (`/superadmin/users`):**
-   - Tạo mới tài khoản Admin cho giảng viên / biên tập viên.
-   - Khóa/Mở khóa tài khoản Admin khi cần thiết.
+### Bước 1: Đăng Nhập Hệ Thống
+- Sử dụng tài khoản mẫu: `user_khoa@pltsolutions.com` / Mật khẩu: **`123456`**
+- Hoặc tài khoản: `anhkhoa@plt.com` / Mật khẩu: **`Password123!`**
 
-2. **Ma Trận Phân Quyền (`/superadmin/permissions`):**
-   - Cấp từng quyền cụ thể cho Admin (Cấp quyền `ManageCourses` để upload video, `ManageQuizzes` để tạo đề thi, `ManageUsers` để duyệt học viên).
+### Bước 2: Chọn Cây Kỹ Năng & Nuôi Dưỡng Khu Vườn
+1. Truy cập vào **Khu Vườn Của Tôi** (`/dashboard/my-garden`) hoặc **Danh Mục Kỹ Năng** (`/dashboard/skill-catalog`).
+2. Chọn lộ trình kỹ năng bạn quan tâm (Ví dụ: *Frontend React 19 Mastery*, *Backend NestJS & Node.js*, *Database SQL*...).
+3. Nhận hạt mầm tương ứng (Ví dụ: Cây Hoa Anh Đào cho Frontend, Cây Cổ Thụ cho Backend, Cây Tre cho Database).
 
-3. **Báo Cáo Thống Kê System (`/superadmin/reports`):**
-   - Xem tổng số học viên, tỷ lệ đạt Quiz, lượng bài học đã hoàn thành và số cây đã thu hoạch.
+### Bước 3: Xem Video Bài Học & Sinh Trưởng Cây Trồng
+1. Vào **Lộ Trình Học Tập** (`/dashboard/learning-path/:skillId`).
+2. Xem bài giảng video và ghi chú bài học.
+3. Khi hoàn thành bài học:
+   - Hệ thống tự động cộng **+50 XP** đến **+100 XP** vào tài khoản.
+   - Cây kỹ năng tăng trưởng qua 5 nấc: **Hạt mầm ➔ Mầm xanh ➔ Cây non ➔ Cây trưởng thành ➔ Cổ thụ nở hoa**.
+4. Tham gia làm bài kiểm tra trắc nghiệm (Quiz) để củng cố kiến thức và nhận thêm điểm thưởng.
 
-4. **Nhật Ký Thao Tác (Audit Logs) (`/superadmin/audit-logs`):**
-   - Theo dõi toàn bộ lịch sử thao tác của các Admin trên hệ thống để bảo đảm an toàn dữ liệu.
+### Bước 4: Tưới Nước Hằng Ngày (Daily Streak) & Xem Bảng Xếp Hạng
+1. Tại trang Khu vườn, nhấn nút **Tưới Nước (+10 XP)** mỗi ngày để duy trì chuỗi Streak học tập liên tục.
+2. Vào **Bảng Xếp Hạng (Leaderboard)** (`/dashboard/leaderboard`) để so tài vị trí Top bảng điểm với các bạn học khác.
+
+---
+
+## 🛡️ 7. HƯỚNG DẪN DÀNH CHO SUPER ADMIN (QUẢN TRỊ TỐI CAO)
+
+Tài khoản đăng nhập: `admin@pltsolutions.com` / Mật khẩu: **`admin123`**
+
+1. **Quản Lý Danh Sách Admin (`/superadmin/users`):**
+   - Khởi tạo tài khoản Admin mới cho giảng viên, biên tập viên nội dung.
+   - Phân cấp vai trò: `USER`, `ADMIN`, `SUPER_ADMIN`.
+   - Khóa (Lock) hoặc Mở khóa (Unlock) tài khoản khi vi phạm quy tắc.
+2. **Ma Trận Phân Quyền Chi Tiết (`/superadmin/permissions`):**
+   - Cấp phát các quyền hạn cụ thể cho từng Admin: `ManageUsers`, `ManageSkills`, `ManageLessons`, `ManageQuizzes`, `ViewReports`.
+3. **Báo Cáo & Thống Kê Tổng Quan (`/superadmin/reports`):**
+   - Theo dõi biểu đồ tăng trưởng học viên, tổng số giờ học, số cây kỹ năng đã thu hoạch và tỷ lệ vượt qua bài thi Quiz.
+4. **Nhật Ký Thao Tác Hệ Thống (Audit Logs) (`/superadmin/audit-logs`):**
+   - Giám sát toàn bộ hoạt động đăng nhập, cập nhật bài học, thay đổi quyền hạn của các Admin trong hệ thống theo thời gian thực.
+
+---
+
+## 🛠️ 8. CÁC LỆNH HỖ TRỢ BẢO TRÌ & KHẮC PHỤC SỰ CỐ NHANH
+
+### 1. Đồng bộ lại tài khoản khi CSDL bị trống:
+```powershell
+docker exec skillgarden_backend php /var/www/html/bin/seed_users.php
+```
+
+### 2. Kiểm tra danh sách tài khoản hiện có trong MySQL:
+```powershell
+docker exec skillgarden_db mysql -uroot -pskillgarden_dev db_skill_garden -e "SELECT id, email, username, role, is_approved, status FROM users;"
+```
+
+### 3. Phê duyệt nhanh một học viên qua dòng lệnh:
+```powershell
+docker exec skillgarden_db mysql -uroot -pskillgarden_dev db_skill_garden -e "UPDATE users SET is_approved = 1, status = 'ACTIVE' WHERE email = 'maitran@gmail.com';"
+```
+
+### 4. Xem log hoạt động của Backend API:
+```powershell
+docker logs -f skillgarden_backend
+```
+
+### 5. Khởi động lại toàn bộ dịch vụ:
+```powershell
+docker compose restart
+```
